@@ -1,0 +1,3 @@
+pypdf
+langchain-groq
+python-dotenv
