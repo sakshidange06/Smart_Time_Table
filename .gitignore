@@ -12,8 +12,8 @@ __pycache__/
 *.pyo
 *.pyd
 
-# PDF files
-*.pdf
+
+
 
 # IDE / Editor
 .vscode/
