@@ -11,9 +11,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from llm import llm
 
 
-# =========================================================
 # FLASK CONFIGURATION
-# =========================================================
+
 
 app = Flask(
     __name__,
@@ -28,10 +27,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-# =========================================================
 # USER MANAGEMENT
-# =========================================================
 
 def init_user_csv():
 
@@ -131,9 +127,9 @@ def register_new_user(
     )
 
 
-# =========================================================
+
 # PDF FUNCTIONS
-# =========================================================
+
 
 def chunk_text(
     text: str,
@@ -186,10 +182,8 @@ def extract_pdf_text(
 
     return extracted_text
 
-
-# =========================================================
 # HOME
-# =========================================================
+
 
 @app.route('/')
 def index():
@@ -199,9 +193,8 @@ def index():
     )
 
 
-# =========================================================
 # LOGIN
-# =========================================================
+
 
 @app.route(
     '/api/login',
@@ -237,10 +230,8 @@ def login():
     }), 401
 
 
-# =========================================================
-# REGISTER
-# =========================================================
 
+# REGISTER
 @app.route(
     '/api/register',
     methods=['POST']
@@ -284,10 +275,7 @@ def register():
         "message": message
     }), 400
 
-
-# =========================================================
 # QUIZ GENERATOR
-# =========================================================
 
 @app.route(
     '/api/quiz',
@@ -483,9 +471,9 @@ Syllabus / notes:
         }), 500
 
 
-# =========================================================
+
 # SMART TIMETABLE
-# =========================================================
+
 
 @app.route(
     '/api/timetable',
@@ -505,9 +493,9 @@ def generate_timetable():
         "=============================="
     )
 
-    # -----------------------------------------------------
+    
     # CHECK PDF
-    # -----------------------------------------------------
+
 
     if 'pdf' not in request.files:
 
@@ -527,9 +515,9 @@ def generate_timetable():
                 "No selected file."
         }), 400
 
-    # -----------------------------------------------------
+
     # GET USER INPUT
-    # -----------------------------------------------------
+ 
 
     wake_time = request.form.get(
         'wake_time',
@@ -571,9 +559,9 @@ def generate_timetable():
         travel_timestamps
     )
 
-    # -----------------------------------------------------
+  
     # SAVE PDF
-    # -----------------------------------------------------
+    
 
     filename = secure_filename(
         file.filename
@@ -593,9 +581,8 @@ def generate_timetable():
 
     try:
 
-        # -------------------------------------------------
         # EXTRACT PDF TEXT
-        # -------------------------------------------------
+       
 
         print(
             "Extracting PDF text..."
@@ -628,10 +615,9 @@ def generate_timetable():
 
         timetable_text = raw_text[:3500]
 
-        # -------------------------------------------------
+    
         # SHORTER TIMETABLE PROMPT
-        # -------------------------------------------------
-
+       
         prompt = ChatPromptTemplate.from_messages([
 
             (
@@ -823,9 +809,9 @@ Generate the timetable now.
                     parts
                 ).strip()
 
-        # -------------------------------------------------
+        
         # EMPTY RESPONSE CHECK
-        # -------------------------------------------------
+        
 
         if not timetable:
 
@@ -855,9 +841,9 @@ Generate the timetable now.
                     "Please try again."
             }), 500
 
-        # -------------------------------------------------
+    
         # SUCCESS
-        # -------------------------------------------------
+    
 
         print(
             "TIMETABLE GENERATED SUCCESSFULLY"
@@ -868,9 +854,9 @@ Generate the timetable now.
             len(timetable)
         )
 
-        # -------------------------------------------------
+    
         # RETURN TIMETABLE
-        # -------------------------------------------------
+    
 
         return jsonify({
             "success": True,
@@ -902,13 +888,13 @@ Generate the timetable now.
         }), 500
 
 
-# =========================================================
+
 # START SERVER
-# =========================================================
+
 
 if __name__ == '__main__':
 
     app.run(
         debug=True,
         port=5000
-    )
+    )     
