@@ -1,915 +1,319 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Timetable | Autonomous Agentic AI Academic Platform</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            cyan: '#00f2fe',
-                            violet: '#7c3aed',
-                            indigo: '#4f46e5',
-                            dark: '#090d16',
-                            card: '#131b2e',
-                            accent: '#38bdf8'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace']
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 3s infinite ease-in-out',
-                        'float': 'float 5s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-                            '50%': { opacity: 0.7, transform: 'scale(1.05)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-8px)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- Font Awesome & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <title>Smart Timetable & Quiz AI Portfolio</title>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #080c14;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
-        .glass-panel {
-            background: rgba(19, 27, 46, 0.75);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-card {
-            background: rgba(19, 27, 46, 0.45);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card:hover {
-            background: rgba(19, 27, 46, 0.8);
-            border-color: rgba(56, 189, 248, 0.4);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px -10px rgba(0, 242, 254, 0.15);
-        }
-        .text-gradient {
-            background: linear-gradient(135deg, #00f2fe 0%, #38bdf8 40%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .bg-gradient-brand {
-            background: linear-gradient(135deg, #00f2fe 0%, #7c3aed 100%);
-        }
-        /* Custom scrollbars */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #080c14;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #38bdf8;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 650px; }
+        .hidden { display: none !important; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.2s; }
+        button:hover { background: #0056b3; }
+        .secondary-btn { background: #6c757d; margin-top: 10px; }
+        .secondary-btn:hover { background: #5a6268; }
+        .error { color: #dc3545; font-size: 14px; margin-top: 5px; }
+        .success { color: #28a745; font-size: 14px; margin-top: 5px; }
+        .toggle-link { text-align: center; margin-top: 15px; font-size: 14px; color: #007bff; cursor: pointer; }
+        .toggle-link:hover { text-decoration: underline; }
+        .option-card { background: #eef2f7; padding: 20px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+        .option-card:hover { border-color: #007bff; }
+        .question-box { background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid #007bff; }
+        .options-list { margin-top: 10px; list-style-type: none; padding: 0; }
+        .options-list li { margin-bottom: 8px; }
+        .result-banner { padding: 15px; border-radius: 6px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; background: #d4edda; color: #155724; }
+        .correct { color: #28a745; font-weight: bold; }
+        .incorrect { color: #dc3545; font-weight: bold; }
     </style>
 </head>
-<body class="selection:bg-cyan-500 selection:text-black">
+<body>
 
-    <!-- Navigation Bar -->
-    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20 glass-panel rounded-b-2xl px-6 mt-2">
-                <!-- Logo -->
-                <a href="#" class="flex items-center gap-3 font-mono text-xl font-bold tracking-wider group">
-                    <div class="p-2 bg-gradient-brand rounded-xl text-slate-950 font-extrabold flex items-center justify-center">
-                        <i data-lucide="bot" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-white group-hover:text-cyan-400 transition-colors">Smart<span class="text-cyan-400">TimeTable</span></span>
-                    <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 font-mono border border-cyan-500/30">AGENTIC AI</span>
-                </a>
-
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-300">
-                    <a href="#why-needed" class="hover:text-cyan-400 transition-colors">Why It's Needed</a>
-                    <a href="#phase1" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Phase 1: Student Agent
-                    </a>
-                    <a href="#phase2" class="hover:text-purple-400 transition-colors flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-purple-400"></span> Phase 2: Professor Hub
-                    </a>
-                    <a href="#architecture" class="hover:text-cyan-400 transition-colors">Agent Architecture</a>
-                </nav>
-
-                <!-- Actions -->
-                <div class="hidden md:flex items-center gap-4">
-                    <a href="#phase1" class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-white rounded-xl group bg-gradient-brand group-hover:from-cyan-500 group-hover:to-purple-600 hover:text-white">
-                        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-slate-950 rounded-[10px] group-hover:bg-opacity-0 font-semibold flex items-center gap-2">
-                            <i data-lucide="play" class="w-4 h-4 text-cyan-400 group-hover:text-white"></i> Try Interactive Demo
-                        </span>
-                    </a>
-                </div>
-
-                <!-- Mobile menu toggle button -->
-                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white focus:outline-none" aria-label="Toggle Navigation">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
+<div class="container">
+    <!-- AUTHENTICATION SECTION (Login & Signup) -->
+    <div id="auth-section">
+        <!-- Login Form -->
+        <div id="login-form">
+            <h2>🔒 Smart Timetable AI - Login</h2>
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="login-username" placeholder="admin">
             </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="login-password" placeholder="password123">
+            </div>
+            <button onclick="handleLogin()">Login</button>
+            <div id="login-msg" class="error"></div>
+            <div class="toggle-link" onclick="toggleAuthMode()">Don't have an account? Register here</div>
         </div>
 
-        <!-- Mobile Navigation Menu -->
-        <div id="mobile-menu" class="hidden md:hidden glass-panel mx-4 mt-2 p-6 rounded-2xl flex flex-col gap-4 text-center">
-            <a href="#why-needed" class="text-slate-300 hover:text-cyan-400 py-2 border-b border-slate-800">Why It's Needed</a>
-            <a href="#phase1" class="text-slate-300 hover:text-cyan-400 py-2 border-b border-slate-800">Phase 1: Student Hub</a>
-            <a href="#phase2" class="text-slate-300 hover:text-purple-400 py-2 border-b border-slate-800">Phase 2: Professor Hub</a>
-            <a href="#architecture" class="text-slate-300 hover:text-cyan-400 py-2">Agent Architecture</a>
+        <!-- Register Form -->
+        <div id="register-form" class="hidden">
+            <h2>📝 Create New Account</h2>
+            <div class="form-group">
+                <label>Choose Username:</label>
+                <input type="text" id="reg-username" placeholder="New username">
+            </div>
+            <div class="form-group">
+                <label>Choose Password:</label>
+                <input type="password" id="reg-password" placeholder="New password">
+            </div>
+            <button onclick="handleRegister()">Register</button>
+            <div id="reg-msg"></div>
+            <div class="toggle-link" onclick="toggleAuthMode()">Already have an account? Login here</div>
         </div>
-    </header>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-screen pt-32 pb-20 flex items-center justify-center overflow-hidden">
-        <!-- Background Glowing Orbs -->
-        <div class="absolute top-1/4 left-10 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl animate-pulse-glow pointer-events-none"></div>
-        <div class="absolute bottom-1/4 right-10 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-3xl animate-pulse-glow pointer-events-none" style="animation-delay: 1.5s;"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div class="text-center space-y-8 max-w-4xl mx-auto">
-                
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border-cyan-500/30 text-cyan-400 text-xs sm:text-sm font-mono">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-                    Autonomous Dual-Phase Agentic AI System
-                </div>
-
-                <!-- Animated Headline -->
-                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-none">
-                    Revolutionizing Academia with <br class="hidden sm:inline" />
-                    <span class="text-gradient">Agentic Intelligence</span>
-                </h1>
-
-                <!-- Dynamic Animated Typing Pitch -->
-                <div class="text-xl sm:text-3xl text-slate-300 font-medium h-16 flex items-center justify-center">
-                    <span class="text-slate-400">Purpose: &nbsp;</span>
-                    <span id="typed-pitch" class="text-cyan-400 font-mono font-semibold border-r-2 border-cyan-400 animate-pulse"></span>
-                </div>
-
-                <p class="text-slate-400 text-base sm:text-xl max-w-3xl mx-auto leading-relaxed">
-                    Say goodbye to chaotic schedule clashes, forgotten syllabus gaps, and manual timetable headaches. Smart Timetable autonomously manages personal student mastery and multi-year institutional schedules with zero friction.
-                </p>
-
-                <!-- Action CTAs -->
-                <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
-                    <a href="#phase1" class="px-8 py-4 rounded-xl bg-gradient-brand text-slate-950 font-bold hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2">
-                        Explore Student Agent <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                    </a>
-                    <a href="#phase2" class="px-8 py-4 rounded-xl glass-card text-white hover:text-purple-300 border border-purple-500/30 hover:border-purple-500 transition-all flex items-center gap-2 font-semibold">
-                        Explore Institutional Hub <i data-lucide="building-2" class="w-5 h-5 text-purple-400"></i>
-                    </a>
-                </div>
-
-                <!-- Live Quick Code Preview Snippet -->
-                <div class="pt-10 max-w-2xl mx-auto text-left">
-                    <div class="bg-slate-950/90 rounded-2xl border border-slate-800 p-4 font-mono text-xs sm:text-sm text-slate-300 shadow-2xl space-y-2">
-                        <div class="flex items-center justify-between text-slate-500 border-b border-slate-800 pb-2 mb-2">
-                            <span class="flex items-center gap-2">
-                                <i data-lucide="terminal" class="w-4 h-4 text-cyan-400"></i> smart_timetable_agent.py
-                            </span>
-                            <span class="flex gap-1.5">
-                                <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
-                                <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
-                                <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
-                            </span>
-                        </div>
-                        <p><span class="text-purple-400">class</span> <span class="text-cyan-300">SmartTimetableAgent</span>:</p>
-                        <p class="pl-4"><span class="text-purple-400">async def</span> <span class="text-blue-400">resolve_academic_friction</span>(self, student_id, years=[1,2,3,4]):</p>
-                        <p class="pl-8 text-slate-400"># Autonomous Syllabus Quiz & Weakness Recommendation</p>
-                        <p class="pl-8">gaps = <span class="text-purple-400">await</span> self.scan_syllabus_pdf(student_id)</p>
-                        <p class="pl-8">self.notify_study_slots(student_id, target_topics=gaps)</p>
-                        <p class="pl-8 text-slate-400"># Institutional Clash Elimination Engine</p>
-                        <p class="pl-8"><span class="text-purple-400">return await</span> self.generate_zero_clash_matrix(rooms, labs, faculty)</p>
-                    </div>
-                </div>
-
-            </div>
+    <!-- DASHBOARD SECTION (Option Selection) -->
+    <div id="dashboard-section" class="hidden">
+        <h2>🚀 Welcome to Dashboard</h2>
+        <p>Please select an operation below:</p>
+        
+        <div class="option-card" onclick="selectOption(1)">
+            <h3>1️⃣ Quick Revision (Quiz Generator)</h3>
+            <p>Upload your syllabus PDF, take an interactive AI-generated quiz, and view your results.</p>
         </div>
-    </section>
 
-    <!-- Section: Why Smart Timetable is Required -->
-    <section id="why-needed" class="py-24 relative bg-slate-950/60">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center space-y-4 mb-16">
-                <span class="text-cyan-400 font-mono text-sm tracking-widest uppercase font-semibold">// The Necessity</span>
-                <h2 class="text-3xl sm:text-5xl font-bold text-white">Why Modern Education Needs This Agent</h2>
-                <div class="w-20 h-1 bg-gradient-brand mx-auto rounded-full"></div>
-                <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
-                    Traditional static timetables create learning gaps for students and catastrophic room/lab clashes for university administrators.
-                </p>
-            </div>
-
-            <!-- Problem vs Agentic Solution Grid -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Card 1 -->
-                <div class="glass-panel p-8 rounded-3xl space-y-4 border-l-4 border-l-rose-500 hover:border-l-cyan-400 transition-all">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center font-bold text-xl">
-                        <i data-lucide="alert-triangle" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white">The Traditional Problem</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        Students memorize without knowing their specific weak syllabus topics. Meanwhile, professors spend days manually resolving overlapping lab sessions and conflicting faculty hours across 4 batch years.
-                    </p>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="glass-panel p-8 rounded-3xl space-y-4 border-l-4 border-l-cyan-400 hover:border-l-purple-400 transition-all">
-                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xl">
-                        <i data-lucide="brain-circuit" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white">Student Agentic Edge</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        Instant quiz generation directly from uploaded syllabus PDFs. The agent actively diagnoses weak subject modules and automatically injects targeted revision blocks into the student's personal schedule.
-                    </p>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="glass-panel p-8 rounded-3xl space-y-4 border-l-4 border-l-purple-500 hover:border-l-cyan-400 transition-all">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-xl">
-                        <i data-lucide="shield-check" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white">Institutional Clash Elimination</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        Multi-constraint solver ensuring 0% room overlap, 0% lab assignment conflicts, and balanced teaching hours across 1st, 2nd, 3rd, and 4th-year engineering batches simultaneously.
-                    </p>
-                </div>
-
-            </div>
+        <div class="option-card" onclick="selectOption(2)">
+            <h3>2️⃣ Create Smart Timetable</h3>
+            <p>Generate a personalized daily schedule based on your routine and college timetable PDF.</p>
         </div>
-    </section>
+        <button class="secondary-btn" onclick="handleLogout()">Logout</button>
+    </div>
 
-    <!-- Section: Phase 1 - Student Login & Agent Hub -->
-    <section id="phase1" class="py-24 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-4 border-b border-slate-800 pb-6">
-                <div>
-                    <div class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
-                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Phase 1 Showcase
-                    </div>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-white">Student Agent Hub</h2>
-                    <p class="text-slate-400 text-sm mt-1">Quiz Generation, Syllabus Gap Tracking & Personal Schedule Automation</p>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="switchStudentTab('quiz')" id="tab-btn-quiz" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20">
-                        1. PDF Quiz & Gap Tracker
-                    </button>
-                    <button onclick="switchStudentTab('schedule')" id="tab-btn-schedule" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 glass-card hover:text-white">
-                        2. AI Personal Timetable
-                    </button>
-                </div>
+    <!-- OPTION 1: QUIZ SECTION -->
+    <div id="quiz-section" class="hidden">
+        <h2>🎯 Quick Revision Quiz Generator</h2>
+        <p>Upload your syllabus/notes PDF to start the quiz.</p>
+        
+        <div id="quiz-upload-container">
+            <div class="form-group">
+                <label>Syllabus PDF File:</label>
+                <input type="file" id="pdfFile" accept=".pdf">
             </div>
-
-            <!-- TAB 1: PDF Quiz Generator & Gap Tracker -->
-            <div id="student-tab-quiz" class="space-y-8">
-                <div class="grid lg:grid-cols-12 gap-8 items-start">
-                    
-                    <!-- Left: PDF Upload & Quiz Simulation -->
-                    <div class="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                                <i data-lucide="file-up" class="w-5 h-5 text-cyan-400"></i> Syllabus PDF Analyzer
-                            </h3>
-                            <span class="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full border border-cyan-500/30">Agentic Scanner Active</span>
-                        </div>
-
-                        <!-- Dropzone Simulator -->
-                        <div id="dropzone" onclick="simulatePdfUpload()" class="border-2 border-dashed border-slate-700 hover:border-cyan-400 rounded-2xl p-8 text-center cursor-pointer transition-colors bg-slate-950/40 space-y-3">
-                            <div class="w-12 h-12 mx-auto rounded-full bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                                <i data-lucide="upload-cloud" class="w-6 h-6"></i>
-                            </div>
-                            <div>
-                                <p class="text-white font-medium text-sm">Click to simulate uploading <span class="text-cyan-400">CS_Syllabus_2026.pdf</span></p>
-                                <p class="text-slate-500 text-xs mt-1">Data Structures, Algorithms, AI Systems, Database Management</p>
-                            </div>
-                        </div>
-
-                        <!-- PDF Info Badge (Hidden initial) -->
-                        <div id="pdf-status" class="hidden p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="file-text" class="w-5 h-5 text-cyan-400"></i>
-                                <div>
-                                    <p class="text-white text-xs font-semibold">CS_Syllabus_Advanced_Algorithms.pdf</p>
-                                    <p class="text-slate-400 text-[11px]">Parsed 4 Modules • 28 Subtopics Identified</p>
-                                </div>
-                            </div>
-                            <span class="text-xs font-mono text-emerald-400 font-bold">PARSED OK</span>
-                        </div>
-
-                        <!-- Quiz Section -->
-                        <div class="space-y-4 pt-2">
-                            <div class="flex justify-between items-center">
-                                <h4 class="text-white font-bold text-sm">Agent-Generated Diagnostic Quiz</h4>
-                                <button onclick="generateNewQuiz()" class="text-xs font-mono text-cyan-400 hover:underline flex items-center gap-1">
-                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Regenerate
-                                </button>
-                            </div>
-
-                            <!-- Quiz Card Container -->
-                            <div id="quiz-container" class="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
-                                <p id="quiz-question" class="text-white font-medium text-sm">
-                                    Question 1: What is the worst-case time complexity of Dijkstra's algorithm implemented with a Fibonacci Heap?
-                                </p>
-                                <div id="quiz-options" class="space-y-2">
-                                    <button onclick="answerQuiz(false, this)" class="w-full text-left p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs transition-colors border border-slate-800">
-                                        A) O(V^2)
-                                    </button>
-                                    <button onclick="answerQuiz(true, this)" class="w-full text-left p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs transition-colors border border-slate-800">
-                                        B) O(E + V log V)  (Correct)
-                                    </button>
-                                    <button onclick="answerQuiz(false, this)" class="w-full text-left p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs transition-colors border border-slate-800">
-                                        C) O(V log E)
-                                    </button>
-                                </div>
-                                <div id="quiz-feedback" class="hidden text-xs font-mono p-3 rounded-xl"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right: Weak Area Analytics & Recommendation Dashboard -->
-                    <div class="lg:col-span-6 space-y-6">
-                        <div class="glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                                    <i data-lucide="activity" class="w-5 h-5 text-purple-400"></i> Weak Area Tracker
-                                </h3>
-                                <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full border border-purple-500/30">Live Analytics</span>
-                            </div>
-
-                            <p class="text-slate-400 text-xs leading-relaxed">
-                                As you complete agent-generated quizzes, the agent autonomously isolates syllabus sections where proficiency falls below 70%.
-                            </p>
-
-                            <!-- Progress bars for modules -->
-                            <div class="space-y-4">
-                                <div>
-                                    <div class="flex justify-between text-xs font-mono mb-1">
-                                        <span class="text-slate-300">Graph Algorithms & Shortest Path</span>
-                                        <span class="text-rose-400 font-bold">42% (Weak Segment)</span>
-                                    </div>
-                                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
-                                        <div class="h-full bg-rose-500 rounded-full transition-all duration-500" style="width: 42%;"></div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="flex justify-between text-xs font-mono mb-1">
-                                        <span class="text-slate-300">Dynamic Programming (Knapsack/LCS)</span>
-                                        <span class="text-amber-400 font-bold">64% (Needs Practice)</span>
-                                    </div>
-                                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
-                                        <div class="h-full bg-amber-400 rounded-full transition-all duration-500" style="width: 64%;"></div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="flex justify-between text-xs font-mono mb-1">
-                                        <span class="text-slate-300">Relational Database Indexing (B-Trees)</span>
-                                        <span class="text-emerald-400 font-bold">91% (Proficient)</span>
-                                    </div>
-                                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
-                                        <div class="h-full bg-emerald-400 rounded-full transition-all duration-500" style="width: 91%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Agent Recommendation Box -->
-                            <div class="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/40 space-y-3">
-                                <div class="flex items-center gap-2 text-purple-300 font-bold text-xs">
-                                    <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i> AGENT RECOMMENDATION
-                                </div>
-                                <p class="text-slate-300 text-xs leading-relaxed">
-                                    "Detected lower confidence in <strong class="text-cyan-300">Graph Algorithms</strong>. I have reserved 45 minutes in your personal schedule today at 04:00 PM for focused graph theory review."
-                                </p>
-                                <button onclick="injectStudyBlock()" class="w-full py-2 bg-gradient-brand text-slate-950 font-bold text-xs rounded-xl shadow-md hover:opacity-90 transition-opacity">
-                                    Auto-Inject Targeted Study Block to Timetable
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- TAB 2: AI Personal Timetable & Push Notifications -->
-            <div id="student-tab-schedule" class="hidden space-y-8">
-                <div class="grid lg:grid-cols-12 gap-8 items-start">
-                    
-                    <!-- Day Schedule Collector Controls -->
-                    <div class="lg:col-span-5 glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
-                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                            <i data-lucide="sliders" class="w-5 h-5 text-cyan-400"></i> Routine & Habit Inputs
-                        </h3>
-                        <p class="text-slate-400 text-xs">Provide your personal constraints and preferred focus hours to let the agent auto-generate your optimized day timetable.</p>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label class="text-xs font-mono text-slate-300">Preferred Daily Focus Window</label>
-                                <select id="pref-focus" class="w-full mt-1 px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 text-xs focus:outline-none focus:border-cyan-400">
-                                    <option value="morning">Morning Focus (08:00 AM - 12:00 PM)</option>
-                                    <option value="afternoon">Afternoon Focus (01:00 PM - 05:00 PM)</option>
-                                    <option value="evening" selected>Evening Focus (06:00 PM - 10:00 PM)</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="text-xs font-mono text-slate-300">Daily Study Target Hours</label>
-                                <input type="range" id="target-hours" min="2" max="8" value="4" class="w-full mt-2 accent-cyan-400" oninput="document.getElementById('hours-val').textContent = this.value + ' Hours'">
-                                <div class="flex justify-between text-[11px] font-mono text-slate-400">
-                                    <span>2 Hours</span>
-                                    <span id="hours-val" class="text-cyan-400 font-bold">4 Hours</span>
-                                    <span>8 Hours</span>
-                                </div>
-                            </div>
-
-                            <button onclick="generatePersonalSchedule()" class="w-full py-3 bg-gradient-brand text-slate-950 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2">
-                                <i data-lucide="wand-2" class="w-4 h-4"></i> Generate My Agentic Timetable
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Generated Personal Timetable Grid & Push Notifications -->
-                    <div class="lg:col-span-7 space-y-6">
-                        
-                        <!-- Simulated Notification Toast Banner -->
-                        <div id="notification-banner" class="glass-panel p-4 rounded-2xl border-l-4 border-l-cyan-400 flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-cyan-500/20 text-cyan-400 rounded-xl">
-                                    <i data-lucide="bell-ring" class="w-5 h-5 animate-bounce"></i>
-                                </div>
-                                <div>
-                                    <p class="text-white text-xs font-bold">Agent Push Notification</p>
-                                    <p class="text-slate-300 text-[11px]">"Reminder: 04:00 PM Graph Algorithms Weakness Review starts in 15 mins."</p>
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-mono text-slate-500">JUST NOW</span>
-                        </div>
-
-                        <!-- Schedule Stream -->
-                        <div class="glass-panel p-6 sm:p-8 rounded-3xl space-y-4">
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                                <h3 class="text-lg font-bold text-white">Today's AI Optimized Schedule</h3>
-                                <span class="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full">0 Clashes</span>
-                            </div>
-
-                            <div id="schedule-timeline" class="space-y-3 font-mono text-xs">
-                                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                                    <span class="text-slate-400">09:00 AM - 10:30 AM</span>
-                                    <span class="text-white font-bold">CS301: Operating Systems Lecture</span>
-                                    <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px]">College</span>
-                                </div>
-                                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                                    <span class="text-slate-400">11:00 AM - 01:00 PM</span>
-                                    <span class="text-white font-bold">CS305: Database Systems Lab</span>
-                                    <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 text-[10px]">Lab Room 204</span>
-                                </div>
-                                <div id="injected-block" class="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/40 flex items-center justify-between animate-pulse">
-                                    <span class="text-rose-400 font-bold">04:00 PM - 04:45 PM</span>
-                                    <span class="text-rose-200 font-bold">★ Agent Remedial: Graph Algorithms</span>
-                                    <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[10px]">Weakness Target</span>
-                                </div>
-                                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                                    <span class="text-slate-400">06:00 PM - 07:30 PM</span>
-                                    <span class="text-white font-bold">Personal Focus Study & AI Quiz</span>
-                                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px]">Self Learning</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-
+            <button onclick="generateQuiz()">Generate Quiz</button>
+            <div id="loading" class="hidden" style="text-align: center; margin-top: 15px;">Reading PDF and generating quiz via Groq LLM... Please wait ⏳</div>
         </div>
-    </section>
 
-    <!-- Section: Phase 2 - Professor / Institutional Login Hub -->
-    <section id="phase2" class="py-24 bg-slate-950/70 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="text-center space-y-4 mb-16">
-                <span class="text-purple-400 font-mono text-sm tracking-widest uppercase font-semibold">// Phase 2 Showcase</span>
-                <h2 class="text-3xl sm:text-5xl font-bold text-white">Professor & Institutional Master Matrix</h2>
-                <div class="w-20 h-1 bg-gradient-brand mx-auto rounded-full"></div>
-                <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
-                    Simultaneously schedule 1st, 2nd, 3rd, and 4th-year engineering classes, lab capacities, and faculty hours without room or timing conflicts.
-                </p>
-            </div>
-
-            <!-- Resource Input & Agent Execution Grid -->
-            <div class="grid lg:grid-cols-12 gap-8 items-start mb-12">
-                
-                <!-- Inputs & Constraints Matrix -->
-                <div class="lg:col-span-5 glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
-                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i data-lucide="layers" class="w-5 h-5 text-purple-400"></i> University Resources & Batches
-                    </h3>
-
-                    <div class="space-y-4 text-xs font-mono">
-                        <div>
-                            <label class="text-slate-300 block mb-1">Active Academic Years</label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <span class="p-2 bg-slate-900 rounded-lg text-slate-300 border border-slate-800 text-center">1st Year (4 Batches)</span>
-                                <span class="p-2 bg-slate-900 rounded-lg text-slate-300 border border-slate-800 text-center">2nd Year (3 Batches)</span>
-                                <span class="p-2 bg-slate-900 rounded-lg text-slate-300 border border-slate-800 text-center">3rd Year (3 Batches)</span>
-                                <span class="p-2 bg-slate-900 rounded-lg text-slate-300 border border-slate-800 text-center">4th Year (2 Batches)</span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="text-slate-300 block mb-1">Available Facilities & Labs</label>
-                            <input type="text" readonly value="Labs: AI Lab, Hardware Lab, DBMS Lab | Lecture Halls: L101-L105" class="w-full p-2.5 bg-slate-950 rounded-xl border border-slate-800 text-slate-400 text-xs">
-                        </div>
-
-                        <div>
-                            <label class="text-slate-300 block mb-1">Assigned Faculty Constraints</label>
-                            <input type="text" readonly value="24 Professors • Max 18 Teaching Hrs/Week" class="w-full p-2.5 bg-slate-950 rounded-xl border border-slate-800 text-slate-400 text-xs">
-                        </div>
-                    </div>
-
-                    <button onclick="runMasterAgentGenerator()" id="run-agent-btn" class="w-full py-4 rounded-xl bg-gradient-brand text-slate-950 font-bold text-sm shadow-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-                        <i data-lucide="cpu" class="w-5 h-5"></i> Execute Agentic Clash-Free Generator
-                    </button>
-                </div>
-
-                <!-- Live Agent Execution Visual Pipeline -->
-                <div class="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                            <i data-lucide="workflow" class="w-5 h-5 text-cyan-400"></i> Agent Constraint Pipeline
-                        </h3>
-                        <span id="agent-status-badge" class="text-xs font-mono text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full">IDLE</span>
-                    </div>
-
-                    <div class="space-y-3 font-mono text-xs">
-                        <div id="step-1" class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                            <span class="text-slate-400">Step 1: Analyzing Multi-Year Room Capacity</span>
-                            <span class="status-text text-slate-500">Waiting...</span>
-                        </div>
-                        <div id="step-2" class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                            <span class="text-slate-400">Step 2: Checking Faculty Hours Overlap</span>
-                            <span class="status-text text-slate-500">Waiting...</span>
-                        </div>
-                        <div id="step-3" class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                            <span class="text-slate-400">Step 3: Resolving 1st - 4th Year Lab Dependencies</span>
-                            <span class="status-text text-slate-500">Waiting...</span>
-                        </div>
-                        <div id="step-4" class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                            <span class="text-slate-400">Step 4: Compiling Final Master Matrix</span>
-                            <span class="status-text text-slate-500">Waiting...</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Master Schedule Grid Display -->
-            <div class="glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
-                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                    <div>
-                        <h3 class="text-2xl font-bold text-white">4-Year Master Schedule Grid</h3>
-                        <p class="text-slate-400 text-xs">Generated by Smart Timetable Agent • Zero Conflict Verified</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold flex items-center gap-1.5">
-                            <i data-lucide="check-circle" class="w-4 h-4"></i> 0 Clashes Found
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Year Filter Tabs -->
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="filterMasterGrid('all')" class="master-tab-btn active px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950">All Batches</button>
-                    <button onclick="filterMasterGrid('1st')" class="master-tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 glass-card">1st Year</button>
-                    <button onclick="filterMasterGrid('2nd')" class="master-tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 glass-card">2nd Year</button>
-                    <button onclick="filterMasterGrid('3rd')" class="master-tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 glass-card">3rd Year</button>
-                    <button onclick="filterMasterGrid('4th')" class="master-tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 glass-card">4th Year</button>
-                </div>
-
-                <!-- Schedule Matrix Table -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left font-mono text-xs border-collapse">
-                        <thead>
-                            <tr class="border-b border-slate-800 text-slate-400">
-                                <th class="p-3">Time Slot</th>
-                                <th class="p-3">1st Year (CS-A)</th>
-                                <th class="p-3">2nd Year (CS-B)</th>
-                                <th class="p-3">3rd Year (CS-A)</th>
-                                <th class="p-3">4th Year (CS-A)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="master-grid-body" class="divide-y divide-slate-800/60">
-                            <!-- Slot 1 -->
-                            <tr class="hover:bg-slate-900/50 transition-colors">
-                                <td class="p-3 text-cyan-400 font-bold">09:00 - 10:00</td>
-                                <td class="p-3 row-1st"><span class="p-2 rounded bg-blue-500/10 text-blue-300 block">Math I (L101) - Dr. Roy</span></td>
-                                <td class="p-3 row-2nd"><span class="p-2 rounded bg-purple-500/10 text-purple-300 block">Data Struct (L102) - Prof. Aneesh</span></td>
-                                <td class="p-3 row-3rd"><span class="p-2 rounded bg-emerald-500/10 text-emerald-300 block">AI Systems (L103) - Dr. Gupta</span></td>
-                                <td class="p-3 row-4th"><span class="p-2 rounded bg-amber-500/10 text-amber-300 block">Project Phase II (Lab 1)</span></td>
-                            </tr>
-                            <!-- Slot 2 -->
-                            <tr class="hover:bg-slate-900/50 transition-colors">
-                                <td class="p-3 text-cyan-400 font-bold">10:00 - 11:00</td>
-                                <td class="p-3 row-1st"><span class="p-2 rounded bg-cyan-500/10 text-cyan-300 block">Physics (L101) - Prof. Mehta</span></td>
-                                <td class="p-3 row-2nd"><span class="p-2 rounded bg-indigo-500/10 text-indigo-300 block">DBMS Lab (DBMS Lab)</span></td>
-                                <td class="p-3 row-3rd"><span class="p-2 rounded bg-rose-500/10 text-rose-300 block">Compiler Des. (L103) - Dr. Sen</span></td>
-                                <td class="p-3 row-4th"><span class="p-2 rounded bg-purple-500/10 text-purple-300 block">Deep Learning (L104)</span></td>
-                            </tr>
-                            <!-- Slot 3 -->
-                            <tr class="hover:bg-slate-900/50 transition-colors">
-                                <td class="p-3 text-cyan-400 font-bold">11:15 - 01:15</td>
-                                <td class="p-3 row-1st"><span class="p-2 rounded bg-amber-500/10 text-amber-300 block">C Prog Lab (Hardware Lab)</span></td>
-                                <td class="p-3 row-2nd"><span class="p-2 rounded bg-blue-500/10 text-blue-300 block">Discrete Math (L102)</span></td>
-                                <td class="p-3 row-3rd"><span class="p-2 rounded bg-cyan-500/10 text-cyan-300 block">Web Architectures (L103)</span></td>
-                                <td class="p-3 row-4th"><span class="p-2 rounded bg-emerald-500/10 text-emerald-300 block">Elective Seminar (Auditorium)</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+        <!-- Interactive Quiz Container -->
+        <div id="quiz-container" class="hidden" style="margin-top: 20px;">
+            <div id="quiz-questions-form"></div>
+            <button onclick="submitQuiz()">Submit Answers</button>
         </div>
-    </section>
 
-    <!-- Section: Agent Architecture Breakdown -->
-    <section id="architecture" class="py-24 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center space-y-4 mb-16">
-                <span class="text-cyan-400 font-mono text-sm tracking-widest uppercase font-semibold">// Under The Hood</span>
-                <h2 class="text-3xl sm:text-5xl font-bold text-white">Dual-Agent Autonomous System Architecture</h2>
-                <div class="w-20 h-1 bg-gradient-brand mx-auto rounded-full"></div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Student Agent Architecture -->
-                <div class="glass-panel p-8 rounded-3xl space-y-4 border border-cyan-500/20">
-                    <div class="flex items-center gap-3">
-                        <div class="p-3 rounded-xl bg-cyan-500/20 text-cyan-400">
-                            <i data-lucide="user-check" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-white">Student Mastery Agent</h3>
-                            <p class="text-xs font-mono text-cyan-400">Personalized Knowledge & Schedule Optimization</p>
-                        </div>
-                    </div>
-                    <ul class="space-y-3 text-xs text-slate-300 font-mono pt-2">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> PDF Parsing & Topic Extraction NLP Engine</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Adaptive Quiz Generation Pipeline</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Weak Area Profiling & Score Analytics</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-400"></i> Dynamic Schedule Injection & Push Alert Trigger</li>
-                    </ul>
-                </div>
-
-                <!-- Professor Agent Architecture -->
-                <div class="glass-panel p-8 rounded-3xl space-y-4 border border-purple-500/20">
-                    <div class="flex items-center gap-3">
-                        <div class="p-3 rounded-xl bg-purple-500/20 text-purple-400">
-                            <i data-lucide="building" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-white">Institutional Coordinator Agent</h3>
-                            <p class="text-xs font-mono text-purple-400">Constraint Satisfaction & Clash Elimination</p>
-                        </div>
-                    </div>
-                    <ul class="space-y-3 text-xs text-slate-300 font-mono pt-2">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> Multi-Year Matrix Constraint Solver</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> Zero-Overlap Facility & Lab Allocator</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> Faculty Workload Balancing Heuristic</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> Automated Master Export (PDF/iCal)</li>
-                    </ul>
-                </div>
-            </div>
+        <!-- Quiz Results Container -->
+        <div id="quiz-results-container" class="hidden" style="margin-top: 20px;">
+            <div id="score-banner" class="result-banner"></div>
+            <div id="quiz-review-list"></div>
+            <button onclick="resetQuiz()" class="secondary-btn">Upload Another PDF / Retake</button>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="py-12 border-t border-slate-800 bg-slate-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-3 font-mono text-lg font-bold">
-                <div class="p-1.5 bg-gradient-brand rounded-lg text-slate-950">
-                    <i data-lucide="bot" class="w-4 h-4"></i>
-                </div>
-                <span class="text-white">Smart<span class="text-cyan-400">TimeTable</span></span>
-            </div>
-            <p class="text-slate-500 text-xs text-center">
-                © 2026 Smart TimeTable Agentic AI Project. Built for Next-Gen Academic Excellence.
-            </p>
-            <a href="#" class="p-3 rounded-xl glass-card text-slate-400 hover:text-cyan-400 transition-colors" title="Back to top">
-                <i data-lucide="arrow-up" class="w-5 h-5"></i>
-            </a>
-        </div>
-    </footer>
+        <button class="secondary-btn" onclick="backToDashboard()" style="margin-top: 15px;">Back to Dashboard</button>
+    </div>
 
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+    <!-- OPTION 2: TIMETABLE SECTION -->
+    <div id="timetable-section" class="hidden">
+        <h2>📅 Smart Timetable Generator</h2>
+        <p>Timetable generation feature implementation in progress...</p>
+        <button class="secondary-btn" onclick="backToDashboard()">Back to Dashboard</button>
+    </div>
+</div>
 
-        // 1. Dynamic Typing Pitch Header
-        const pitchPhrases = [
-            "Eliminate 100% of University Schedule Clashes",
-            "Auto-Detect Student Weak Syllabus Topics",
-            "Generate Adaptive PDF Quizzes in Seconds",
-            "Harmonize 1st to 4th Year Institutional Labs"
-        ];
-        let pitchIdx = 0;
-        let charIdx = 0;
-        let isDeletingPitch = false;
-        const typedPitchElement = document.getElementById('typed-pitch');
+<script>
+    let currentQuizData = [];
 
-        function typePitchLoop() {
-            const current = pitchPhrases[pitchIdx];
-            
-            if (isDeletingPitch) {
-                typedPitchElement.textContent = current.substring(0, charIdx - 1);
-                charIdx--;
+    function toggleAuthMode() {
+        document.getElementById('login-form').classList.toggle('hidden');
+        document.getElementById('register-form').classList.toggle('hidden');
+        document.getElementById('login-msg').textContent = '';
+        document.getElementById('reg-msg').textContent = '';
+    }
+
+    async function handleLogin() {
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const msgEl = document.getElementById('login-msg');
+
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
             } else {
-                typedPitchElement.textContent = current.substring(0, charIdx + 1);
-                charIdx++;
+                msgEl.textContent = data.message;
             }
+        } catch (err) {
+            msgEl.textContent = "Server error during login.";
+        }
+    }
 
-            let speed = isDeletingPitch ? 30 : 70;
+    async function handleRegister() {
+        const username = document.getElementById('reg-username').value;
+        const password = document.getElementById('reg-password').value;
+        const msgEl = document.getElementById('reg-msg');
 
-            if (!isDeletingPitch && charIdx === current.length) {
-                speed = 2200;
-                isDeletingPitch = true;
-            } else if (isDeletingPitch && charIdx === 0) {
-                isDeletingPitch = false;
-                pitchIdx = (pitchIdx + 1) % pitchPhrases.length;
-                speed = 400;
+        try {
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            msgEl.className = data.success ? "success" : "error";
+            msgEl.textContent = data.message;
+            if (data.success) {
+                setTimeout(toggleAuthMode, 1500); // switch back to login after success
             }
+        } catch (err) {
+            msgEl.className = "error";
+            msgEl.style.color = "red";
+            msgEl.textContent = "Server error during registration.";
+        }
+    }
 
-            setTimeout(typePitchLoop, speed);
+    function handleLogout() {
+        document.getElementById('dashboard-section').classList.add('hidden');
+        document.getElementById('auth-section').classList.remove('hidden');
+        document.getElementById('login-username').value = '';
+        document.getElementById('login-password').value = '';
+    }
+
+    function selectOption(optionNumber) {
+        document.getElementById('dashboard-section').classList.add('hidden');
+        if (optionNumber === 1) {
+            document.getElementById('quiz-section').classList.remove('hidden');
+        } else if (optionNumber === 2) {
+            document.getElementById('timetable-section').classList.remove('hidden');
+        }
+    }
+
+    function backToDashboard() {
+        document.getElementById('quiz-section').classList.add('hidden');
+        document.getElementById('timetable-section').classList.add('hidden');
+        document.getElementById('dashboard-section').classList.remove('hidden');
+        resetQuiz();
+    }
+
+    async function generateQuiz() {
+        const fileInput = document.getElementById('pdfFile');
+        const loadingEl = document.getElementById('loading');
+        const uploadContainer = document.getElementById('quiz-upload-container');
+        const quizContainer = document.getElementById('quiz-container');
+
+        if (fileInput.files.length === 0) {
+            alert("Please select a PDF file first!");
+            return;
         }
 
-        // Mobile Menu Navigation
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+        const formData = new FormData();
+        formData.append('pdf', fileInput.files[0]);
+
+        loadingEl.classList.remove('hidden');
+
+        try {
+            const response = await fetch('/api/quiz', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            loadingEl.classList.add('hidden');
+            if (data.success) {
+                currentQuizData = data.quiz;
+                renderQuizQuestions(currentQuizData);
+                uploadContainer.classList.add('hidden');
+                quizContainer.classList.remove('hidden');
+            } else {
+                alert("Error: " + data.message);
+            }
+        } catch (err) {
+            loadingEl.classList.add('hidden');
+            alert("Failed to communicate with the server.");
+        }
+    }
+
+    function renderQuizQuestions(questions) {
+        const formContainer = document.getElementById('quiz-questions-form');
+        formContainer.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                // Extract option letter (e.g., 'A', 'B', 'C', 'D' from option text or prefix)
+                const optLetter = opt.charAt(0);
+                optionsHtml += `
+                    <li>
+                        <label style="font-weight: normal; cursor: pointer;">
+                            <input type="radio" name="question_${index}" value="${optLetter}"> ${opt}
+                        </label>
+                    </li>
+                `;
+            });
+
+            formContainer.innerHTML += `
+                <div class="question-box">
+                    <strong>Q${index + 1}: ${q.question}</strong>
+                    <ul class="options-list">${optionsHtml}</ul>
+                </div>
+            `;
+        });
+    }
+
+    function submitQuiz() {
+        let score = 0;
+        let reviewHtml = '';
+
+        currentQuizData.forEach((q, index) => {
+            const selectedOption = document.querySelector(`input[name="question_${index}"]:checked`);
+            const userChoice = selectedOption ? selectedOption.value : null;
+            const isCorrect = userChoice === q.answer;
+
+            if (isCorrect) score++;
+
+            let optionsReviewHtml = '';
+            q.options.forEach(opt => {
+                const optLetter = opt.charAt(0);
+                let style = '';
+                if (optLetter === q.answer) {
+                    style = 'color: #28a745; font-weight: bold;';
+                } else if (optLetter === userChoice && !isCorrect) {
+                    style = 'color: #dc3545; text-decoration: line-through;';
+                }
+                optionsReviewHtml += `<li style="${style}">${opt}</li>`;
+            });
+
+            reviewHtml += `
+                <div class="question-box">
+                    <strong>Q${index + 1}: ${q.question}</strong>
+                    <p>Your choice: <b>${userChoice ? userChoice : 'None'}</b> | Correct Answer: <span class="correct">${q.answer}</span></p>
+                    <ul class="options-list">${optionsReviewHtml}</ul>
+                </div>
+            `;
         });
 
-        // 2. Student Tab Switcher
-        function switchStudentTab(tab) {
-            const quizTab = document.getElementById('student-tab-quiz');
-            const scheduleTab = document.getElementById('student-tab-schedule');
-            const btnQuiz = document.getElementById('tab-btn-quiz');
-            const btnSchedule = document.getElementById('tab-btn-schedule');
+        document.getElementById('score-banner').textContent = `Your Score: ${score} / ${currentQuizData.length}`;
+        document.getElementById('quiz-review-list').innerHTML = reviewHtml;
 
-            if (tab === 'quiz') {
-                quizTab.classList.remove('hidden');
-                scheduleTab.classList.add('hidden');
-                btnQuiz.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20';
-                btnSchedule.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 glass-card hover:text-white';
-            } else {
-                quizTab.classList.add('hidden');
-                scheduleTab.classList.remove('hidden');
-                btnSchedule.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20';
-                btnQuiz.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 glass-card hover:text-white';
-            }
-        }
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('quiz-results-container').classList.remove('hidden');
+    }
 
-        // 3. Quiz & PDF Upload Simulation
-        function simulatePdfUpload() {
-            const pdfStatus = document.getElementById('pdf-status');
-            pdfStatus.classList.remove('hidden');
-            generateNewQuiz();
-        }
+    function resetQuiz() {
+        document.getElementById('pdfFile').value = '';
+        document.getElementById('quiz-upload-container').classList.remove('hidden');
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('quiz-results-container').classList.add('hidden');
+        currentQuizData = [];
+    }
+</script>
 
-        const questionsList = [
-            {
-                q: "Question 1: What is the worst-case time complexity of Dijkstra's algorithm implemented with a Fibonacci Heap?",
-                options: ["A) O(V^2)", "B) O(E + V log V)  (Correct)", "C) O(V log E)"],
-                correctIdx: 1
-            },
-            {
-                q: "Question 2: In Dynamic Programming, what property allows a problem to be broken down into smaller overlapping subproblems?",
-                options: ["A) Optimal Substructure (Correct)", "B) Greedy Choice Property", "C) Heuristic Search"],
-                correctIdx: 0
-            }
-        ];
-        let currentQ = 0;
-
-        function generateNewQuiz() {
-            currentQ = (currentQ + 1) % questionsList.length;
-            const data = questionsList[currentQ];
-            document.getElementById('quiz-question').textContent = data.q;
-            const optionsDiv = document.getElementById('quiz-options');
-            optionsDiv.innerHTML = data.options.map((opt, i) => `
-                <button onclick="answerQuiz(${i === data.correctIdx}, this)" class="w-full text-left p-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs transition-colors border border-slate-800">
-                    ${opt}
-                </button>
-            `).join('');
-            
-            const fb = document.getElementById('quiz-feedback');
-            fb.classList.add('hidden');
-        }
-
-        function answerQuiz(isCorrect, btn) {
-            const fb = document.getElementById('quiz-feedback');
-            fb.classList.remove('hidden');
-            if (isCorrect) {
-                fb.className = "text-xs font-mono p-3 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-                fb.textContent = "✓ Correct! High proficiency recorded in this subtopic.";
-            } else {
-                fb.className = "text-xs font-mono p-3 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/30";
-                fb.textContent = "✗ Incorrect. Agent registered this module as a WEAK TOPIC requiring targeted study block injection.";
-            }
-        }
-
-        function injectStudyBlock() {
-            switchStudentTab('schedule');
-            const injected = document.getElementById('injected-block');
-            injected.classList.remove('hidden');
-            injected.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function generatePersonalSchedule() {
-            alert("Agent generated a brand-new daily timetable tailored to your Evening Focus hours and 4-hour study target!");
-        }
-
-        // 4. Professor Agent Pipeline Simulation
-        function runMasterAgentGenerator() {
-            const btn = document.getElementById('run-agent-btn');
-            const badge = document.getElementById('agent-status-badge');
-            btn.disabled = true;
-            badge.textContent = "EXECUTING...";
-            badge.className = "text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-full border border-cyan-500/30 animate-pulse";
-
-            const steps = ['step-1', 'step-2', 'step-3', 'step-4'];
-            
-            steps.forEach((stepId, index) => {
-                setTimeout(() => {
-                    const el = document.getElementById(stepId);
-                    const txt = el.querySelector('.status-text');
-                    txt.textContent = "✓ Verified";
-                    txt.className = "status-text text-emerald-400 font-bold";
-                    
-                    if (index === steps.length - 1) {
-                        badge.textContent = "MASTER MATRIX READY";
-                        badge.className = "text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30";
-                        btn.disabled = false;
-                    }
-                }, (index + 1) * 600);
-            });
-        }
-
-        function filterMasterGrid(year) {
-            const buttons = document.querySelectorAll('.master-tab-btn');
-            buttons.forEach(b => {
-                b.className = "master-tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 glass-card";
-            });
-            event.currentTarget.className = "master-tab-btn active px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950";
-
-            const rows1 = document.querySelectorAll('.row-1st');
-            const rows2 = document.querySelectorAll('.row-2nd');
-            const rows3 = document.querySelectorAll('.row-3rd');
-            const rows4 = document.querySelectorAll('.row-4th');
-
-            if (year === 'all') {
-                [...rows1, ...rows2, ...rows3, ...rows4].forEach(el => el.style.opacity = '1');
-            } else {
-                [...rows1, ...rows2, ...rows3, ...rows4].forEach(el => el.style.opacity = '0.3');
-                document.querySelectorAll(`.row-${year}`).forEach(el => el.style.opacity = '1');
-            }
-        }
-
-        window.onload = function() {
-            typePitchLoop();
-        };
-    </script>
 </body>
 </html>
