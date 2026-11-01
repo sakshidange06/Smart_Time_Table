@@ -3,4 +3,4 @@ langchain-groq
 python-dotenv
 Flask
 gunicorn
-google-auth
+google-auth-oauthlib
