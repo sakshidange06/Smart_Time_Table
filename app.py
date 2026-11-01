@@ -197,6 +197,44 @@ def _clean(text):
     return re.sub(r"\*\*|__|`", "", text).strip()
 
 
+def classify_activity(activity):
+    """Guess what kind of activity a row is, so reminders can be friendly."""
+    a = activity.lower()
+
+    if any(w in a for w in ("wake", "get up")):
+        return "wake"
+    if any(w in a for w in ("sleep", "bedtime", "go to bed")):
+        return "sleep"
+    if any(w in a for w in ("breakfast", "lunch", "dinner", "snack", "meal")):
+        return "meal"
+    if "break" in a:
+        return "break"
+    if any(w in a for w in ("study", "revision", "revise", "assignment", "homework")):
+        return "study"
+    if any(w in a for w in ("travel", "commute", "bus", "train")):
+        return "travel"
+    return "other"
+
+
+def events_for_client(events):
+    """Shape the parsed events for the browser notification scheduler."""
+    def label(minutes):
+        minutes %= 24 * 60
+        return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+    return [
+        {
+            "start": e["start"] % (24 * 60),
+            "start_label": label(e["start"]),
+            "end_label": label(e["end"]),
+            "activity": e["activity"],
+            "purpose": e["purpose"],
+            "category": e["category"],
+        }
+        for e in events
+    ]
+
+
 def parse_timetable_rows(markdown_text):
     events = []
 
@@ -227,9 +265,16 @@ def parse_timetable_rows(markdown_text):
             "end": time_range[1],
             "activity": activity,
             "purpose": purpose,
+            "category": classify_activity(activity),
         })
 
     return events
+
+
+def build_reminder_offsets(minutes):
+    """Reminder times in minutes before the event. Always includes 'at start'
+    (for example 10 -> [10, 0]: a notification 10 minutes before and at the start)."""
+    return [0] if minutes == 0 else [minutes, 0]
 
 
 def read_calendar_request():
@@ -250,7 +295,14 @@ def read_calendar_request():
 
     timezone = (data.get("timezone") or "UTC").strip()
 
-    return events, day, repeat_days, timezone
+    # How many minutes BEFORE each activity the notification should appear.
+    # A second notification always appears exactly at the start time.
+    try:
+        reminder_minutes = max(0, min(int(data.get("reminder_minutes", 10)), 1440))
+    except (TypeError, ValueError):
+        reminder_minutes = 10
+
+    return events, day, repeat_days, timezone, reminder_minutes
 
 
 # =========================================================
@@ -589,7 +641,13 @@ Generate the timetable now.
 
         print("TIMETABLE GENERATED SUCCESSFULLY, length:", len(timetable))
 
-        return jsonify({"success": True, "timetable": timetable})
+        events = parse_timetable_rows(timetable)
+
+        return jsonify({
+            "success": True,
+            "timetable": timetable,
+            "events": events_for_client(events),
+        })
 
     except Exception as e:
         print("\n==============================")
@@ -671,7 +729,7 @@ def google_disconnect():
 
 @app.route("/api/calendar/add", methods=["POST"])
 def add_to_google_calendar():
-    events, day, repeat_days, timezone = read_calendar_request()
+    events, day, repeat_days, timezone, reminder_minutes = read_calendar_request()
 
     if not events:
         return jsonify({
@@ -689,6 +747,7 @@ def add_to_google_calendar():
 
     try:
         service = build("calendar", "v3", credentials=creds, cache_discovery=False)
+        reminder_offsets = build_reminder_offsets(reminder_minutes)
 
         created = 0
         for ev in events:
@@ -700,6 +759,13 @@ def add_to_google_calendar():
                 "description": ev["purpose"],
                 "start": {"dateTime": start_dt.strftime("%Y-%m-%dT%H:%M:%S"), "timeZone": timezone},
                 "end": {"dateTime": end_dt.strftime("%Y-%m-%dT%H:%M:%S"), "timeZone": timezone},
+                # Notifications on phone / desktop Google Calendar
+                "reminders": {
+                    "useDefault": False,
+                    "overrides": [
+                        {"method": "popup", "minutes": m} for m in reminder_offsets
+                    ],
+                },
             }
 
             if repeat_days > 1:
@@ -741,7 +807,7 @@ def _ics_escape(text):
 
 @app.route("/api/calendar/ics", methods=["POST"])
 def download_ics():
-    events, day, repeat_days, _timezone = read_calendar_request()
+    events, day, repeat_days, _timezone, reminder_minutes = read_calendar_request()
 
     if not events:
         return jsonify({
@@ -773,6 +839,17 @@ def download_ics():
         ]
         if repeat_days > 1:
             lines.append(f"RRULE:FREQ=DAILY;COUNT={repeat_days}")
+
+        for m in build_reminder_offsets(reminder_minutes):
+            trigger = "PT0S" if m == 0 else f"-PT{m}M"
+            lines += [
+                "BEGIN:VALARM",
+                "ACTION:DISPLAY",
+                f"DESCRIPTION:{_ics_escape(ev['activity'])}",
+                f"TRIGGER:{trigger}",
+                "END:VALARM",
+            ]
+
         lines.append("END:VEVENT")
 
     lines.append("END:VCALENDAR")
@@ -782,6 +859,26 @@ def download_ics():
         mimetype="text/calendar",
         headers={"Content-Disposition": "attachment; filename=timetable.ics"},
     )
+
+
+# =========================================================
+# EVENTS FOR BROWSER NOTIFICATIONS
+# =========================================================
+
+@app.route("/api/timetable/events", methods=["POST"])
+def timetable_events():
+    """Return each timed row (start time, activity, category) so the page
+    can show a notification at wake-up, study, meal and sleep times."""
+    data = request.json or {}
+    events = parse_timetable_rows(data.get("timetable", ""))
+
+    if not events:
+        return jsonify({
+            "success": False,
+            "message": "No timed rows were found in the timetable."
+        }), 400
+
+    return jsonify({"success": True, "events": events_for_client(events)})
 
 
 # =========================================================
