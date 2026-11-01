@@ -1,3 +1,5 @@
 pypdf
 langchain-groq
 python-dotenv
+Flask
+gunicorn
