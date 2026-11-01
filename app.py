@@ -1,14 +1,26 @@
 import os
+import re
 import csv
 import json
+import uuid
+from datetime import datetime, timedelta
 from pathlib import Path
 
-from flask import Flask, request, jsonify, render_template
+from flask import (
+    Flask, request, jsonify, render_template,
+    session, redirect, url_for, Response
+)
 from werkzeug.utils import secure_filename
 from pypdf import PdfReader
 from langchain_core.prompts import ChatPromptTemplate
 
-from llm import llm
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request as GoogleRequest
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+
+from llm import llm  # llm.py also loads the .env file
 
 
 # =========================================================
@@ -17,11 +29,25 @@ from llm import llm
 
 app = Flask(__name__, template_folder=".", static_folder=".")
 
+# Needed for login sessions (Google tokens are kept in the session).
+# Put FLASK_SECRET_KEY=some-long-random-text in your .env file.
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
+
 USER_CSV = "users.csv"
 UPLOAD_FOLDER = "uploads"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# ---------------- Google Calendar settings ----------------
+
+GOOGLE_CLIENT_SECRETS = "credentials.json"  # downloaded from Google Cloud Console
+GOOGLE_SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
+
+# Local development runs on http://, so allow it.
+# Remove these two lines if you deploy with https.
+os.environ.setdefault("OAUTHLIB_INSECURE_TRANSPORT", "1")
+os.environ.setdefault("OAUTHLIB_RELAX_TOKEN_SCOPE", "1")
 
 
 # =========================================================
@@ -116,6 +142,164 @@ def save_uploaded_pdf(file):
     pdf_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
     file.save(pdf_path)
     return pdf_path
+
+
+# =========================================================
+# TIMETABLE PARSER (markdown table -> list of events)
+# =========================================================
+
+TIME_RE = re.compile(r"(\d{1,2})(?:[:.](\d{2}))?\s*([AaPp]\.?[Mm]\.?)?")
+RANGE_SPLIT_RE = re.compile(r"\s*(?:[-\u2013\u2014]|\bto\b)\s*", re.IGNORECASE)
+
+
+def _to_minutes(hour, minute, meridiem):
+    if meridiem:
+        is_pm = meridiem[0].lower() == "p"
+        hour = hour % 12 + (12 if is_pm else 0)
+    return hour * 60 + minute
+
+
+def parse_time_range(cell):
+    """'06:00 - 06:30', '6:00 AM – 7:15 AM', '6:00-6:30 AM' -> (start_min, end_min)"""
+    parts = RANGE_SPLIT_RE.split(cell.strip(), maxsplit=1)
+    if len(parts) != 2:
+        return None
+
+    a = TIME_RE.search(parts[0])
+    b = TIME_RE.search(parts[1])
+    if not a or not b:
+        return None
+
+    ha, ma, mera = int(a.group(1)), int(a.group(2) or 0), a.group(3)
+    hb, mb, merb = int(b.group(1)), int(b.group(2) or 0), b.group(3)
+
+    if ha > 24 or hb > 24 or ma > 59 or mb > 59:
+        return None
+
+    if mera is None and merb:
+        # "6:00 - 6:30 AM": start shares the end's AM/PM unless that makes it later
+        end = _to_minutes(hb, mb, merb)
+        start = _to_minutes(ha, ma, merb)
+        if start > end:
+            other = "a" if merb[0].lower() == "p" else "p"
+            start = _to_minutes(ha, ma, other)
+    else:
+        start = _to_minutes(ha, ma, mera)
+        end = _to_minutes(hb, mb, merb)
+
+    if end <= start:
+        end += 24 * 60  # crosses midnight (for example, sleep)
+
+    return start, end
+
+
+def _clean(text):
+    return re.sub(r"\*\*|__|`", "", text).strip()
+
+
+def parse_timetable_rows(markdown_text):
+    events = []
+
+    for line in markdown_text.splitlines():
+        line = line.strip()
+        if not line.startswith("|"):
+            continue
+
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if len(cells) < 2:
+            continue
+
+        # Skip the |-----|-----| separator row
+        if all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c):
+            continue
+
+        time_range = parse_time_range(cells[0])
+        if not time_range:
+            continue  # header row or a row without a time
+
+        activity = _clean(cells[1])
+        purpose = _clean(cells[2]) if len(cells) > 2 else ""
+        if not activity:
+            continue
+
+        events.append({
+            "start": time_range[0],
+            "end": time_range[1],
+            "activity": activity,
+            "purpose": purpose,
+        })
+
+    return events
+
+
+def read_calendar_request():
+    """Read and validate the JSON sent by the browser."""
+    data = request.json or {}
+
+    events = parse_timetable_rows(data.get("timetable", ""))
+
+    try:
+        day = datetime.strptime(data.get("date", ""), "%Y-%m-%d")
+    except ValueError:
+        day = datetime.combine(datetime.today().date(), datetime.min.time())
+
+    try:
+        repeat_days = max(1, min(int(data.get("repeat_days", 1)), 365))
+    except (TypeError, ValueError):
+        repeat_days = 1
+
+    timezone = (data.get("timezone") or "UTC").strip()
+
+    return events, day, repeat_days, timezone
+
+
+# =========================================================
+# GOOGLE CALENDAR HELPERS
+# =========================================================
+
+def make_flow(state=None):
+    return Flow.from_client_secrets_file(
+        GOOGLE_CLIENT_SECRETS,
+        scopes=GOOGLE_SCOPES,
+        state=state,
+        redirect_uri=url_for("oauth2callback", _external=True),
+    )
+
+
+def get_google_credentials():
+    raw = session.get("google_creds")
+    if not raw:
+        return None
+
+    try:
+        creds = Credentials.from_authorized_user_info(json.loads(raw), GOOGLE_SCOPES)
+
+        if creds.expired and creds.refresh_token:
+            creds.refresh(GoogleRequest())
+            session["google_creds"] = creds.to_json()
+
+        return creds if creds.valid else None
+
+    except Exception as e:
+        print("GOOGLE CREDENTIAL ERROR:", repr(e))
+        session.pop("google_creds", None)
+        return None
+
+
+def popup_page(message, ok):
+    """Small page shown in the login popup. It tells the main page and closes."""
+    status = "google-connected" if ok else "google-failed"
+    return f"""<!DOCTYPE html>
+<html><body style="font-family: sans-serif; text-align: center; padding: 40px;">
+<h3>{message}</h3>
+<p>You can close this window.</p>
+<script>
+  if (window.opener) {{
+    window.opener.postMessage("{status}", window.location.origin);
+  }}
+  setTimeout(function () {{ window.close(); }}, 1200);
+</script>
+</body></html>"""
 
 
 # =========================================================
@@ -330,6 +514,8 @@ Rules:
 11. Give priority to difficult subjects.
 12. Keep some personal/relaxation time.
 13. Protect sleep time.
+14. Write every time as a range like
+    06:00 - 06:30 (24-hour format).
 
 Return ONLY this format:
 
@@ -414,6 +600,188 @@ Generate the timetable now.
             "success": False,
             "message": f"Timetable generation failed: {str(e)}"
         }), 500
+
+
+# =========================================================
+# GOOGLE CALENDAR: CONNECT
+# =========================================================
+
+@app.route("/google/login")
+def google_login():
+    if not os.path.exists(GOOGLE_CLIENT_SECRETS):
+        return (
+            "credentials.json was not found. Download it from Google Cloud "
+            "Console and place it next to app.py.",
+            500,
+        )
+
+    flow = make_flow()
+    auth_url, state = flow.authorization_url(
+        access_type="offline",
+        include_granted_scopes="true",
+        prompt="consent",
+    )
+
+    session["google_state"] = state
+    session["google_code_verifier"] = getattr(flow, "code_verifier", None)
+
+    return redirect(auth_url)
+
+
+@app.route("/oauth2callback")
+def oauth2callback():
+    if request.args.get("error"):
+        return popup_page("Google sign-in was cancelled.", False)
+
+    state = session.get("google_state")
+    if not state:
+        return popup_page("Session expired. Please try connecting again.", False)
+
+    try:
+        flow = make_flow(state=state)
+
+        verifier = session.get("google_code_verifier")
+        if verifier:
+            flow.code_verifier = verifier
+
+        flow.fetch_token(authorization_response=request.url)
+        session["google_creds"] = flow.credentials.to_json()
+
+        return popup_page("Google Calendar connected!", True)
+
+    except Exception as e:
+        print("GOOGLE OAUTH ERROR:", repr(e))
+        return popup_page("Could not connect Google Calendar.", False)
+
+
+@app.route("/api/google/status")
+def google_status():
+    return jsonify({"connected": get_google_credentials() is not None})
+
+
+@app.route("/api/google/disconnect", methods=["POST"])
+def google_disconnect():
+    session.pop("google_creds", None)
+    return jsonify({"success": True})
+
+
+# =========================================================
+# GOOGLE CALENDAR: ADD EVENTS
+# =========================================================
+
+@app.route("/api/calendar/add", methods=["POST"])
+def add_to_google_calendar():
+    events, day, repeat_days, timezone = read_calendar_request()
+
+    if not events:
+        return jsonify({
+            "success": False,
+            "message": "No timed rows were found in the timetable."
+        }), 400
+
+    creds = get_google_credentials()
+    if not creds:
+        return jsonify({
+            "success": False,
+            "needs_auth": True,
+            "message": "Please connect your Google account first."
+        }), 401
+
+    try:
+        service = build("calendar", "v3", credentials=creds, cache_discovery=False)
+
+        created = 0
+        for ev in events:
+            start_dt = day + timedelta(minutes=ev["start"])
+            end_dt = day + timedelta(minutes=ev["end"])
+
+            body = {
+                "summary": ev["activity"],
+                "description": ev["purpose"],
+                "start": {"dateTime": start_dt.strftime("%Y-%m-%dT%H:%M:%S"), "timeZone": timezone},
+                "end": {"dateTime": end_dt.strftime("%Y-%m-%dT%H:%M:%S"), "timeZone": timezone},
+            }
+
+            if repeat_days > 1:
+                body["recurrence"] = [f"RRULE:FREQ=DAILY;COUNT={repeat_days}"]
+
+            service.events().insert(calendarId="primary", body=body).execute()
+            created += 1
+
+        return jsonify({
+            "success": True,
+            "created": created,
+            "link": f"https://calendar.google.com/calendar/u/0/r/day/{day.year}/{day.month}/{day.day}",
+        })
+
+    except HttpError as e:
+        print("GOOGLE CALENDAR API ERROR:", repr(e))
+        return jsonify({
+            "success": False,
+            "message": f"Google Calendar error: {e.reason if hasattr(e, 'reason') else e}"
+        }), 500
+
+    except Exception as e:
+        print("CALENDAR ERROR:", repr(e))
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# =========================================================
+# CALENDAR FILE (.ics) - works without any Google setup
+# =========================================================
+
+def _ics_escape(text):
+    return (
+        text.replace("\\", "\\\\")
+        .replace(";", "\\;")
+        .replace(",", "\\,")
+        .replace("\n", "\\n")
+    )
+
+
+@app.route("/api/calendar/ics", methods=["POST"])
+def download_ics():
+    events, day, repeat_days, _timezone = read_calendar_request()
+
+    if not events:
+        return jsonify({
+            "success": False,
+            "message": "No timed rows were found in the timetable."
+        }), 400
+
+    stamp = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+
+    lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Smart Timetable AI//EN",
+        "CALSCALE:GREGORIAN",
+    ]
+
+    for ev in events:
+        start_dt = day + timedelta(minutes=ev["start"])
+        end_dt = day + timedelta(minutes=ev["end"])
+
+        lines += [
+            "BEGIN:VEVENT",
+            f"UID:{uuid.uuid4()}@smart-timetable",
+            f"DTSTAMP:{stamp}",
+            f"DTSTART:{start_dt.strftime('%Y%m%dT%H%M%S')}",
+            f"DTEND:{end_dt.strftime('%Y%m%dT%H%M%S')}",
+            f"SUMMARY:{_ics_escape(ev['activity'])}",
+            f"DESCRIPTION:{_ics_escape(ev['purpose'])}",
+        ]
+        if repeat_days > 1:
+            lines.append(f"RRULE:FREQ=DAILY;COUNT={repeat_days}")
+        lines.append("END:VEVENT")
+
+    lines.append("END:VCALENDAR")
+
+    return Response(
+        "\r\n".join(lines) + "\r\n",
+        mimetype="text/calendar",
+        headers={"Content-Disposition": "attachment; filename=timetable.ics"},
+    )
 
 
 # =========================================================
