@@ -4,18 +4,28 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 
-# Always load the .env file that sits next to this file,
-# no matter which folder you start the app from.
+# Local computer: load the .env file that sits next to this file.
+# Render: there is no .env file, so this does nothing and the key comes
+# from Render's Environment settings instead.
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
-# Read the key and clean accidental spaces or quotes
-groq_api_key = (os.getenv("GROQ_API_KEY") or "").strip().strip('"').strip("'")
+
+def _clean_key(value):
+    """Remove accidental spaces, quotes and a pasted 'GROQ_API_KEY=' prefix."""
+    value = (value or "").strip()
+    if value.upper().startswith("GROQ_API_KEY="):
+        value = value.split("=", 1)[1]
+    return value.strip().strip('"').strip("'").strip()
+
+
+groq_api_key = _clean_key(os.getenv("GROQ_API_KEY"))
 
 if not groq_api_key:
     raise ValueError(
-        "GROQ_API_KEY is missing. Add this line to your .env file: "
-        "GROQ_API_KEY=your_key_here"
+        "GROQ_API_KEY is missing. "
+        "Locally: add GROQ_API_KEY=your_key to the .env file. "
+        "On Render: add GROQ_API_KEY under Environment settings."
     )
 
 llm = ChatGroq(
