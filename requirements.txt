@@ -4,3 +4,4 @@ python-dotenv
 Flask
 gunicorn
 google-auth-oauthlib
+google-api-python-client
