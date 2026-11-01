@@ -3,6 +3,7 @@ import re
 import csv
 import json
 import uuid
+import traceback
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from flask import (
     session, redirect, url_for, Response
 )
 from werkzeug.utils import secure_filename
+from werkzeug.middleware.proxy_fix import ProxyFix
 from pypdf import PdfReader
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -29,6 +31,9 @@ from llm import llm  # llm.py also loads the .env file
 
 app = Flask(__name__, template_folder=".", static_folder=".")
 
+# Render sits behind a proxy: trust its https/host headers
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
 # Needed for login sessions (Google tokens are kept in the session).
 # Put FLASK_SECRET_KEY=some-long-random-text in your .env file.
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
@@ -41,13 +46,38 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # ---------------- Google Calendar settings ----------------
 
-GOOGLE_CLIENT_SECRETS = "credentials.json"  # downloaded from Google Cloud Console
+# On Render, upload credentials.json as a Secret File (it appears in /etc/secrets).
+GOOGLE_CLIENT_SECRETS = (
+    "/etc/secrets/credentials.json"
+    if os.path.exists("/etc/secrets/credentials.json")
+    else "credentials.json"
+)
 GOOGLE_SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
 
 # Local development runs on http://, so allow it.
 # Remove these two lines if you deploy with https.
-os.environ.setdefault("OAUTHLIB_INSECURE_TRANSPORT", "1")
+if not os.getenv("RENDER"):
+    os.environ.setdefault("OAUTHLIB_INSECURE_TRANSPORT", "1")
 os.environ.setdefault("OAUTHLIB_RELAX_TOKEN_SCOPE", "1")
+
+
+@app.errorhandler(Exception)
+def handle_unexpected_error(e):
+    """Return JSON for API calls instead of an HTML error page."""
+    from werkzeug.exceptions import HTTPException
+
+    if isinstance(e, HTTPException):
+        return e
+
+    traceback.print_exc()  # full error appears in the terminal
+
+    if request.path.startswith("/api/"):
+        return jsonify({
+            "success": False,
+            "message": f"Server error: {e}"
+        }), 500
+
+    return "Internal server error", 500
 
 
 # =========================================================
@@ -55,8 +85,8 @@ os.environ.setdefault("OAUTHLIB_RELAX_TOKEN_SCOPE", "1")
 # =========================================================
 
 def init_user_csv():
-    if not os.path.exists(USER_CSV):
-        with open(USER_CSV, mode="w", newline="") as f:
+    if not os.path.exists(USER_CSV) or os.path.getsize(USER_CSV) == 0:
+        with open(USER_CSV, mode="w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(["username", "password"])
             writer.writerow(["admin", "password123"])
@@ -65,27 +95,41 @@ def init_user_csv():
 init_user_csv()
 
 
-def verify_credentials(username, password):
-    if not os.path.exists(USER_CSV):
-        init_user_csv()
+def read_users():
+    """Return a list of (username, password).
+    Tolerates a BOM (Excel), blank lines and a missing header."""
+    init_user_csv()
 
-    with open(USER_CSV, mode="r", newline="") as f:
-        for row in csv.DictReader(f):
-            if row["username"] == username and row["password"] == password:
-                return True
-    return False
+    users = []
+    with open(USER_CSV, mode="r", newline="", encoding="utf-8-sig") as f:
+        for row in csv.reader(f):
+            if len(row) < 2:
+                continue
+            user, pwd = row[0].strip(), row[1].strip()
+            if user.lower() == "username" and pwd.lower() == "password":
+                continue  # header row
+            users.append((user, pwd))
+    return users
+
+
+def verify_credentials(username, password):
+    return any(u == username and p == password for u, p in read_users())
 
 
 def register_new_user(username, password):
-    if not os.path.exists(USER_CSV):
-        init_user_csv()
+    if any(u == username for u, _ in read_users()):
+        return False, "Username already exists. Please choose another."
 
-    with open(USER_CSV, mode="r", newline="") as f:
-        for row in csv.DictReader(f):
-            if row["username"] == username:
-                return False, "Username already exists. Please choose another."
+    # If the file does not end with a line break, add one first
+    needs_newline = False
+    with open(USER_CSV, mode="rb") as f:
+        data = f.read()
+        if data and not data.endswith((b"\n", b"\r")):
+            needs_newline = True
 
-    with open(USER_CSV, mode="a", newline="") as f:
+    with open(USER_CSV, mode="a", newline="", encoding="utf-8") as f:
+        if needs_newline:
+            f.write("\r\n")
         csv.writer(f).writerow([username, password])
 
     return True, "Registration successful!"
@@ -398,7 +442,13 @@ def register():
             "message": "Username and password cannot be empty."
         }), 400
 
-    success, message = register_new_user(username, password)
+    try:
+        success, message = register_new_user(username, password)
+    except PermissionError:
+        return jsonify({
+            "success": False,
+            "message": "Cannot write users.csv. Close it if it is open in Excel and try again."
+        }), 500
 
     if success:
         return jsonify({"success": True, "message": message})

@@ -1,7 +1,9 @@
-pypdf
-langchain-groq
-python-dotenv
-Flask
+flask
 gunicorn
-google-auth-oauthlib
+pypdf
+python-dotenv
+langchain-core
+langchain-groq
 google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
