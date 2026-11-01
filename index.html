@@ -10,7 +10,7 @@
         .hidden { display: none !important; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        input[type="text"], input[type="password"], input[type="file"], input[type="time"], textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 14px; }
         button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.2s; }
         button:hover { background: #0056b3; }
         .secondary-btn { background: #6c757d; margin-top: 10px; }
@@ -27,6 +27,13 @@
         .result-banner { padding: 15px; border-radius: 6px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; background: #d4edda; color: #155724; }
         .correct { color: #28a745; font-weight: bold; }
         .incorrect { color: #dc3545; font-weight: bold; }
+
+        /* Timetable output */
+        .timetable-output { margin-top: 20px; overflow-x: auto; }
+        .timetable-output table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .timetable-output th, .timetable-output td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
+        .timetable-output th { background: #007bff; color: #fff; }
+        .timetable-output tr:nth-child(even) { background: #f8f9fa; }
     </style>
 </head>
 <body>
@@ -71,7 +78,7 @@
     <div id="dashboard-section" class="hidden">
         <h2>🚀 Welcome to Dashboard</h2>
         <p>Please select an operation below:</p>
-        
+
         <div class="option-card" onclick="selectOption(1)">
             <h3>1️⃣ Quick Revision (Quiz Generator)</h3>
             <p>Upload your syllabus PDF, take an interactive AI-generated quiz, and view your results.</p>
@@ -88,7 +95,7 @@
     <div id="quiz-section" class="hidden">
         <h2>🎯 Quick Revision Quiz Generator</h2>
         <p>Upload your syllabus/notes PDF to start the quiz.</p>
-        
+
         <div id="quiz-upload-container">
             <div class="form-group">
                 <label>Syllabus PDF File:</label>
@@ -117,13 +124,45 @@
     <!-- OPTION 2: TIMETABLE SECTION -->
     <div id="timetable-section" class="hidden">
         <h2>📅 Smart Timetable Generator</h2>
-        <p>Timetable generation feature implementation in progress...</p>
+        <p>Upload your college timetable PDF and enter your daily routine.</p>
+
+        <div id="timetable-form">
+            <div class="form-group">
+                <label>College Timetable PDF:</label>
+                <input type="file" id="timetablePdf" accept=".pdf">
+            </div>
+            <div class="form-group">
+                <label>Wake-up Time:</label>
+                <input type="time" id="wake_time" value="06:00">
+            </div>
+            <div class="form-group">
+                <label>Sleep Time:</label>
+                <input type="time" id="sleep_time" value="22:30">
+            </div>
+            <div class="form-group">
+                <label>Dinner Time:</label>
+                <input type="time" id="dinner_time" value="20:00">
+            </div>
+            <div class="form-group">
+                <label>Travel Timings (optional):</label>
+                <textarea id="travel_timestamps" rows="3" placeholder="e.g. Home to college 07:30-08:15, College to home 16:00-16:45"></textarea>
+            </div>
+            <button onclick="generateTimetable()">Generate Timetable</button>
+            <div id="timetable-loading" class="hidden" style="text-align: center; margin-top: 15px;">Generating your timetable... Please wait ⏳</div>
+            <div id="timetable-error" class="error"></div>
+        </div>
+
+        <div id="timetable-result" class="timetable-output hidden"></div>
+
+        <button id="timetable-reset-btn" class="secondary-btn hidden" onclick="resetTimetable()">Generate Another</button>
         <button class="secondary-btn" onclick="backToDashboard()">Back to Dashboard</button>
     </div>
 </div>
 
 <script>
     let currentQuizData = [];
+
+    // ---------------- AUTH ----------------
 
     function toggleAuthMode() {
         document.getElementById('login-form').classList.toggle('hidden');
@@ -170,11 +209,10 @@
             msgEl.className = data.success ? "success" : "error";
             msgEl.textContent = data.message;
             if (data.success) {
-                setTimeout(toggleAuthMode, 1500); // switch back to login after success
+                setTimeout(toggleAuthMode, 1500);
             }
         } catch (err) {
             msgEl.className = "error";
-            msgEl.style.color = "red";
             msgEl.textContent = "Server error during registration.";
         }
     }
@@ -185,6 +223,8 @@
         document.getElementById('login-username').value = '';
         document.getElementById('login-password').value = '';
     }
+
+    // ---------------- NAVIGATION ----------------
 
     function selectOption(optionNumber) {
         document.getElementById('dashboard-section').classList.add('hidden');
@@ -200,7 +240,10 @@
         document.getElementById('timetable-section').classList.add('hidden');
         document.getElementById('dashboard-section').classList.remove('hidden');
         resetQuiz();
+        resetTimetable();
     }
+
+    // ---------------- QUIZ ----------------
 
     async function generateQuiz() {
         const fileInput = document.getElementById('pdfFile');
@@ -219,10 +262,7 @@
         loadingEl.classList.remove('hidden');
 
         try {
-            const response = await fetch('/api/quiz', {
-                method: 'POST',
-                body: formData
-            });
+            const response = await fetch('/api/quiz', { method: 'POST', body: formData });
             const data = await response.json();
 
             loadingEl.classList.add('hidden');
@@ -246,8 +286,7 @@
 
         questions.forEach((q, index) => {
             let optionsHtml = '';
-            q.options.forEach((opt, optIndex) => {
-                // Extract option letter (e.g., 'A', 'B', 'C', 'D' from option text or prefix)
+            q.options.forEach(opt => {
                 const optLetter = opt.charAt(0);
                 optionsHtml += `
                     <li>
@@ -312,6 +351,111 @@
         document.getElementById('quiz-container').classList.add('hidden');
         document.getElementById('quiz-results-container').classList.add('hidden');
         currentQuizData = [];
+    }
+
+    // ---------------- TIMETABLE ----------------
+
+    async function generateTimetable() {
+        const fileInput = document.getElementById('timetablePdf');
+        const loadingEl = document.getElementById('timetable-loading');
+        const errorEl = document.getElementById('timetable-error');
+        errorEl.textContent = '';
+
+        if (fileInput.files.length === 0) {
+            errorEl.textContent = "Please select your college timetable PDF first!";
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('pdf', fileInput.files[0]);
+        formData.append('wake_time', document.getElementById('wake_time').value);
+        formData.append('sleep_time', document.getElementById('sleep_time').value);
+        formData.append('dinner_time', document.getElementById('dinner_time').value);
+        formData.append('travel_timestamps', document.getElementById('travel_timestamps').value);
+
+        loadingEl.classList.remove('hidden');
+
+        try {
+            const res = await fetch('/api/timetable', { method: 'POST', body: formData });
+            const data = await res.json();
+            loadingEl.classList.add('hidden');
+
+            if (data.success) {
+                const resultEl = document.getElementById('timetable-result');
+                resultEl.innerHTML = markdownToHtml(data.timetable);
+                resultEl.classList.remove('hidden');
+                document.getElementById('timetable-form').classList.add('hidden');
+                document.getElementById('timetable-reset-btn').classList.remove('hidden');
+            } else {
+                errorEl.textContent = data.message;
+            }
+        } catch (err) {
+            loadingEl.classList.add('hidden');
+            errorEl.textContent = "Failed to communicate with the server.";
+        }
+    }
+
+    function resetTimetable() {
+        document.getElementById('timetablePdf').value = '';
+        document.getElementById('timetable-error').textContent = '';
+        document.getElementById('timetable-form').classList.remove('hidden');
+        document.getElementById('timetable-result').classList.add('hidden');
+        document.getElementById('timetable-result').innerHTML = '';
+        document.getElementById('timetable-reset-btn').classList.add('hidden');
+    }
+
+    // Small markdown renderer: tables, headings, lists, bold
+    function markdownToHtml(md) {
+        const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+        const lines = md.split('\n');
+        let html = '', inTable = false, inUl = false, inOl = false, headerDone = false;
+
+        const closeLists = () => {
+            if (inUl) { html += '</ul>'; inUl = false; }
+            if (inOl) { html += '</ol>'; inOl = false; }
+        };
+        const closeTable = () => {
+            if (inTable) { html += '</tbody></table>'; inTable = false; headerDone = false; }
+        };
+
+        for (const raw of lines) {
+            const line = raw.trim();
+
+            if (line.startsWith('|')) {
+                closeLists();
+                const cells = line.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+                if (cells.every(c => /^:?-{2,}:?$/.test(c))) continue; // separator row
+                if (!inTable) { html += '<table><thead>'; inTable = true; }
+                if (!headerDone) {
+                    html += '<tr>' + cells.map(c => `<th>${inline(c)}</th>`).join('') + '</tr></thead><tbody>';
+                    headerDone = true;
+                } else {
+                    html += '<tr>' + cells.map(c => `<td>${inline(c)}</td>`).join('') + '</tr>';
+                }
+                continue;
+            }
+            closeTable();
+
+            if (/^#{1,6}\s/.test(line)) {
+                closeLists();
+                html += `<h3>${inline(line.replace(/^#{1,6}\s/, ''))}</h3>`;
+            } else if (/^\d+\.\s/.test(line)) {
+                if (inUl) { html += '</ul>'; inUl = false; }
+                if (!inOl) { html += '<ol>'; inOl = true; }
+                html += `<li>${inline(line.replace(/^\d+\.\s/, ''))}</li>`;
+            } else if (/^[-*]\s/.test(line)) {
+                if (inOl) { html += '</ol>'; inOl = false; }
+                if (!inUl) { html += '<ul>'; inUl = true; }
+                html += `<li>${inline(line.replace(/^[-*]\s/, ''))}</li>`;
+            } else if (line) {
+                closeLists();
+                html += `<p>${inline(line)}</p>`;
+            }
+        }
+        closeLists();
+        closeTable();
+        return html;
     }
 </script>
 
