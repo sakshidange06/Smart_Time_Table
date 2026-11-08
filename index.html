@@ -3,523 +3,697 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Timetable & Quiz AI Portfolio</title>
+<title>Smart Timetable & Quiz AI · Dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#1d1a3a;--muted:#6b6890;--brand:#6c4cf1;--brand-d:#5238c9;--sun:#ffb938;--mint:#1fb67a;--rose:#e5484d;--line:#e4e1f5;--soft:#f5f3ff}
+:root{
+  --bg:#080a14;--panel:#11142a;--panel2:#171b38;--line:#262b52;--ink:#eef0ff;--muted:#9aa2cf;
+  --cyan:#22d3ee;--violet:#a78bfa;--pink:#f472b6;--lime:#a3e635;--amber:#fbbf24;--red:#fb7185;
+  --head:'Outfit','Segoe UI',system-ui,sans-serif;--body:'DM Sans','Segoe UI',system-ui,sans-serif;
+  --r:18px;--glow:0 0 0 1px rgba(167,139,250,.25),0 10px 40px rgba(0,0,0,.45);
+}
 *{box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink);margin:0;padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#2b1f6e 0%,#5a3fd6 55%,#8f6cff 100%);background-attachment:fixed;overflow-x:hidden}
-
-/* floating emoji background */
-#emoji-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-#emoji-bg span{position:absolute;bottom:-60px;opacity:.35;animation:floatUp linear infinite}
-@keyframes floatUp{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(-115vh) rotate(360deg)}}
-
-.container{position:relative;z-index:1;background:#fff;padding:32px;border-radius:20px;box-shadow:0 20px 60px rgba(20,10,70,.35);width:100%;max-width:660px;animation:popIn .5s cubic-bezier(.2,1.2,.4,1) both}
-@keyframes popIn{from{opacity:0;transform:scale(.94) translateY(16px)}to{opacity:1;transform:none}}
-.container>div:not(.hidden){animation:fadeSlide .35s ease both}
-@keyframes fadeSlide{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
-
-h2{margin:0 0 6px;font-size:1.6rem;letter-spacing:-.01em}
-h3{margin:0 0 4px}
-p{color:var(--muted);line-height:1.5}
+html.bf,html.bf *{cursor:none !important}
+html{color-scheme:dark}
+body{margin:0;min-height:100vh;font-family:var(--body);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* aurora background */
+body::before,body::after{content:"";position:fixed;z-index:0;width:60vmax;height:60vmax;border-radius:50%;filter:blur(110px);opacity:.35;pointer-events:none}
+body::before{background:#6d28d9;top:-25vmax;left:-15vmax;animation:drift 22s ease-in-out infinite alternate}
+body::after{background:#0891b2;bottom:-30vmax;right:-20vmax;animation:drift 26s ease-in-out infinite alternate-reverse}
+@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(1px 1px at 20% 30%,#fff8,transparent),radial-gradient(1px 1px at 70% 20%,#fff6,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#fff7,transparent),radial-gradient(1px 1px at 85% 65%,#fff6,transparent),radial-gradient(1px 1px at 10% 75%,#fff5,transparent);background-size:420px 420px}
+h1,h2,h3{font-family:var(--head);margin:0;letter-spacing:-.02em}
+p{color:var(--muted);line-height:1.65;margin:0}
 .hidden{display:none !important}
+#auth-section,#app{position:relative;z-index:1}
 
-/* emoji animations */
-.emo{display:inline-block}
-.bounce{animation:bounce 1.6s ease-in-out infinite}
-.wiggle{animation:wiggle 2.4s ease-in-out infinite;transform-origin:70% 70%}
-.pulse{animation:pulse 1.8s ease-in-out infinite}
-.spin{animation:flip 1.4s ease-in-out infinite}
-.wave{animation:wiggle 1.2s ease-in-out infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@keyframes wiggle{0%,60%,100%{transform:rotate(0)}70%{transform:rotate(16deg)}80%{transform:rotate(-12deg)}90%{transform:rotate(10deg)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
-@keyframes flip{0%{transform:rotate(0)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}
+/* highlights */
+.hl{background:linear-gradient(transparent 62%,rgba(34,211,238,.35) 62%);color:#fff;font-weight:700;padding:0 2px}
+.hl-p{background:linear-gradient(transparent 62%,rgba(244,114,182,.35) 62%);color:#fff;font-weight:700;padding:0 2px}
+.grad{background:linear-gradient(90deg,var(--cyan),var(--violet) 55%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
 
-/* forms */
+/* butterfly cursor (neon) */
+#butterfly{position:fixed;left:0;top:0;z-index:99999;pointer-events:none;font-size:30px;line-height:1;display:none;will-change:transform;filter:drop-shadow(0 0 10px rgba(34,211,238,.9)) drop-shadow(0 0 22px rgba(167,139,250,.7))}
+html.bf #butterfly{display:block}
+#butterfly .wings{display:block;animation:flap .3s ease-in-out infinite alternate;transition:font-size .2s}
+#butterfly.big .wings{font-size:42px}
+@keyframes flap{from{transform:scaleX(1)}to{transform:scaleX(.33)}}
+.trail{position:fixed;z-index:99998;pointer-events:none;font-size:12px;animation:tf 1s ease-out forwards;text-shadow:0 0 8px var(--cyan)}
+@keyframes tf{from{opacity:.9;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,calc(-50% + 20px)) scale(.3)}}
+.burst{position:fixed;z-index:99998;pointer-events:none;font-size:20px;animation:bu .9s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes bu{from{opacity:1;transform:translate(-50%,-50%) scale(.4)}to{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.2) rotate(var(--rot))}}
+
+/* buttons / forms */
+.btn{font-family:var(--body);display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 18px;border:0;border-radius:14px;font-size:1rem;font-weight:700;color:#06121a;background:linear-gradient(135deg,var(--cyan),var(--violet));box-shadow:0 8px 28px rgba(34,211,238,.28);transition:transform .15s,box-shadow .2s,filter .2s;text-decoration:none}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 12px 34px rgba(167,139,250,.4)}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.btn.ghost:hover{background:var(--panel2);border-color:var(--violet)}
+.btn.sm{width:auto;padding:10px 16px;font-size:.9rem}
+.btn:focus-visible,.tab:focus-visible,.tool:focus-visible,.dot:focus-visible,.seg:focus-visible,.eye:focus-visible,.drop:focus-within{outline:3px solid var(--amber);outline-offset:2px}
 .form-group{margin-bottom:16px}
-label{display:block;margin-bottom:6px;font-weight:600;color:var(--ink)}
-input[type="text"],input[type="password"],input[type="file"],input[type="time"],textarea{width:100%;padding:11px 12px;border:2px solid var(--line);border-radius:10px;font:inherit;font-size:14px;background:var(--soft);transition:border-color .2s,box-shadow .2s,background .2s}
-input:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(108,76,241,.15)}
-button{background:var(--brand);color:#fff;border:none;padding:12px 16px;border-radius:12px;cursor:pointer;width:100%;font-size:16px;font-weight:700;transition:transform .15s,background .2s,box-shadow .2s;box-shadow:0 6px 16px rgba(108,76,241,.35)}
-button:hover{background:var(--brand-d);transform:translateY(-2px)}
-button:active{transform:translateY(0) scale(.98)}
-button:focus-visible,.option-card:focus-visible,.toggle-link:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
-.secondary-btn{background:#fff;color:var(--brand);border:2px solid var(--line);margin-top:10px;box-shadow:none}
-.secondary-btn:hover{background:var(--soft);color:var(--brand-d)}
-.error{color:var(--rose);font-size:14px;margin-top:8px}
-.success{color:var(--mint);font-size:14px;margin-top:8px}
-.toggle-link{text-align:center;margin-top:16px;font-size:14px;color:var(--brand);cursor:pointer}
-.toggle-link:hover{text-decoration:underline}
-.loading-text{text-align:center;margin-top:16px;color:var(--muted)}
+label{display:block;margin-bottom:7px;font-weight:700;font-size:.9rem}
+input[type=text],input[type=password],input[type=time],textarea{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:.96rem;background:#0c0f22;color:var(--ink);transition:border-color .2s,box-shadow .2s;color-scheme:dark}
+input::placeholder,textarea::placeholder{color:#5d6596}
+input:focus,textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.15)}
+.pw{position:relative}.pw input{padding-right:48px}
+.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:transparent;font-size:18px;border-radius:10px;color:var(--ink)}
+.eye:hover{background:var(--panel2)}
+.error{color:var(--red);font-size:.88rem;margin-top:10px;font-weight:700;min-height:1em}
+.success{color:var(--lime);font-size:.88rem;margin-top:10px;font-weight:700}
 
-/* dashboard cards */
-.option-card{background:var(--soft);padding:20px;border-radius:16px;margin-bottom:14px;cursor:pointer;border:2px solid transparent;transition:transform .2s,border-color .2s,box-shadow .2s}
-.option-card:hover{border-color:var(--brand);transform:translateY(-3px);box-shadow:0 10px 24px rgba(108,76,241,.18)}
-.option-card p{margin:0}
-.option-card:hover .emo{animation:bounce .6s ease-in-out infinite}
+/* ===== AUTH ===== */
+#auth-section{min-height:100vh;display:grid;place-items:center;padding:28px}
+.auth-wrap{width:100%;max-width:440px;text-align:center}
+.logo-big{width:76px;height:76px;margin:0 auto 18px;border-radius:24px;display:grid;place-items:center;font-size:40px;background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(167,139,250,.22));border:1px solid rgba(167,139,250,.4);box-shadow:0 0 50px rgba(167,139,250,.35);animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+.auth-wrap h1{font-size:2rem;margin-bottom:8px}
+.auth-card{margin-top:26px;text-align:left;background:rgba(17,20,42,.78);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:var(--glow)}
+.segs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#0c0f22;border:1px solid var(--line);padding:5px;border-radius:14px;margin-bottom:22px}
+.seg{border:0;padding:11px;border-radius:10px;background:transparent;color:var(--muted);font:700 .92rem var(--body);transition:background .2s,color .2s}
+.seg.on{background:linear-gradient(135deg,var(--violet),var(--cyan));color:#06121a}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
+.chip{font-size:.8rem;font-weight:700;padding:6px 12px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted)}
 
-/* quiz */
-.question-box{background:var(--soft);padding:16px;border-radius:12px;margin-bottom:14px;border-left:5px solid var(--brand)}
-.options-list{margin-top:10px;list-style-type:none;padding:0}
-.options-list li{margin-bottom:8px}
-.options-list label{padding:8px 10px;border-radius:8px;transition:background .15s}
-.options-list label:hover{background:#fff}
-.result-banner{padding:18px;border-radius:14px;text-align:center;font-size:20px;font-weight:800;margin-bottom:20px;background:linear-gradient(135deg,#d9f7ea,#fff3cf);color:#14513a}
-.result-banner .emo{font-size:1.6em;display:block;animation:pulse 1s ease-in-out 3}
-.correct{color:var(--mint);font-weight:700}
-.incorrect{color:var(--rose);font-weight:700}
+/* ===== APP: top navbar ===== */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:18px;padding:12px 28px;background:rgba(8,10,20,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:700;font-size:1.08rem;white-space:nowrap}
+.brand .lg{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:19px;background:linear-gradient(135deg,rgba(34,211,238,.2),rgba(167,139,250,.25));border:1px solid rgba(167,139,250,.4)}
+.tabs{display:flex;gap:6px;margin:0 auto;background:#0c0f22;border:1px solid var(--line);padding:5px;border-radius:999px}
+.tab{border:0;background:transparent;color:var(--muted);padding:9px 18px;border-radius:99px;font:700 .9rem var(--body);transition:all .2s;white-space:nowrap}
+.tab:hover{color:#fff}
+.tab.on{background:linear-gradient(135deg,var(--violet),var(--cyan));color:#06121a;box-shadow:0 4px 18px rgba(34,211,238,.3)}
+.user{display:flex;align-items:center;gap:10px}
+.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:linear-gradient(135deg,var(--amber),var(--pink));color:#1a0b1a}
+.user b{font-size:.9rem}
+main{position:relative;padding:34px 28px 70px}
+.wrap{max-width:1000px;margin:0 auto}
+.view>*{animation:in .4s ease both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.page-head{margin-bottom:24px}
+.page-head h2{font-size:1.9rem;margin-bottom:8px}
+.card{background:rgba(17,20,42,.82);border:1px solid var(--line);border-radius:var(--r);padding:26px;margin-bottom:18px;box-shadow:var(--glow)}
+
+/* bento dashboard */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.cell{background:rgba(17,20,42,.82);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--glow)}
+.hero{grid-column:span 4;background:linear-gradient(135deg,rgba(109,40,217,.35),rgba(8,145,178,.25)),var(--panel);position:relative;overflow:hidden}
+.hero h2{font-size:2rem;margin-bottom:10px}
+.hero .clock{font-family:var(--head);font-size:2.6rem;font-weight:700;margin-top:18px;letter-spacing:-.03em}
+.hero .date{color:var(--muted);font-weight:600}
+.hero .bfy{position:absolute;right:22px;top:14px;font-size:64px;opacity:.9;animation:float 3.6s ease-in-out infinite;filter:drop-shadow(0 0 22px rgba(34,211,238,.6))}
+.tipc{grid-column:span 2;display:flex;flex-direction:column;justify-content:space-between}
+.tipc small{font-weight:800;color:var(--amber);font-size:.8rem}
+.tipc p{color:var(--ink);font-weight:600;margin:10px 0}
+.tool{grid-column:span 3;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.tool:hover{transform:translateY(-5px);border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan),0 18px 44px rgba(34,211,238,.18)}
+.tool .big{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:28px;margin-bottom:16px;background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(167,139,250,.22))}
+.tool h3{font-size:1.2rem;margin-bottom:8px}
+.tool .go{display:inline-block;margin-top:16px;font-weight:800;color:var(--cyan)}
+.how{grid-column:span 6}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px;counter-reset:s}
+.step{padding:16px;border-radius:14px;background:#0c0f22;border:1px solid var(--line);counter-increment:s}
+.step::before{content:counter(s);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--cyan));color:#06121a;font-weight:800;font-size:.85rem;margin-bottom:10px}
+.step b{display:block;margin-bottom:4px}.step p{font-size:.88rem}
+
+/* dropzone */
+.drop{position:relative;display:block;border:2px dashed #3a4180;border-radius:var(--r);padding:34px 20px;text-align:center;background:#0c0f22;transition:border-color .2s,background .2s,transform .2s;margin:0}
+.drop:hover,.drop.over{border-color:var(--cyan);background:#0f1530}
+.drop.over{transform:scale(1.01)}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.drop .ico{font-size:36px;display:block;margin-bottom:8px}
+.drop strong{display:block}.drop p{font-size:.85rem;margin-top:4px}
+.drop .fn{display:block;margin-top:10px;font-weight:800;color:var(--lime);word-break:break-all}
+.note{display:flex;gap:10px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);color:#fde7a3;border-radius:12px;padding:12px 14px;font-size:.88rem;font-weight:600;margin-bottom:16px}
+.loading-text{margin-top:18px;text-align:center;color:var(--muted);font-weight:700}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;width:40%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--pink));animation:slide 1.2s ease-in-out infinite}
+@keyframes slide{from{transform:translateX(-100%)}to{transform:translateX(260%)}}
+
+/* quiz (one question at a time) */
+.qtop{display:flex;justify-content:space-between;align-items:center;font-weight:800;margin-bottom:10px}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px}
+.progress>i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));transition:width .35s}
+.dots{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.dot{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--line);background:#0c0f22;color:var(--muted);font:700 .82rem var(--body);transition:all .15s}
+.dot:hover{border-color:var(--violet);color:#fff}
+.dot.done{background:rgba(34,211,238,.15);border-color:var(--cyan);color:var(--cyan)}
+.dot.cur{background:linear-gradient(135deg,var(--violet),var(--cyan));border-color:transparent;color:#06121a;transform:scale(1.1)}
+.question-box{background:rgba(17,20,42,.85);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:16px;box-shadow:var(--glow)}
+.q{display:flex;gap:14px;align-items:flex-start;font-weight:700;font-size:1.08rem;line-height:1.5}
+.q .n{flex:none;min-width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(167,139,250,.18);color:var(--violet);font:700 .9rem var(--head)}
+.options-list{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:10px}
+.options-list label{margin:0;display:flex;gap:12px;align-items:center;padding:14px 16px;border:1.5px solid var(--line);border-radius:14px;font-weight:600;cursor:pointer;background:#0c0f22;transition:all .15s}
+.options-list label:hover{border-color:var(--violet);transform:translateX(4px)}
+.options-list input{accent-color:var(--cyan);width:18px;height:18px;margin:0}
+.options-list label:has(input:checked){border-color:var(--cyan);background:rgba(34,211,238,.1);box-shadow:0 0 0 3px rgba(34,211,238,.1)}
+.navrow{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:12px}
+.kbd{font-size:.78rem;color:var(--muted);text-align:center;margin-top:12px;font-weight:600}
+.kbd b{background:#0c0f22;border:1px solid var(--line);border-radius:6px;padding:1px 7px;color:var(--ink)}
+.result-banner{display:flex;align-items:center;gap:26px;padding:26px;border-radius:var(--r);margin-bottom:18px;background:linear-gradient(135deg,rgba(109,40,217,.4),rgba(8,145,178,.3)),var(--panel);border:1px solid var(--line);box-shadow:var(--glow)}
+.ring{position:relative;width:124px;height:124px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
+.ring .bg{stroke:rgba(255,255,255,.1)}
+.ring .fg{stroke:url(#rg);transition:stroke-dashoffset 1.2s cubic-bezier(.3,.9,.3,1);filter:drop-shadow(0 0 8px rgba(34,211,238,.7))}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 1.5rem var(--head)}
+.result-banner h3{font-size:1.35rem;margin-bottom:6px}
+.filter{display:flex;justify-content:space-between;align-items:center;margin:6px 0 14px}
+.filter h3{font-size:1.1rem}
+#quiz-review-list.only-wrong .question-box.ok{display:none}
+.question-box>p{font-size:.88rem;margin-top:12px}
+.question-box.ok{border-left:5px solid var(--lime)}.question-box.bad{border-left:5px solid var(--red)}
+.correct{color:var(--lime);font-weight:800}
 
 /* timetable */
-.timetable-output{margin-top:20px;overflow-x:auto}
-.timetable-output table{width:100%;border-collapse:collapse;font-size:14px}
-.timetable-output th,.timetable-output td{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}
-.timetable-output th{background:var(--brand);color:#fff}
-.timetable-output tr:nth-child(even){background:var(--soft)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin:-4px 0 18px}
+.presets button{border:1px solid var(--line);background:#0c0f22;color:var(--muted);font:700 .8rem var(--body);padding:7px 12px;border-radius:99px;transition:all .15s}
+.presets button:hover{border-color:var(--cyan);color:#fff}
+.timetable-output{overflow-x:auto}
+.timetable-output table{width:100%;border-collapse:collapse;font-size:.92rem}
+.timetable-output th{background:linear-gradient(135deg,rgba(167,139,250,.35),rgba(34,211,238,.25));color:#fff;font:600 .85rem var(--head);text-align:left;padding:12px}
+.timetable-output td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:#dfe3ff}
+.timetable-output tr:hover td{background:rgba(167,139,250,.08)}
+.timetable-output b{background:linear-gradient(transparent 60%,rgba(34,211,238,.35) 60%);color:#fff}
+.timetable-output h3{margin:18px 0 10px;font-size:1.05rem}
+.timetable-output p,.timetable-output li{color:#dfe3ff;line-height:1.7}
+.row-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
 
-@media (max-width:480px){.container{padding:22px}h2{font-size:1.3rem}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}#emoji-bg{display:none}}
+/* toasts */
+#toasts{position:fixed;right:20px;bottom:20px;z-index:100000;display:grid;gap:10px;max-width:min(360px,calc(100vw - 40px))}
+.toast{padding:13px 16px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);box-shadow:0 14px 40px rgba(0,0,0,.5);font-weight:700;font-size:.92rem;animation:ti .3s ease both;border-left:5px solid var(--cyan)}
+.toast.err{border-left-color:var(--red)}.toast.ok{border-left-color:var(--lime)}.toast.warn{border-left-color:var(--amber)}
+@keyframes ti{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+
+@media (max-width:860px){
+  .top{flex-wrap:wrap;padding:12px 16px}.tabs{order:3;width:100%;overflow-x:auto;margin:0}.tab{flex:1}.user b{display:none}.top .push{margin-left:auto}
+  main{padding:22px 16px 60px}.hero,.tipc,.tool,.how{grid-column:span 6}.hero .bfy{font-size:44px}
+  .steps,.grid3,.row-btns{grid-template-columns:1fr}.result-banner{flex-direction:column;text-align:center}.navrow{grid-template-columns:1fr 1fr}.navrow .btn:nth-child(2){grid-column:span 2;order:3}
+}
+@media print{body *{visibility:hidden}#timetable-result,#timetable-result *{visibility:visible;color:#000 !important;background:#fff !important}#timetable-result{position:absolute;left:0;top:0;width:100%}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
 </style>
 </head>
 <body>
+<div class="stars" aria-hidden="true"></div>
+<div id="butterfly" aria-hidden="true"><span class="wings">🦋</span></div>
+<div id="toasts" aria-live="polite"></div>
 
-<div id="emoji-bg" aria-hidden="true"></div>
+<!-- ================= AUTH ================= -->
+<div id="auth-section">
+  <div class="auth-wrap">
+    <div class="logo-big">🦋</div>
+    <h1><span class="grad">Smart Timetable AI</span></h1>
+    <p>Turn your <span class="hl">PDFs</span> into <span class="hl-p">Quizzes</span> and a daily plan ✨</p>
 
-<div class="container">
-    <!-- AUTHENTICATION SECTION (Login & Signup) -->
-    <div id="auth-section">
-        <div id="login-form">
-            <h2><span class="emo bounce">🔒</span> Smart Timetable AI - Login</h2>
-            <div class="form-group">
-                <label>Username:</label>
-                <input type="text" id="login-username" placeholder="admin">
-            </div>
-            <div class="form-group">
-                <label>Password:</label>
-                <input type="password" id="login-password" placeholder="password123">
-            </div>
-            <button onclick="handleLogin()">Login</button>
-            <div id="login-msg" class="error"></div>
-            <div class="toggle-link" tabindex="0" onclick="toggleAuthMode()">Don't have an account? Register here</div>
+    <div class="auth-card">
+      <div class="segs" role="tablist">
+        <button class="seg on" id="seg-login" onclick="setAuth('login')">🔑 Login</button>
+        <button class="seg" id="seg-register" onclick="setAuth('register')">🌟 Register</button>
+      </div>
+
+      <div id="login-form">
+        <div class="form-group"><label for="login-username">👤 Username</label><input type="text" id="login-username" placeholder="admin" autocomplete="username"></div>
+        <div class="form-group"><label for="login-password">🔒 Password</label>
+          <div class="pw"><input type="password" id="login-password" placeholder="password123" autocomplete="current-password"><button type="button" class="eye" onclick="togglePw('login-password',this)" aria-label="Show password">👁️</button></div>
         </div>
+        <button class="btn" onclick="handleLogin()">Login 🚀</button>
+        <div id="login-msg" class="error"></div>
+      </div>
 
-        <div id="register-form" class="hidden">
-            <h2><span class="emo wiggle">📝</span> Create New Account</h2>
-            <div class="form-group">
-                <label>Choose Username:</label>
-                <input type="text" id="reg-username" placeholder="New username">
-            </div>
-            <div class="form-group">
-                <label>Choose Password:</label>
-                <input type="password" id="reg-password" placeholder="New password">
-            </div>
-            <button onclick="handleRegister()">Register</button>
-            <div id="reg-msg"></div>
-            <div class="toggle-link" tabindex="0" onclick="toggleAuthMode()">Already have an account? Login here</div>
+      <div id="register-form" class="hidden">
+        <div class="form-group"><label for="reg-username">🎭 Choose username</label><input type="text" id="reg-username" placeholder="New username" autocomplete="username"></div>
+        <div class="form-group"><label for="reg-password">🛡️ Choose password</label>
+          <div class="pw"><input type="password" id="reg-password" placeholder="New password" autocomplete="new-password"><button type="button" class="eye" onclick="togglePw('reg-password',this)" aria-label="Show password">👁️</button></div>
         </div>
+        <button class="btn" onclick="handleRegister()">Create account 🎉</button>
+        <div id="reg-msg"></div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip">🧠 AI Quiz</span><span class="chip">📅 Smart Planner</span><span class="chip">⚡ Groq LLM</span></div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app" class="hidden">
+  <header class="top">
+    <div class="brand"><span class="lg">🦋</span> Smart Timetable AI</div>
+    <nav class="tabs">
+      <button class="tab on" data-view="dashboard" onclick="showView('dashboard')">🏠 Home</button>
+      <button class="tab" data-view="quiz" onclick="selectOption(1)">🎯 Quiz</button>
+      <button class="tab" data-view="timetable" onclick="selectOption(2)">📅 Timetable</button>
+    </nav>
+    <div class="user push">
+      <div class="avatar" id="user-avatar">U</div><b id="user-name">User</b>
+      <button class="btn ghost sm" onclick="handleLogout()">↩ Logout</button>
+    </div>
+  </header>
+
+  <main><div class="wrap">
+
+    <!-- DASHBOARD -->
+    <div id="dashboard-section" class="view">
+      <div class="bento">
+        <div class="cell hero">
+          <span class="bfy">🦋</span>
+          <h2><span id="greet-time">Hello</span>, <span class="grad" id="greet-name">there</span> 👋</h2>
+          <p>Ready to learn something new? Pick a tool below and start in <span class="hl">under a minute</span>.</p>
+          <div class="clock" id="clock">--:--</div><div class="date" id="date"></div>
+        </div>
+        <div class="cell tipc">
+          <div><small>💡 STUDY TIP</small><p id="tip">Short sessions with breaks beat one long cram.</p></div>
+          <button class="btn ghost sm" onclick="nextTip()">Next tip ↻</button>
+        </div>
+        <div class="cell tool" tabindex="0" onclick="selectOption(1)" onkeydown="if(event.key==='Enter')selectOption(1)">
+          <div class="big">🎯</div><h3>Quick Revision <span class="hl">Quiz Generator</span></h3>
+          <p>Upload your <b>syllabus PDF</b>, answer AI-made questions one by one and review your mistakes.</p><span class="go">Start quiz →</span>
+        </div>
+        <div class="cell tool" tabindex="0" onclick="selectOption(2)" onkeydown="if(event.key==='Enter')selectOption(2)">
+          <div class="big">📅</div><h3>Create <span class="hl-p">Smart Timetable</span></h3>
+          <p>Get a <b>personal daily schedule</b> built from your college timetable and routine.</p><span class="go">Build schedule →</span>
+        </div>
+        <div class="cell how">
+          <h3>How it works</h3>
+          <div class="steps">
+            <div class="step"><b>📤 Upload</b><p>Add a text-based PDF of your syllabus or timetable.</p></div>
+            <div class="step"><b>🤖 AI works</b><p>The Groq LLM reads it and builds your quiz or plan.</p></div>
+            <div class="step"><b>🏆 Review</b><p>Check your score, or print / copy your timetable.</p></div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- DASHBOARD SECTION -->
-    <div id="dashboard-section" class="hidden">
-        <h2><span class="emo wave">👋</span> Welcome to Dashboard</h2>
-        <p>Please select an operation below:</p>
+    <!-- QUIZ -->
+    <div id="quiz-section" class="view hidden">
+      <div class="page-head"><h2>🎯 Quick Revision <span class="grad">Quiz</span></h2>
+        <p>Upload your <span class="hl">syllabus or notes PDF</span> and test yourself.</p></div>
 
-        <div class="option-card" tabindex="0" onclick="selectOption(1)">
-            <h3><span class="emo">🎯</span> Quick Revision (Quiz Generator)</h3>
-            <p>Upload your syllabus PDF, take an interactive AI-generated quiz, and view your results.</p>
-        </div>
+      <div id="quiz-upload-container" class="card">
+        <div class="note">💡 <span><b>Tip:</b> text-based PDFs work best. Scanned images may not be readable.</span></div>
+        <label class="drop" data-drop>
+          <input type="file" id="pdfFile" accept=".pdf">
+          <span class="ico">📄</span><strong>Click to choose a PDF or drag it here</strong><p>PDF files only</p><span class="fn"></span>
+        </label>
+        <button class="btn" style="margin-top:18px" onclick="generateQuiz()">✨ Generate Quiz</button>
+        <div id="loading" class="hidden loading-text"><span id="load-msg">Reading your PDF…</span><div class="bar"><i></i></div></div>
+      </div>
 
-        <div class="option-card" tabindex="0" onclick="selectOption(2)">
-            <h3><span class="emo">📅</span> Create Smart Timetable</h3>
-            <p>Generate a personalized daily schedule based on your routine and college timetable PDF.</p>
+      <div id="quiz-container" class="hidden">
+        <div class="qtop"><span id="quiz-count">0 / 0 answered</span><span id="quiz-pos" style="color:var(--muted)">Question 1</span></div>
+        <div class="progress"><i id="quiz-progress"></i></div>
+        <div class="dots" id="quiz-dots"></div>
+        <div id="quiz-questions-form"></div>
+        <div class="navrow">
+          <button class="btn ghost" onclick="gotoQ(qIndex-1)">← Back</button>
+          <button class="btn" onclick="submitQuiz()">✅ Submit Answers</button>
+          <button class="btn ghost" onclick="gotoQ(qIndex+1)">Next →</button>
         </div>
-        <button class="secondary-btn" onclick="handleLogout()">Logout</button>
+        <div class="kbd">Shortcuts: <b>A</b>–<b>D</b> pick answer · <b>←</b> <b>→</b> move</div>
+      </div>
+
+      <div id="quiz-results-container" class="hidden">
+        <div id="score-banner" class="result-banner"></div>
+        <div class="filter"><h3>📝 Review your answers</h3><button class="btn ghost sm" id="filter-btn" onclick="toggleWrong()">Show only mistakes</button></div>
+        <div id="quiz-review-list"></div>
+        <button onclick="resetQuiz()" class="btn ghost">🔄 Upload Another PDF / Retake</button>
+      </div>
+
+      <button class="btn ghost" onclick="backToDashboard()" style="margin-top:14px">← Back to Home</button>
     </div>
 
-    <!-- OPTION 1: QUIZ SECTION -->
-    <div id="quiz-section" class="hidden">
-        <h2><span class="emo bounce">🎯</span> Quick Revision Quiz Generator</h2>
-        <p>Upload your syllabus/notes PDF to start the quiz.</p>
+    <!-- TIMETABLE -->
+    <div id="timetable-section" class="view hidden">
+      <div class="page-head"><h2>📅 Smart <span class="grad">Timetable</span> Generator</h2>
+        <p>Upload your <span class="hl">college timetable PDF</span> and tell us your <span class="hl-p">daily routine</span>.</p></div>
 
-        <div id="quiz-upload-container">
-            <div class="form-group">
-                <label>Syllabus PDF File:</label>
-                <input type="file" id="pdfFile" accept=".pdf">
-            </div>
-            <button onclick="generateQuiz()">Generate Quiz</button>
-            <div id="loading" class="hidden loading-text"><span class="emo spin">⏳</span> Reading PDF and generating quiz via Groq LLM... Please wait</div>
+      <div id="timetable-form" class="card">
+        <label class="drop" data-drop>
+          <input type="file" id="timetablePdf" accept=".pdf">
+          <span class="ico">📄</span><strong>Click to choose your timetable PDF or drag it here</strong><p>PDF files only</p><span class="fn"></span>
+        </label>
+        <div class="presets" style="margin-top:20px">
+          <span style="color:var(--muted);font-weight:700;font-size:.85rem;align-self:center">Quick presets:</span>
+          <button onclick="preset('05:30','21:30','19:30')">🌅 Early bird</button>
+          <button onclick="preset('06:30','22:30','20:00')">⚖️ Balanced</button>
+          <button onclick="preset('08:00','00:00','21:30')">🦉 Night owl</button>
         </div>
-
-        <div id="quiz-container" class="hidden" style="margin-top: 20px;">
-            <div id="quiz-questions-form"></div>
-            <button onclick="submitQuiz()">Submit Answers</button>
+        <div class="grid3">
+          <div class="form-group"><label for="wake_time">🌅 Wake-up time</label><input type="time" id="wake_time" value="06:00"></div>
+          <div class="form-group"><label for="dinner_time">🍽️ Dinner time</label><input type="time" id="dinner_time" value="20:00"></div>
+          <div class="form-group"><label for="sleep_time">🌙 Sleep time</label><input type="time" id="sleep_time" value="22:30"></div>
         </div>
+        <div class="form-group"><label for="travel_timestamps">🚌 Travel timings <span style="color:var(--muted);font-weight:600">(optional)</span></label>
+          <textarea id="travel_timestamps" rows="3" placeholder="e.g. Home to college 07:30-08:15, College to home 16:00-16:45"></textarea></div>
+        <button class="btn" onclick="generateTimetable()">🪄 Generate Timetable</button>
+        <div id="timetable-loading" class="hidden loading-text"><span id="tt-msg">Reading your timetable…</span><div class="bar"><i></i></div></div>
+        <div id="timetable-error" class="error"></div>
+      </div>
 
-        <div id="quiz-results-container" class="hidden" style="margin-top: 20px;">
-            <div id="score-banner" class="result-banner"></div>
-            <div id="quiz-review-list"></div>
-            <button onclick="resetQuiz()" class="secondary-btn">Upload Another PDF / Retake</button>
-        </div>
-
-        <button class="secondary-btn" onclick="backToDashboard()" style="margin-top: 15px;">Back to Dashboard</button>
+      <div id="timetable-result" class="card timetable-output hidden"></div>
+      <div id="timetable-reset-btn" class="row-btns hidden">
+        <button class="btn ghost" onclick="window.print()">🖨️ Print / PDF</button>
+        <button class="btn ghost" onclick="copyTimetable()">📋 Copy text</button>
+        <button class="btn ghost" onclick="resetTimetable()">🔄 Generate another</button>
+      </div>
+      <button class="btn ghost" onclick="backToDashboard()" style="margin-top:6px">← Back to Home</button>
     </div>
 
-    <!-- OPTION 2: TIMETABLE SECTION -->
-    <div id="timetable-section" class="hidden">
-        <h2><span class="emo pulse">📅</span> Smart Timetable Generator</h2>
-        <p>Upload your college timetable PDF and enter your daily routine.</p>
-
-        <div id="timetable-form">
-            <div class="form-group">
-                <label>College Timetable PDF:</label>
-                <input type="file" id="timetablePdf" accept=".pdf">
-            </div>
-            <div class="form-group">
-                <label>⏰ Wake-up Time:</label>
-                <input type="time" id="wake_time" value="06:00">
-            </div>
-            <div class="form-group">
-                <label>😴 Sleep Time:</label>
-                <input type="time" id="sleep_time" value="22:30">
-            </div>
-            <div class="form-group">
-                <label>🍽️ Dinner Time:</label>
-                <input type="time" id="dinner_time" value="20:00">
-            </div>
-            <div class="form-group">
-                <label>🚌 Travel Timings (optional):</label>
-                <textarea id="travel_timestamps" rows="3" placeholder="e.g. Home to college 07:30-08:15, College to home 16:00-16:45"></textarea>
-            </div>
-            <button onclick="generateTimetable()">Generate Timetable</button>
-            <div id="timetable-loading" class="hidden loading-text"><span class="emo spin">⏳</span> Generating your timetable... Please wait</div>
-            <div id="timetable-error" class="error"></div>
-        </div>
-
-        <div id="timetable-result" class="timetable-output hidden"></div>
-
-        <button id="timetable-reset-btn" class="secondary-btn hidden" onclick="resetTimetable()">Generate Another</button>
-        <button class="secondary-btn" onclick="backToDashboard()">Back to Dashboard</button>
-    </div>
+  </div></main>
 </div>
 
 <script>
-    let currentQuizData = [];
+    let currentQuizData = [], qIndex = 0, warned = false;
+    const $ = id => document.getElementById(id);
+    const escapeHtml = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
-    // ---------------- FLOATING EMOJI BACKGROUND ----------------
-    (function () {
-        const bg = document.getElementById('emoji-bg');
-        const icons = ['📚', '✏️', '🎯', '⏰', '✨', '🧠', '📅', '💡', '🎓'];
-        for (let i = 0; i < 16; i++) {
-            const s = document.createElement('span');
-            s.textContent = icons[i % icons.length];
-            s.style.left = (Math.random() * 96) + '%';
-            s.style.fontSize = (20 + Math.random() * 28) + 'px';
-            s.style.animationDuration = (14 + Math.random() * 16) + 's';
-            s.style.animationDelay = (-Math.random() * 30) + 's';
-            bg.appendChild(s);
-        }
-    })();
-
-    // ---------------- AUTH ----------------
-
-    function toggleAuthMode() {
-        document.getElementById('login-form').classList.toggle('hidden');
-        document.getElementById('register-form').classList.toggle('hidden');
-        document.getElementById('login-msg').textContent = '';
-        document.getElementById('reg-msg').textContent = '';
+    // ---------- toasts ----------
+    function toast(msg, type = '') {
+        const t = document.createElement('div');
+        t.className = 'toast ' + type; t.textContent = msg;
+        $('toasts').appendChild(t); setTimeout(() => t.remove(), 4200);
     }
 
-    async function handleLogin() {
-        const username = document.getElementById('login-username').value;
-        const password = document.getElementById('login-password').value;
-        const msgEl = document.getElementById('login-msg');
-
-        try {
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+    // ---------- butterfly cursor ----------
+    (function () {
+        if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const el = $('butterfly');
+        document.documentElement.classList.add('bf');
+        let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty, angle = 0, last = 0;
+        const sparks = ['✨', '💜', '⭐', '💎'];
+        addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+        document.addEventListener('mouseleave', () => el.style.opacity = 0);
+        document.addEventListener('mouseenter', () => el.style.opacity = 1);
+        document.addEventListener('mouseover', e => el.classList.toggle('big', !!e.target.closest('button,.tool,label,.dot')));
+        addEventListener('click', e => {
+            if (reduce) return;
+            ['🦋', '✨', '💜', '🌸', '⭐', '🦋'].forEach((ch, i, a) => {
+                const b = document.createElement('span');
+                b.className = 'burst'; b.textContent = ch;
+                const ang = Math.PI * 2 * i / a.length, d = 46 + Math.random() * 30;
+                b.style.left = e.clientX + 'px'; b.style.top = e.clientY + 'px';
+                b.style.setProperty('--dx', Math.cos(ang) * d + 'px');
+                b.style.setProperty('--dy', Math.sin(ang) * d + 'px');
+                b.style.setProperty('--rot', (Math.random() * 360 - 180) + 'deg');
+                document.body.appendChild(b); setTimeout(() => b.remove(), 950);
             });
+        });
+        (function tick(now) {
+            const dx = tx - x, dy = ty - y, dist = Math.hypot(dx, dy);
+            x += dx * 0.16; y += dy * 0.16;
+            if (dist > 3) angle += (((Math.atan2(dy, dx) * 180 / Math.PI + 90) - angle + 540) % 360 - 180) * 0.2;
+            el.style.transform = `translate(${x - 15}px, ${y - 15 + Math.sin(now / 260) * 3}px) rotate(${angle}deg)`;
+            if (!reduce && dist > 6 && now - last > 100) {
+                last = now;
+                const t = document.createElement('span');
+                t.className = 'trail'; t.textContent = sparks[Math.floor(Math.random() * sparks.length)];
+                t.style.left = x + 'px'; t.style.top = y + 'px';
+                document.body.appendChild(t); setTimeout(() => t.remove(), 1000);
+            }
+            requestAnimationFrame(tick);
+        })(0);
+    })();
+
+    // ---------- dropzones ----------
+    document.querySelectorAll('[data-drop]').forEach(zone => {
+        const input = zone.querySelector('input'), fn = zone.querySelector('.fn');
+        const show = () => fn.textContent = input.files.length ? '✅ ' + input.files[0].name : '';
+        input.addEventListener('change', show);
+        ['dragenter', 'dragover'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('over'); }));
+        ['dragleave', 'drop'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.remove('over'); }));
+        zone.addEventListener('drop', e => {
+            const f = e.dataTransfer.files[0];
+            if (!f) return;
+            if (!/\.pdf$/i.test(f.name)) { toast('Please drop a PDF file 📄', 'warn'); return; }
+            input.files = e.dataTransfer.files; show();
+        });
+    });
+    function clearDrop(id) { const i = $(id); i.value = ''; const f = i.parentElement.querySelector('.fn'); if (f) f.textContent = ''; }
+
+    // rotating loading messages
+    let loadTimer;
+    function startLoading(boxId, msgId, msgs) {
+        $(boxId).classList.remove('hidden'); let i = 0; $(msgId).textContent = msgs[0];
+        clearInterval(loadTimer); loadTimer = setInterval(() => { i = (i + 1) % msgs.length; $(msgId).textContent = msgs[i]; }, 2200);
+    }
+    function stopLoading(boxId) { clearInterval(loadTimer); $(boxId).classList.add('hidden'); }
+
+    // ---------- auth ----------
+    function setAuth(mode) {
+        const login = mode === 'login';
+        $('login-form').classList.toggle('hidden', !login);
+        $('register-form').classList.toggle('hidden', login);
+        $('seg-login').classList.toggle('on', login);
+        $('seg-register').classList.toggle('on', !login);
+        $('login-msg').textContent = ''; $('reg-msg').textContent = '';
+    }
+    function toggleAuthMode() { setAuth($('login-form').classList.contains('hidden') ? 'login' : 'register'); }
+    function togglePw(id, btn) {
+        const i = $(id), show = i.type === 'password';
+        i.type = show ? 'text' : 'password'; btn.textContent = show ? '🙈' : '👁️';
+    }
+    ['login-username', 'login-password'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); }));
+    ['reg-username', 'reg-password'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') handleRegister(); }));
+
+    async function handleLogin() {
+        const username = $('login-username').value, password = $('login-password').value, msgEl = $('login-msg');
+        if (!username.trim() || !password) { msgEl.textContent = '⚠️ Enter your username and password.'; return; }
+        try {
+            const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
             const data = await res.json();
             if (data.success) {
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
-            } else {
-                msgEl.textContent = data.message;
-            }
-        } catch (err) {
-            msgEl.textContent = "Server error during login.";
-        }
+                const name = username.trim();
+                $('user-name').textContent = name; $('greet-name').textContent = name;
+                $('user-avatar').textContent = name.charAt(0).toUpperCase();
+                $('auth-section').classList.add('hidden'); $('app').classList.remove('hidden');
+                msgEl.textContent = ''; showView('dashboard'); updateClock(); toast('Welcome back, ' + name + '! 🦋', 'ok');
+            } else { msgEl.textContent = '⚠️ ' + data.message; }
+        } catch (err) { msgEl.textContent = '⚠️ Server error during login.'; }
     }
 
     async function handleRegister() {
-        const username = document.getElementById('reg-username').value;
-        const password = document.getElementById('reg-password').value;
-        const msgEl = document.getElementById('reg-msg');
-
+        const username = $('reg-username').value, password = $('reg-password').value, msgEl = $('reg-msg');
+        if (!username.trim() || !password) { msgEl.className = 'error'; msgEl.textContent = '⚠️ Fill in both fields.'; return; }
         try {
-            const res = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
+            const res = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
             const data = await res.json();
-            msgEl.className = data.success ? "success" : "error";
-            msgEl.textContent = data.message;
-            if (data.success) {
-                setTimeout(toggleAuthMode, 1500);
-            }
-        } catch (err) {
-            msgEl.className = "error";
-            msgEl.textContent = "Server error during registration.";
-        }
+            msgEl.className = data.success ? 'success' : 'error';
+            msgEl.textContent = (data.success ? '🎉 ' : '⚠️ ') + data.message;
+            if (data.success) setTimeout(() => setAuth('login'), 1500);
+        } catch (err) { msgEl.className = 'error'; msgEl.textContent = '⚠️ Server error during registration.'; }
     }
 
     function handleLogout() {
-        document.getElementById('dashboard-section').classList.add('hidden');
-        document.getElementById('auth-section').classList.remove('hidden');
-        document.getElementById('login-username').value = '';
-        document.getElementById('login-password').value = '';
+        $('app').classList.add('hidden'); $('auth-section').classList.remove('hidden');
+        $('login-username').value = ''; $('login-password').value = '';
+        resetQuiz(); resetTimetable(); toast('Logged out. See you soon! 👋');
     }
 
-    // ---------------- NAVIGATION ----------------
-
-    function selectOption(optionNumber) {
-        document.getElementById('dashboard-section').classList.add('hidden');
-        if (optionNumber === 1) {
-            document.getElementById('quiz-section').classList.remove('hidden');
-        } else if (optionNumber === 2) {
-            document.getElementById('timetable-section').classList.remove('hidden');
-        }
+    // ---------- navigation ----------
+    function showView(name) {
+        ['dashboard', 'quiz', 'timetable'].forEach(v => $(v + '-section').classList.toggle('hidden', v !== name));
+        document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.view === name));
+        scrollTo({ top: 0 });
     }
+    function selectOption(n) { showView(n === 1 ? 'quiz' : 'timetable'); }
+    function backToDashboard() { showView('dashboard'); resetQuiz(); resetTimetable(); }
 
-    function backToDashboard() {
-        document.getElementById('quiz-section').classList.add('hidden');
-        document.getElementById('timetable-section').classList.add('hidden');
-        document.getElementById('dashboard-section').classList.remove('hidden');
-        resetQuiz();
-        resetTimetable();
+    // dashboard extras: greeting, clock, tips
+    const tips = ['Short sessions with breaks beat one long cram.', 'Test yourself often — recall beats re-reading.', 'Sleep is part of studying. Protect your bedtime.', 'Start with the hardest subject while you are fresh.', 'Review notes within 24 hours to remember more.', 'Drink water and stretch every hour. 💧'];
+    let tipI = 0;
+    function nextTip() { tipI = (tipI + 1) % tips.length; $('tip').textContent = tips[tipI]; }
+    function updateClock() {
+        const d = new Date(), h = d.getHours();
+        $('greet-time').textContent = h < 5 ? 'Good night' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+        $('clock').textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        $('date').textContent = d.toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long' });
     }
+    setInterval(updateClock, 20000);
 
-    // ---------------- QUIZ ----------------
-
+    // ---------- quiz ----------
     async function generateQuiz() {
-        const fileInput = document.getElementById('pdfFile');
-        const loadingEl = document.getElementById('loading');
-        const uploadContainer = document.getElementById('quiz-upload-container');
-        const quizContainer = document.getElementById('quiz-container');
-
-        if (fileInput.files.length === 0) {
-            alert("Please select a PDF file first!");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('pdf', fileInput.files[0]);
-
-        loadingEl.classList.remove('hidden');
-
+        const fileInput = $('pdfFile');
+        if (fileInput.files.length === 0) { toast('Please select a PDF file first 📄', 'warn'); return; }
+        const formData = new FormData(); formData.append('pdf', fileInput.files[0]);
+        startLoading('loading', 'load-msg', ['Reading your PDF… 📄', 'Finding key topics… 🔍', 'Writing questions with Groq… 🤖', 'Almost ready… ✨']);
         try {
             const response = await fetch('/api/quiz', { method: 'POST', body: formData });
             const data = await response.json();
-
-            loadingEl.classList.add('hidden');
+            stopLoading('loading');
             if (data.success) {
-                currentQuizData = data.quiz;
+                currentQuizData = data.quiz; warned = false;
                 renderQuizQuestions(currentQuizData);
-                uploadContainer.classList.add('hidden');
-                quizContainer.classList.remove('hidden');
-            } else {
-                alert("Error: " + data.message);
-            }
-        } catch (err) {
-            loadingEl.classList.add('hidden');
-            alert("Failed to communicate with the server.");
-        }
+                $('quiz-upload-container').classList.add('hidden'); $('quiz-container').classList.remove('hidden');
+                gotoQ(0); toast(currentQuizData.length + ' questions ready — good luck! 🍀', 'ok');
+            } else { toast(data.message || 'Could not generate quiz', 'err'); }
+        } catch (err) { stopLoading('loading'); toast('Failed to communicate with the server 🔌', 'err'); }
     }
 
     function renderQuizQuestions(questions) {
-        const formContainer = document.getElementById('quiz-questions-form');
-        formContainer.innerHTML = '';
-
-        questions.forEach((q, index) => {
-            let optionsHtml = '';
-            q.options.forEach(opt => {
-                const optLetter = opt.charAt(0);
-                optionsHtml += `
-                    <li>
-                        <label style="font-weight: normal; cursor: pointer;">
-                            <input type="radio" name="question_${index}" value="${optLetter}"> ${opt}
-                        </label>
-                    </li>
-                `;
-            });
-
-            formContainer.innerHTML += `
-                <div class="question-box">
-                    <strong>Q${index + 1}: ${q.question}</strong>
-                    <ul class="options-list">${optionsHtml}</ul>
-                </div>
-            `;
-        });
+        $('quiz-questions-form').innerHTML = questions.map((q, index) => {
+            const opts = q.options.map(opt => `<li><label><input type="radio" name="question_${index}" value="${escapeHtml(opt.charAt(0))}" onchange="updateProgress()"> ${escapeHtml(opt)}</label></li>`).join('');
+            return `<div class="question-box hidden" data-q="${index}"><div class="q"><span class="n">${index + 1}</span><span>${escapeHtml(q.question)}</span></div><ul class="options-list">${opts}</ul></div>`;
+        }).join('');
+        $('quiz-dots').innerHTML = questions.map((_, i) => `<button type="button" class="dot" onclick="gotoQ(${i})" aria-label="Question ${i + 1}">${i + 1}</button>`).join('');
     }
 
-    function submitQuiz() {
-        let score = 0;
-        let reviewHtml = '';
+    function gotoQ(i) {
+        const n = currentQuizData.length;
+        if (i < 0 || i >= n) return;
+        qIndex = i;
+        document.querySelectorAll('#quiz-questions-form .question-box').forEach(b => b.classList.toggle('hidden', +b.dataset.q !== i));
+        $('quiz-pos').textContent = `Question ${i + 1} of ${n}`;
+        updateProgress();
+    }
 
-        currentQuizData.forEach((q, index) => {
-            const selectedOption = document.querySelector(`input[name="question_${index}"]:checked`);
-            const userChoice = selectedOption ? selectedOption.value : null;
-            const isCorrect = userChoice === q.answer;
-
-            if (isCorrect) score++;
-
-            let optionsReviewHtml = '';
-            q.options.forEach(opt => {
-                const optLetter = opt.charAt(0);
-                let style = '';
-                if (optLetter === q.answer) {
-                    style = 'color: #1fb67a; font-weight: bold;';
-                } else if (optLetter === userChoice && !isCorrect) {
-                    style = 'color: #e5484d; text-decoration: line-through;';
-                }
-                optionsReviewHtml += `<li style="${style}">${opt}</li>`;
-            });
-
-            reviewHtml += `
-                <div class="question-box">
-                    <strong>${isCorrect ? '✅' : '❌'} Q${index + 1}: ${q.question}</strong>
-                    <p>Your choice: <b>${userChoice ? userChoice : 'None'}</b> | Correct Answer: <span class="correct">${q.answer}</span></p>
-                    <ul class="options-list">${optionsReviewHtml}</ul>
-                </div>
-            `;
+    function updateProgress() {
+        const n = currentQuizData.length;
+        let done = 0;
+        document.querySelectorAll('#quiz-dots .dot').forEach((d, i) => {
+            const a = !!document.querySelector(`input[name="question_${i}"]:checked`);
+            if (a) done++;
+            d.classList.toggle('done', a && i !== qIndex); d.classList.toggle('cur', i === qIndex);
         });
+        $('quiz-progress').style.width = (n ? done / n * 100 : 0) + '%';
+        $('quiz-count').textContent = `${done} / ${n} answered`;
+    }
 
-        // Emoji reaction based on score
-        const pct = currentQuizData.length ? score / currentQuizData.length : 0;
-        const reaction = pct === 1 ? '🏆' : pct >= 0.7 ? '🎉' : pct >= 0.4 ? '💪' : '📖';
-        document.getElementById('score-banner').innerHTML =
-            `<span class="emo">${reaction}</span>Your Score: ${score} / ${currentQuizData.length}`;
-        document.getElementById('quiz-review-list').innerHTML = reviewHtml;
+    addEventListener('keydown', e => {
+        if ($('quiz-container').classList.contains('hidden') || /INPUT|TEXTAREA/.test(document.activeElement.tagName) && document.activeElement.type !== 'radio') return;
+        if (e.key === 'ArrowRight') { gotoQ(qIndex + 1); }
+        else if (e.key === 'ArrowLeft') { gotoQ(qIndex - 1); }
+        else if (/^[a-dA-D]$/.test(e.key)) {
+            const r = document.querySelector(`input[name="question_${qIndex}"][value="${e.key.toUpperCase()}"]`);
+            if (r) { r.checked = true; updateProgress(); }
+        }
+    });
 
-        document.getElementById('quiz-container').classList.add('hidden');
-        document.getElementById('quiz-results-container').classList.remove('hidden');
+    function submitQuiz() {
+        const missing = currentQuizData.filter((_, i) => !document.querySelector(`input[name="question_${i}"]:checked`)).length;
+        if (missing && !warned) { warned = true; toast(`${missing} question(s) unanswered — press Submit again to finish anyway.`, 'warn'); return; }
+        let score = 0, review = '';
+        currentQuizData.forEach((q, index) => {
+            const sel = document.querySelector(`input[name="question_${index}"]:checked`);
+            const choice = sel ? sel.value : null, ok = choice === q.answer;
+            if (ok) score++;
+            const opts = q.options.map(opt => {
+                const l = opt.charAt(0); let st = '';
+                if (l === q.answer) st = 'color:#a3e635;font-weight:800;';
+                else if (l === choice && !ok) st = 'color:#fb7185;text-decoration:line-through;';
+                return `<li style="${st};padding:2px 0">${escapeHtml(opt)}</li>`;
+            }).join('');
+            review += `<div class="question-box ${ok ? 'ok' : 'bad'}"><div class="q"><span class="n">${ok ? '✅' : '❌'}</span><span>${escapeHtml(q.question)}</span></div><p>Your choice: <b>${choice ? escapeHtml(choice) : 'None'}</b> · Correct answer: <span class="correct">${escapeHtml(q.answer)}</span></p><ul class="options-list" style="gap:2px">${opts}</ul></div>`;
+        });
+        const total = currentQuizData.length, pct = total ? score / total : 0, C = 2 * Math.PI * 52;
+        const emoji = pct === 1 ? '🏆' : pct >= .7 ? '🎉' : pct >= .4 ? '💪' : '📖';
+        const msg = pct === 1 ? 'Perfect score! Genius mode 🧠' : pct >= .7 ? 'Great work! Keep it up 🌟' : pct >= .4 ? 'Good effort — review the mistakes below 🚀' : 'Revise once more, you can do it! 🌱';
+        $('score-banner').innerHTML = `<div class="ring"><svg width="124" height="124" viewBox="0 0 124 124"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs><circle class="bg" cx="62" cy="62" r="52"/><circle class="fg" id="ring-fg" cx="62" cy="62" r="52" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><b>${Math.round(pct * 100)}%</b></div><div><h3>${emoji} Your score: <span class="hl">${score} / ${total}</span></h3><p>${msg}</p></div>`;
+        $('quiz-review-list').innerHTML = review; $('quiz-review-list').classList.remove('only-wrong');
+        $('filter-btn').textContent = 'Show only mistakes';
+        $('quiz-container').classList.add('hidden'); $('quiz-results-container').classList.remove('hidden');
+        setTimeout(() => { const r = $('ring-fg'); if (r) r.style.strokeDashoffset = C * (1 - pct); }, 80);
+        if (pct >= .7) confetti();
+        scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleWrong() {
+        const l = $('quiz-review-list'); l.classList.toggle('only-wrong');
+        $('filter-btn').textContent = l.classList.contains('only-wrong') ? 'Show all answers' : 'Show only mistakes';
+    }
+
+    function confetti() {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const set = ['🎉', '🦋', '🌟', '🎊', '💜', '✨'];
+        for (let i = 0; i < 22; i++) {
+            const c = document.createElement('span');
+            c.className = 'burst'; c.textContent = set[i % set.length];
+            c.style.left = Math.random() * 100 + 'vw'; c.style.top = '-5vh';
+            c.style.setProperty('--dx', (Math.random() * 120 - 60) + 'px');
+            c.style.setProperty('--dy', (70 + Math.random() * 40) + 'vh');
+            c.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+            c.style.animationDuration = (1.6 + Math.random() * 1.4) + 's';
+            document.body.appendChild(c); setTimeout(() => c.remove(), 3200);
+        }
     }
 
     function resetQuiz() {
-        document.getElementById('pdfFile').value = '';
-        document.getElementById('quiz-upload-container').classList.remove('hidden');
-        document.getElementById('quiz-container').classList.add('hidden');
-        document.getElementById('quiz-results-container').classList.add('hidden');
-        currentQuizData = [];
+        clearDrop('pdfFile'); stopLoading('loading');
+        $('quiz-upload-container').classList.remove('hidden');
+        $('quiz-container').classList.add('hidden'); $('quiz-results-container').classList.add('hidden');
+        $('quiz-progress').style.width = '0'; currentQuizData = []; qIndex = 0; warned = false;
     }
 
-    // ---------------- TIMETABLE ----------------
+    // ---------- timetable ----------
+    function preset(w, s, d) { $('wake_time').value = w; $('sleep_time').value = s; $('dinner_time').value = d; toast('Preset applied ✅', 'ok'); }
 
     async function generateTimetable() {
-        const fileInput = document.getElementById('timetablePdf');
-        const loadingEl = document.getElementById('timetable-loading');
-        const errorEl = document.getElementById('timetable-error');
+        const fileInput = $('timetablePdf'), errorEl = $('timetable-error');
         errorEl.textContent = '';
-
-        if (fileInput.files.length === 0) {
-            errorEl.textContent = "Please select your college timetable PDF first!";
-            return;
-        }
-
+        if (fileInput.files.length === 0) { errorEl.textContent = '⚠️ Please select your college timetable PDF first.'; toast('Timetable PDF is missing 📄', 'warn'); return; }
         const formData = new FormData();
         formData.append('pdf', fileInput.files[0]);
-        formData.append('wake_time', document.getElementById('wake_time').value);
-        formData.append('sleep_time', document.getElementById('sleep_time').value);
-        formData.append('dinner_time', document.getElementById('dinner_time').value);
-        formData.append('travel_timestamps', document.getElementById('travel_timestamps').value);
-
-        loadingEl.classList.remove('hidden');
-
+        formData.append('wake_time', $('wake_time').value);
+        formData.append('sleep_time', $('sleep_time').value);
+        formData.append('dinner_time', $('dinner_time').value);
+        formData.append('travel_timestamps', $('travel_timestamps').value);
+        startLoading('timetable-loading', 'tt-msg', ['Reading your timetable… 📄', 'Finding free slots… ⏰', 'Planning meals & rest… 🍽️', 'Polishing your schedule… ✨']);
         try {
             const res = await fetch('/api/timetable', { method: 'POST', body: formData });
             const data = await res.json();
-            loadingEl.classList.add('hidden');
-
+            stopLoading('timetable-loading');
             if (data.success) {
-                const resultEl = document.getElementById('timetable-result');
-                resultEl.innerHTML = markdownToHtml(data.timetable);
-                resultEl.classList.remove('hidden');
-                document.getElementById('timetable-form').classList.add('hidden');
-                document.getElementById('timetable-reset-btn').classList.remove('hidden');
-            } else {
-                errorEl.textContent = data.message;
-            }
-        } catch (err) {
-            loadingEl.classList.add('hidden');
-            errorEl.textContent = "Failed to communicate with the server.";
-        }
+                const out = $('timetable-result');
+                out.innerHTML = markdownToHtml(data.timetable); out.classList.remove('hidden');
+                $('timetable-form').classList.add('hidden'); $('timetable-reset-btn').classList.remove('hidden');
+                confetti(); toast('Your timetable is ready! 📅', 'ok');
+            } else { errorEl.textContent = '⚠️ ' + data.message; }
+        } catch (err) { stopLoading('timetable-loading'); errorEl.textContent = '⚠️ Failed to communicate with the server.'; }
+    }
+
+    function copyTimetable() {
+        const text = $('timetable-result').innerText;
+        (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+            .then(() => toast('Timetable copied 📋', 'ok')).catch(() => toast('Copy failed — select the text manually', 'err'));
     }
 
     function resetTimetable() {
-        document.getElementById('timetablePdf').value = '';
-        document.getElementById('timetable-error').textContent = '';
-        document.getElementById('timetable-form').classList.remove('hidden');
-        document.getElementById('timetable-result').classList.add('hidden');
-        document.getElementById('timetable-result').innerHTML = '';
-        document.getElementById('timetable-reset-btn').classList.add('hidden');
+        clearDrop('timetablePdf'); stopLoading('timetable-loading');
+        $('timetable-error').textContent = '';
+        $('timetable-form').classList.remove('hidden');
+        $('timetable-result').classList.add('hidden'); $('timetable-result').innerHTML = '';
+        $('timetable-reset-btn').classList.add('hidden');
     }
 
-    // Small markdown renderer: tables, headings, lists, bold
+    // markdown renderer: tables, headings, lists, bold
     function markdownToHtml(md) {
         const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
-        const lines = md.split('\n');
         let html = '', inTable = false, inUl = false, inOl = false, headerDone = false;
-
-        const closeLists = () => {
-            if (inUl) { html += '</ul>'; inUl = false; }
-            if (inOl) { html += '</ol>'; inOl = false; }
-        };
-        const closeTable = () => {
-            if (inTable) { html += '</tbody></table>'; inTable = false; headerDone = false; }
-        };
-
-        for (const raw of lines) {
+        const closeLists = () => { if (inUl) { html += '</ul>'; inUl = false; } if (inOl) { html += '</ol>'; inOl = false; } };
+        const closeTable = () => { if (inTable) { html += '</tbody></table>'; inTable = false; headerDone = false; } };
+        for (const raw of md.split('\n')) {
             const line = raw.trim();
-
             if (line.startsWith('|')) {
                 closeLists();
                 const cells = line.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
-                if (cells.every(c => /^:?-{2,}:?$/.test(c))) continue; // separator row
+                if (cells.every(c => /^:?-{2,}:?$/.test(c))) continue;
                 if (!inTable) { html += '<table><thead>'; inTable = true; }
-                if (!headerDone) {
-                    html += '<tr>' + cells.map(c => `<th>${inline(c)}</th>`).join('') + '</tr></thead><tbody>';
-                    headerDone = true;
-                } else {
-                    html += '<tr>' + cells.map(c => `<td>${inline(c)}</td>`).join('') + '</tr>';
-                }
+                if (!headerDone) { html += '<tr>' + cells.map(c => `<th>${inline(c)}</th>`).join('') + '</tr></thead><tbody>'; headerDone = true; }
+                else html += '<tr>' + cells.map(c => `<td>${inline(c)}</td>`).join('') + '</tr>';
                 continue;
             }
             closeTable();
-
-            if (/^#{1,6}\s/.test(line)) {
-                closeLists();
-                html += `<h3>${inline(line.replace(/^#{1,6}\s/, ''))}</h3>`;
-            } else if (/^\d+\.\s/.test(line)) {
-                if (inUl) { html += '</ul>'; inUl = false; }
-                if (!inOl) { html += '<ol>'; inOl = true; }
-                html += `<li>${inline(line.replace(/^\d+\.\s/, ''))}</li>`;
-            } else if (/^[-*]\s/.test(line)) {
-                if (inOl) { html += '</ol>'; inOl = false; }
-                if (!inUl) { html += '<ul>'; inUl = true; }
-                html += `<li>${inline(line.replace(/^[-*]\s/, ''))}</li>`;
-            } else if (line) {
-                closeLists();
-                html += `<p>${inline(line)}</p>`;
-            }
+            if (/^#{1,6}\s/.test(line)) { closeLists(); html += `<h3>${inline(line.replace(/^#{1,6}\s/, ''))}</h3>`; }
+            else if (/^\d+\.\s/.test(line)) { if (inUl) { html += '</ul>'; inUl = false; } if (!inOl) { html += '<ol>'; inOl = true; } html += `<li>${inline(line.replace(/^\d+\.\s/, ''))}</li>`; }
+            else if (/^[-*]\s/.test(line)) { if (inOl) { html += '</ol>'; inOl = false; } if (!inUl) { html += '<ul>'; inUl = true; } html += `<li>${inline(line.replace(/^[-*]\s/, ''))}</li>`; }
+            else if (line) { closeLists(); html += `<p>${inline(line)}</p>`; }
         }
-        closeLists();
-        closeTable();
+        closeLists(); closeTable();
         return html;
     }
 </script>
-
 </body>
 </html>
