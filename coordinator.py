@@ -1,5 +1,5 @@
 
-def route_request(choice):
+"""def route_request(choice):
     if choice == "quiz":
         print("Routing to Quiz Agent...")
         return "Quiz Agent Called"
@@ -7,5 +7,5 @@ def route_request(choice):
         print("Routing to Timetable Agent...")
         return "Timetable Agent Called"
     else:
-        return "Invalid choice"
+        return "Invalid choice" """
     

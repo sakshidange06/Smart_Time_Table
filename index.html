@@ -195,6 +195,36 @@ main{position:relative;padding:34px 28px 70px}
 }
 @media print{body *{visibility:hidden}#timetable-result,#timetable-result *{visibility:visible;color:#000 !important;background:#fff !important}#timetable-result{position:absolute;left:0;top:0;width:100%}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
+
+/* ===== PROFESSOR AREA (uses the existing dark theme tokens) ===== */
+.professor-link-wrap{display:flex;justify-content:center;margin:20px auto 0;width:100%}
+.professor-link{width:auto;min-width:190px;padding:11px 22px;border:1px solid rgba(34,211,238,.45);border-radius:999px;background:rgba(17,20,42,.78);color:var(--cyan);font:700 .92rem var(--body);cursor:pointer;transition:all .2s}
+.professor-link:hover{background:rgba(34,211,238,.12);border-color:var(--cyan);transform:translateY(-2px)}
+.professor-wrap{width:100%;max-width:760px;margin:0 auto;text-align:center;position:relative;z-index:1;padding:34px 18px 60px}
+.professor-wrap .auth-card{text-align:left}
+.professor-actions{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap}
+.professor-actions .btn{width:auto}
+.prof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.prof-option{min-height:190px;cursor:pointer;text-align:left;color:var(--ink);font:inherit}
+.prof-option:disabled{opacity:.62;cursor:not-allowed;transform:none}
+.prof-option .big{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;font-size:27px;margin-bottom:14px;background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(167,139,250,.22))}
+.professor-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.professor-form-grid .form-group{margin-bottom:4px}
+.professor-wrap input[type=number],.professor-wrap select{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:.96rem;background:#0c0f22;color:var(--ink);color-scheme:dark}
+.professor-wrap input:focus,.professor-wrap select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.15)}
+.days-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.day-choice{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#0c0f22;color:var(--ink);font-weight:600}
+.day-choice input{accent-color:var(--cyan)}
+.subject-row{display:grid;grid-template-columns:minmax(0,1fr) 130px auto;gap:10px;align-items:center;margin:10px 0}
+.subject-row input{min-width:0}
+.remove-subject{border:1px solid rgba(251,113,133,.4);border-radius:10px;background:rgba(251,113,133,.1);color:var(--red);padding:11px 13px;cursor:pointer}
+.batch-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.batch-tag{padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:rgba(34,211,238,.08);color:var(--cyan);font-size:.85rem;font-weight:700}
+.processing-panel{margin-top:16px;padding:16px;border:1px solid rgba(34,211,238,.35);border-radius:14px;background:rgba(34,211,238,.07);color:var(--ink);text-align:center}
+.processing-spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(34,211,238,.25);border-top-color:var(--cyan);border-radius:50%;animation:profspin .8s linear infinite;vertical-align:middle;margin-right:9px}
+@keyframes profspin{to{transform:rotate(360deg)}}
+@media(max-width:680px){.prof-grid,.professor-form-grid{grid-template-columns:1fr}.subject-row{grid-template-columns:minmax(0,1fr) 100px auto}.days-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
@@ -234,7 +264,92 @@ main{position:relative;padding:34px 28px 70px}
       </div>
     </div>
     <div class="chips"><span class="chip">🧠 AI Quiz</span><span class="chip">📅 Smart Planner</span><span class="chip">⚡ Groq LLM</span></div>
+    <div class="professor-link-wrap"><button type="button" class="professor-link" onclick="openProfessorAuth()">🎓 Professor Only</button></div>
   </div>
+</div>
+
+<!-- ================= PROFESSOR AUTH ================= -->
+<div id="professor-auth-section" class="hidden">
+  <div class="professor-wrap">
+    <div class="logo-big">🎓</div>
+    <h1><span class="grad">Professor Portal</span></h1>
+    <p>Dedicated access for faculty timetable planning</p>
+    <div class="auth-card">
+      <div class="segs" role="tablist">
+        <button class="seg on" id="prof-seg-login" onclick="setProfessorAuth('login')">🔑 Login</button>
+        <button class="seg" id="prof-seg-register" onclick="setProfessorAuth('register')">🌟 Register</button>
+      </div>
+      <div id="prof-login-form">
+        <div class="form-group"><label for="prof-login-username">👤 Professor Username</label><input type="text" id="prof-login-username" placeholder="Enter professor username" autocomplete="username"></div>
+        <div class="form-group"><label for="prof-login-password">🔒 Password</label><div class="pw"><input type="password" id="prof-login-password" placeholder="Enter password" autocomplete="current-password"><button type="button" class="eye" onclick="togglePw('prof-login-password',this)" aria-label="Show password">👁️</button></div></div>
+        <button class="btn" onclick="handleProfessorLogin()">Login as Professor 🚀</button>
+        <div id="prof-login-msg" class="error"></div>
+      </div>
+      <div id="prof-register-form" class="hidden">
+        <div class="form-group"><label for="prof-reg-username">🎭 Create Professor Username</label><input type="text" id="prof-reg-username" placeholder="Choose username" autocomplete="username"></div>
+        <div class="form-group"><label for="prof-reg-password">🛡️ Create Password</label><div class="pw"><input type="password" id="prof-reg-password" placeholder="At least 6 characters" autocomplete="new-password"><button type="button" class="eye" onclick="togglePw('prof-reg-password',this)" aria-label="Show password">👁️</button></div></div>
+        <button class="btn" onclick="handleProfessorRegister()">Create Professor Account 🎉</button>
+        <div id="prof-reg-msg" class="error"></div>
+      </div>
+    </div>
+    <button type="button" class="btn ghost" style="margin-top:16px" onclick="backToStudentLogin()">← Back to Student Login</button>
+  </div>
+</div>
+
+<!-- ================= PROFESSOR DASHBOARD ================= -->
+<div id="professor-dashboard" class="hidden">
+  <header class="top">
+    <div class="brand"><span class="lg">🎓</span> Smart Timetable AI · Professor</div>
+    <div class="user push"><div class="avatar" id="prof-avatar">P</div><b id="prof-name">Professor</b><button class="btn ghost sm" onclick="handleProfessorLogout()">↩ Logout</button></div>
+  </header>
+  <main><div class="wrap">
+    <section id="professor-home-view" class="view">
+      <div class="page-head"><h2>Professor Dashboard</h2><p>Choose the timetable task you want to work on.</p></div>
+      <div class="prof-grid">
+        <button type="button" class="cell prof-option" onclick="openClassTeacherForm()"><span class="big">🧑‍🏫</span><h3>Generate timetable as class teacher</h3><p>Enter class timings, practical batches, working days and subject credits.</p><span class="go">Open form →</span></button>
+        <button type="button" class="cell prof-option" disabled><span class="big">🏛️</span><h3>Generate department time table with updations</h3><p>This section will be developed in the next phase.</p><span class="go">Coming next</span></button>
+      </div>
+    </section>
+
+    <section id="class-teacher-view" class="view hidden">
+      <div class="professor-actions"><div class="page-head" style="margin:0"><h2>Class Teacher Timetable</h2><p>Provide the class structure and scheduling constraints.</p></div><button class="btn ghost sm" onclick="showProfessorHome()">← Dashboard</button></div>
+      <div class="card">
+        <form id="class-teacher-form" onsubmit="event.preventDefault(); submitClassTeacherInputs();">
+          <h3 style="margin-bottom:16px">🏫 College Timings</h3>
+          <div class="professor-form-grid">
+            <div class="form-group"><label for="college-start">College Start Time</label><input id="college-start" type="time" required></div>
+            <div class="form-group"><label for="college-end">College End Time</label><input id="college-end" type="time" required></div>
+            <div class="form-group"><label for="lecture-minutes">Per Lecture Slot (minutes)</label><input id="lecture-minutes" type="number" min="1" max="240" placeholder="e.g. 60" required></div>
+            <div class="form-group"><label for="practical-minutes">Practical Slot (minutes)</label><input id="practical-minutes" type="number" min="1" max="360" placeholder="e.g. 120" required></div>
+          </div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+          <h3 style="margin-bottom:12px">🧪 Practical Batch Division</h3>
+          <div class="professor-form-grid">
+            <div class="form-group"><label for="batch-count">Number of Practical Batches</label><input id="batch-count" type="number" min="1" max="20" value="2" required oninput="renderBatchNames()"></div>
+            <div class="form-group"><label for="batch-names">Batch Names (comma separated)</label><input id="batch-names" type="text" value="A, B" placeholder="A, B, C" required></div>
+          </div>
+          <div id="batch-preview" class="batch-tags"><span class="batch-tag">Batch A</span><span class="batch-tag">Batch B</span></div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+          <h3 style="margin-bottom:12px">📆 College Working Days</h3>
+          <p style="margin-bottom:12px">Select the working days (Monday to Saturday).</p>
+          <div class="days-grid">
+            <label class="day-choice"><input type="checkbox" name="working-day" value="Monday" checked> Monday</label>
+            <label class="day-choice"><input type="checkbox" name="working-day" value="Tuesday" checked> Tuesday</label>
+            <label class="day-choice"><input type="checkbox" name="working-day" value="Wednesday" checked> Wednesday</label>
+            <label class="day-choice"><input type="checkbox" name="working-day" value="Thursday" checked> Thursday</label>
+            <label class="day-choice"><input type="checkbox" name="working-day" value="Friday" checked> Friday</label>
+            <label class="day-choice"><input type="checkbox" name="working-day" value="Saturday" checked> Saturday</label>
+          </div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+          <div class="professor-actions"><div><h3>📚 Subjects & Credits</h3><p>Add every subject and its credit value.</p></div><button type="button" class="btn ghost sm" onclick="addSubjectRow()">＋ Add Subject</button></div>
+          <div id="subject-rows"><div class="subject-row"><input type="text" class="subject-name" placeholder="Subject name" required><input type="number" class="subject-credit" min="0.5" max="20" step="0.5" placeholder="Credits" required><button type="button" class="remove-subject" onclick="removeSubjectRow(this)" aria-label="Remove subject">✕</button></div></div>
+          <div id="class-teacher-error" class="error"></div>
+          <button id="class-teacher-generate" class="btn" type="submit" style="margin-top:18px">Generate Timetable ⚡</button>
+          <div id="class-teacher-processing" class="processing-panel hidden" role="status"><span class="processing-spinner"></span><b>Processing your class timetable inputs…</b><p style="margin-top:8px">Your details are being checked. Timetable generation will be enabled in the next phase.</p></div>
+        </form>
+      </div>
+    </section>
+  </div></main>
 </div>
 
 <!-- ================= APP ================= -->
@@ -441,6 +556,142 @@ main{position:relative;padding:34px 28px 70px}
     }
     function stopLoading(boxId) { clearInterval(loadTimer); $(boxId).classList.add('hidden'); }
 
+    // ---------- professor portal ----------
+    function openProfessorAuth() {
+        $('auth-section').classList.add('hidden');
+        $('professor-dashboard').classList.add('hidden');
+        $('professor-auth-section').classList.remove('hidden');
+        setProfessorAuth('login');
+        scrollTo({ top: 0 });
+    }
+    function backToStudentLogin() {
+        $('professor-auth-section').classList.add('hidden');
+        $('professor-dashboard').classList.add('hidden');
+        $('auth-section').classList.remove('hidden');
+        scrollTo({ top: 0 });
+    }
+    function setProfessorAuth(mode) {
+        const login = mode === 'login';
+        $('prof-login-form').classList.toggle('hidden', !login);
+        $('prof-register-form').classList.toggle('hidden', login);
+        $('prof-seg-login').classList.toggle('on', login);
+        $('prof-seg-register').classList.toggle('on', !login);
+        $('prof-login-msg').textContent = '';
+        $('prof-reg-msg').textContent = '';
+    }
+    async function handleProfessorLogin() {
+        const username = $('prof-login-username').value.trim();
+        const password = $('prof-login-password').value;
+        const msg = $('prof-login-msg');
+        if (!username || !password) { msg.textContent = '⚠️ Enter your username and password.'; return; }
+        try {
+            const res = await fetch('/api/professor/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+            const data = await res.json();
+            if (!data.success) { msg.textContent = '⚠️ ' + data.message; return; }
+            $('prof-name').textContent = username;
+            $('prof-avatar').textContent = username.charAt(0).toUpperCase();
+            $('professor-auth-section').classList.add('hidden');
+            $('professor-dashboard').classList.remove('hidden');
+            showProfessorHome();
+            toast('Welcome, Professor ' + username + '! 🎓', 'ok');
+        } catch (err) { msg.textContent = '⚠️ Server error during professor login.'; }
+    }
+    async function handleProfessorRegister() {
+        const username = $('prof-reg-username').value.trim();
+        const password = $('prof-reg-password').value;
+        const msg = $('prof-reg-msg');
+        if (!username || !password) { msg.className='error'; msg.textContent='⚠️ Fill in both fields.'; return; }
+        if (password.length < 6) { msg.className='error'; msg.textContent='⚠️ Password must contain at least 6 characters.'; return; }
+        try {
+            const res = await fetch('/api/professor/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+            const data = await res.json();
+            msg.className = data.success ? 'success' : 'error';
+            msg.textContent = (data.success ? '🎉 ' : '⚠️ ') + data.message;
+            if (data.success) {
+                $('prof-login-username').value = username;
+                $('prof-login-password').value = password;
+                await handleProfessorLogin();
+            }
+        } catch (err) { msg.className='error'; msg.textContent='⚠️ Server error during registration.'; }
+    }
+    async function handleProfessorLogout() {
+        try { await fetch('/api/professor/logout',{method:'POST'}); } catch (err) {}
+        $('professor-dashboard').classList.add('hidden');
+        $('professor-auth-section').classList.remove('hidden');
+        $('prof-login-username').value=''; $('prof-login-password').value='';
+        setProfessorAuth('login');
+        toast('Professor logged out.');
+    }
+    function showProfessorHome() {
+        $('professor-home-view').classList.remove('hidden');
+        $('class-teacher-view').classList.add('hidden');
+        scrollTo({top:0});
+    }
+    function openClassTeacherForm() {
+        $('professor-home-view').classList.add('hidden');
+        $('class-teacher-view').classList.remove('hidden');
+        scrollTo({top:0});
+    }
+    function renderBatchNames() {
+        const count = Math.max(1, Math.min(20, Number($('batch-count').value) || 1));
+        const current = $('batch-names').value.split(',').map(x => x.trim()).filter(Boolean);
+        const names = Array.from({length:count}, (_,i) => current[i] || String.fromCharCode(65+i));
+        $('batch-names').value = names.join(', ');
+        $('batch-preview').innerHTML = names.map(name => `<span class="batch-tag">Batch ${escapeHtml(name)}</span>`).join('');
+    }
+    function addSubjectRow() {
+        const row = document.createElement('div');
+        row.className = 'subject-row';
+        row.innerHTML = '<input type="text" class="subject-name" placeholder="Subject name" required><input type="number" class="subject-credit" min="0.5" max="20" step="0.5" placeholder="Credits" required><button type="button" class="remove-subject" onclick="removeSubjectRow(this)" aria-label="Remove subject">✕</button>';
+        $('subject-rows').appendChild(row);
+    }
+    function removeSubjectRow(button) {
+        const rows = $('subject-rows').querySelectorAll('.subject-row');
+        if (rows.length <= 1) { toast('At least one subject is required.', 'warn'); return; }
+        button.closest('.subject-row').remove();
+    }
+    async function submitClassTeacherInputs() {
+        const error = $('class-teacher-error');
+        error.textContent = '';
+        const workingDays = Array.from(document.querySelectorAll('input[name="working-day"]:checked')).map(el => el.value);
+        const subjects = Array.from(document.querySelectorAll('#subject-rows .subject-row')).map(row => ({
+            name: row.querySelector('.subject-name').value.trim(),
+            credits: Number(row.querySelector('.subject-credit').value)
+        }));
+        const batchNames = $('batch-names').value.split(',').map(x => x.trim()).filter(Boolean);
+        const payload = {
+            college_start: $('college-start').value,
+            college_end: $('college-end').value,
+            lecture_minutes: Number($('lecture-minutes').value),
+            practical_minutes: Number($('practical-minutes').value),
+            batch_count: Number($('batch-count').value),
+            batches: batchNames,
+            working_days: workingDays,
+            subjects
+        };
+        if (!payload.college_start || !payload.college_end || payload.college_end <= payload.college_start) { error.textContent='⚠️ Enter a valid college start and end time.'; return; }
+        if (!payload.lecture_minutes || !payload.practical_minutes || !payload.batch_count || batchNames.length !== payload.batch_count) { error.textContent='⚠️ Check lecture/practical durations and ensure batch names match the batch count.'; return; }
+        if (!workingDays.length) { error.textContent='⚠️ Select at least one working day.'; return; }
+        if (!subjects.length || subjects.some(s => !s.name || !s.credits || s.credits <= 0)) { error.textContent='⚠️ Enter every subject name and a valid credit value.'; return; }
+
+        const button = $('class-teacher-generate');
+        button.disabled = true;
+        button.textContent = 'Processing…';
+        $('class-teacher-processing').classList.remove('hidden');
+        try {
+            const res = await fetch('/api/professor/class-teacher/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            const data = await res.json();
+            if (!data.success) { error.textContent='⚠️ ' + data.message; $('class-teacher-processing').classList.add('hidden'); }
+            else { $('class-teacher-processing').querySelector('p').textContent = data.message; }
+        } catch (err) {
+            $('class-teacher-processing').classList.add('hidden');
+            error.textContent='⚠️ Could not send the details to the server.';
+        } finally {
+            button.disabled = false;
+            button.textContent = 'Generate Timetable ⚡';
+        }
+    }
+
     // ---------- auth ----------
     function setAuth(mode) {
         const login = mode === 'login';
@@ -457,6 +708,8 @@ main{position:relative;padding:34px 28px 70px}
     }
     ['login-username', 'login-password'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); }));
     ['reg-username', 'reg-password'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') handleRegister(); }));
+    ['prof-login-username','prof-login-password'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') handleProfessorLogin(); }));
+    ['prof-reg-username','prof-reg-password'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') handleProfessorRegister(); }));
 
     async function handleLogin() {
         const username = $('login-username').value, password = $('login-password').value, msgEl = $('login-msg');
