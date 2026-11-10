@@ -1,184 +1,271 @@
+<div align="center">
+
 # 🎓 Smart Timetable AI
 
-An AI-powered study planning assistant built with Python, PDF text extraction, and Groq LLM integration. Smart Timetable AI helps students process syllabus PDFs, prepare for quick revision, and plan their study schedules around their daily routines.
+### Turn your PDFs into quizzes and a personalised daily study plan
 
-## 📌 Project Overview
+An AI-powered study planner built with **Flask**, **PDF text extraction** and the **Groq LLM**.
 
-Students often struggle to manage their study time alongside college schedules, travelling, meals, and sleep. Manually creating a balanced timetable can be time-consuming.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20App-brightgreen?style=for-the-badge&logo=render&logoColor=white)](https://smart-time-table-4gqu.onrender.com)
 
-**Smart Timetable AI** aims to simplify academic planning by extracting information from PDF files and preparing it for AI-powered revision and personalized timetable generation.
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-3.x-000000?style=flat-square&logo=flask&logoColor=white)
+![Groq](https://img.shields.io/badge/LLM-Groq-F55036?style=flat-square)
+![LangChain](https://img.shields.io/badge/LangChain-integrated-1C3C3C?style=flat-square)
+![Render](https://img.shields.io/badge/Hosted%20on-Render-46E3B7?style=flat-square&logo=render&logoColor=white)
+![Google Calendar](https://img.shields.io/badge/Google%20Calendar-API-4285F4?style=flat-square&logo=googlecalendar&logoColor=white)
 
-## 🎯 Objectives
+[Live Demo](https://smart-time-table-4gqu.onrender.com) · [Features](#-features) · [Quick Start](#-quick-start) · [Deployment](#%EF%B8%8F-deployment-on-render) · [API](#-api-endpoints)
 
-- Extract text from syllabus and college timetable PDFs.
-- Support quick revision workflows.
-- Collect students' daily routine information.
-- Prepare extracted content for AI-based processing.
-- Develop personalized study schedules using an LLM.
-- Reduce manual effort in study planning.
+</div>
+
+> ⏳ **Note:** the demo runs on a free server that sleeps when idle, so the first load can take **30–60 seconds**.
+
+---
+
+## 📑 Table of Contents
+
+- [About the Project](#-about-the-project)
+- [Features](#-features)
+- [How It Works](#-how-it-works)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Quick Start](#-quick-start)
+- [Configuration](#-configuration)
+- [Deployment on Render](#%EF%B8%8F-deployment-on-render)
+- [Usage Guide](#-usage-guide)
+- [API Endpoints](#-api-endpoints)
+- [Security Notes](#-security-notes)
+- [Known Limitations](#%EF%B8%8F-known-limitations)
+- [Roadmap](#%EF%B8%8F-roadmap)
+- [Contributors](#-contributors)
+
+---
+
+## 📌 About the Project
+
+Students often struggle to balance study time with lectures, travelling, meals and sleep. Building a realistic timetable by hand is slow, and revision material takes time to prepare.
+
+**Smart Timetable AI** reads a student's PDFs, combines them with their daily routine, and uses an LLM to:
+
+- generate **multiple-choice quizzes** from syllabus notes, and
+- build a **conflict-free daily timetable** around fixed college classes, travel, meals and sleep,
+
+then helps the student stick to it with **reminders** and **calendar export**.
 
 ## ✨ Features
 
-- **User Login:** Basic username and password authentication.
-- **PDF Text Extraction:** Extract text from PDF documents using `pypdf`.
-- **Text Chunking:** Divide large text into smaller overlapping chunks for LLM processing.
-- **Quick Revision Mode:** Process syllabus PDFs for future AI-generated revision material.
-- **Smart Timetable Mode:** Read college/school timetable PDFs and collect daily routine details.
-- **Groq LLM Integration:** Connect to a language model through LangChain's Groq integration.
-- **Environment Variables:** Store credentials and API keys in a local `.env` file.
+| | Feature | Description |
+|---|---|---|
+| 🔐 | **Student accounts** | Register and log in with a username and password |
+| 👩‍🏫 | **Professor accounts** | Separate professor role with a class-teacher input form (working days, batches, subjects, credits) |
+| 🧠 | **AI Quiz** | Upload a syllabus or notes PDF and get a 5-question multiple-choice quiz |
+| 🗓️ | **Smart Timetable** | Upload a college timetable PDF, add wake-up, sleep, dinner and travel times, and get a daily plan with study priorities and productivity tips |
+| 🔔 | **Reminders** | Browser notifications for wake-up, study, meals and sleep |
+| 📆 | **Google Calendar** | Add the whole plan to your calendar with pop-up reminders and optional daily repeats |
+| 📥 | **.ics export** | Download a calendar file that works with any calendar app, no Google setup needed |
+| 🛡️ | **Protected files** | Only CSS, JS, images and fonts are served, so source code stays private |
 
-## 🛠️ Technologies Used
+## 🔄 How It Works
 
-| Technology | Purpose |
+```mermaid
+flowchart TD
+    A[Login / Register] --> B{Choose a tool}
+    B --> C[AI Quiz]
+    B --> D[Smart Timetable]
+    B --> P[Professor: class-teacher inputs]
+    C --> C1[Upload syllabus PDF]
+    C1 --> C2[Extract text with pypdf]
+    C2 --> C3[Groq LLM writes 5 MCQs]
+    C3 --> C4[Take the quiz]
+    D --> D1[Upload college timetable PDF]
+    D1 --> D2[Enter wake, sleep, dinner, travel times]
+    D2 --> D3[Groq LLM builds the daily plan]
+    D3 --> D4[Browser reminders]
+    D3 --> D5[Google Calendar]
+    D3 --> D6[.ics download]
+```
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
 |---|---|
-| Python | Core programming language |
-| PyPDF | PDF text extraction |
-| LangChain Groq | LLM integration |
-| Groq API | AI model access |
-| python-dotenv | Loading environment variables |
-| Git & GitHub | Version control and project hosting |
+| **Backend** | Python, Flask, Gunicorn |
+| **Frontend** | HTML, CSS, JavaScript (`index.html`) |
+| **AI** | Groq API through LangChain (`openai/gpt-oss-20b` by default) |
+| **PDF processing** | pypdf |
+| **Calendar** | Google Calendar API, iCalendar (`.ics`) |
+| **Config** | python-dotenv |
+| **Hosting** | Render |
+| **Version control** | Git and GitHub |
 
 ## 📂 Project Structure
 
-```text
-Smart-Timetable-AI/
-│
-├── app.py
-├── llm.py
-├── requirements.txt
-├── .env
+```
+Smart_Time_Table/
+├── app.py              # Flask app: routes, auth, PDF handling, timetable, calendar
+├── llm.py              # Groq LLM setup and configuration
+├── index.html          # Web interface
+├── requirements.txt    # Python dependencies
+├── users.csv           # User accounts (created automatically if missing)
+├── uploads/            # Uploaded PDFs (created automatically, not in Git)
+├── .env                # Local secrets (not in Git)
 ├── .gitignore
 └── README.md
 ```
 
-**Note:** The `.env` file is for local use only and must not be uploaded to GitHub.
+## 🚀 Quick Start
 
-## ⚙️ Installation and Setup
-
-### 1. Clone the repository
+**Prerequisites:** Python 3.10+ and a free [Groq API key](https://console.groq.com).
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-```
+# 1. Clone the repository
+git clone https://github.com/sakshidange06/Smart_Time_Table.git
+cd Smart_Time_Table
 
-Replace `YOUR_USERNAME` and `YOUR_REPOSITORY` with your actual GitHub username and repository name.
-
-### 2. Open the project folder
-
-```bash
-cd YOUR_REPOSITORY
-```
-
-### 3. Create a virtual environment (recommended)
-
-```bash
+# 2. Create and activate a virtual environment
 python -m venv venv
-```
+venv\Scripts\activate          # Windows
+# source venv/bin/activate     # macOS / Linux
 
-Activate it on Windows:
-
-```bash
-venv\Scripts\activate
-```
-
-### 4. Install dependencies
-
-```bash
+# 3. Install dependencies
 pip install -r requirements.txt
 ```
 
-Your `requirements.txt` should contain:
-
-```text
-pypdf
-langchain-groq
-python-dotenv
-```
-
-### 5. Configure environment variables
-
-Create a `.env` file in the project root directory:
+**4. Create a `.env` file** in the project root. Use no spaces or quotes around the values:
 
 ```env
-GROQ_API_KEY=your_new_groq_api_key
-VALID_USERNAME=admin
-VALID_PASSWORD=your_demo_password
+GROQ_API_KEY=your_groq_api_key
+FLASK_SECRET_KEY=any_long_random_text
 ```
 
-Replace the placeholder values with your own local configuration.
-
-**Security:** Never commit `.env` or share your API key publicly. If an API key has been exposed, revoke it and create a replacement.
-
-### 6. Run the application
+**5. Run the app**
 
 ```bash
 python app.py
 ```
 
-Follow the terminal prompts to log in and choose an operation.
+Open **http://127.0.0.1:5000** in your browser.
 
-## 🚀 How to Use
+## ⚙️ Configuration
 
-### Option 1: Quick Revision
+| Variable | Required | Default | Purpose |
+|---|:---:|---|---|
+| `GROQ_API_KEY` | ✅ | n/a | Groq API key for the quiz and timetable |
+| `FLASK_SECRET_KEY` | ✅ | n/a | Signs login sessions; use a long random string |
+| `GROQ_MODEL` | | `openai/gpt-oss-20b` | LLM model name |
+| `GROQ_TIMEOUT` | | `60` | Seconds to wait for a model reply |
+| `GROQ_MAX_RETRIES` | | `1` | Retries on connection errors |
+| `ADMIN_PASSWORD` | | `password123` | Password of the default `admin` account |
+| `PYTHON_VERSION` | | Render default | Set to `3.12.8` on Render |
 
-1. Run the application.
-2. Enter your login credentials.
-3. Select `1` for Quick Revision.
-4. Enter the path to your syllabus PDF.
-5. The application extracts the PDF text and divides it into chunks ready for AI processing.
+## ☁️ Deployment on Render
 
-### Option 2: Create Smart Timetable
+> GitHub Pages cannot run this app because it needs a Python backend. Use Render (or a similar host).
 
-1. Run the application.
-2. Log in.
-3. Select `2` for Create Smart Timetable.
-4. Enter the path to your college/school timetable PDF.
-5. Enter your waking time, sleeping time, dinner time, and travel timings.
-6. The application collects this information for the scheduling workflow.
+1. Push the project to GitHub.
+2. On [render.com](https://render.com), choose **New → Web Service** and select this repository.
+3. Set the commands:
 
-## 🔄 System Workflow
+   | Setting | Value |
+   |---|---|
+   | **Build Command** | `pip install -r requirements.txt` |
+   | **Start Command** | `gunicorn app:app --workers 1 --threads 4 --timeout 200` |
 
-```text
-        Start Application
-               |
-               v
-          User Login
-               |
-               v
-       Select Operation
-          /         \
-         v           v
- Quick Revision   Smart Timetable
-         |           |
-         v           v
-   Syllabus PDF   Timetable PDF
-         |           |
-         v           v
-   Extract Text   Extract Text
-         |           |
-         v           v
-   Text Chunking  Collect Routine
-         |           |
-         v           v
-   AI Processing  AI Scheduling
-```
+4. Add the variables from the [Configuration](#%EF%B8%8F-configuration) table in the **Environment** tab (at least `GROQ_API_KEY` and `FLASK_SECRET_KEY`).
+5. Click **Create Web Service**. Render redeploys automatically on every push to `main`.
 
-*The AI processing and automatic timetable-generation stages require the corresponding generation logic to be implemented and connected.*
+<details>
+<summary><b>Optional: enable Google Calendar on Render</b></summary>
 
-## 🧠 AI Integration
+1. Create an OAuth client in Google Cloud Console and download `credentials.json`.
+2. In Render, open **Environment → Secret Files** and upload it as `credentials.json`.
+3. Add `https://YOUR-APP.onrender.com/oauth2callback` to the OAuth client's **Authorized redirect URIs**.
 
-The `llm.py` module initializes a Groq chat model through LangChain. The model can be invoked from `app.py` or another application module to process syllabus content, summarize topics, and generate study plans.
+</details>
 
-Example:
+## 📖 Usage Guide
 
-```python
-from llm import llm
+**🧠 AI Quiz**
+1. Register or log in.
+2. Open the quiz section and upload a syllabus or notes PDF.
+3. Answer the generated 5-question multiple-choice quiz.
 
-response = llm.invoke(
-    "Create a simple study plan for Mathematics."
-)
+**🗓️ Smart Timetable**
+1. Log in and open the timetable section.
+2. Upload your college timetable PDF.
+3. Enter your wake-up, sleep and dinner times, plus any travel timings.
+4. Generate the plan, then enable reminders, add it to Google Calendar, or download the `.ics` file.
 
-print(response.content)
-```
+**👩‍🏫 Professor**
+1. Use the **Professor Only** button on the login page to register or log in.
+2. Fill in the class-teacher form (college hours, slot lengths, batches, working days, subjects and credits).
 
-The selected model must be available to your Groq account. Model availability may change, so check the current
+## 🔌 API Endpoints
+
+<details>
+<summary><b>Click to expand</b></summary>
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/` | Web interface |
+| `POST` | `/api/register` | Register a student |
+| `POST` | `/api/login` | Student login |
+| `POST` | `/api/professor/register` | Register a professor |
+| `POST` | `/api/professor/login` | Professor login |
+| `POST` | `/api/professor/logout` | Professor logout |
+| `POST` | `/api/professor/class-teacher/submit` | Submit class-teacher inputs |
+| `POST` | `/api/quiz` | Generate a quiz from a PDF |
+| `POST` | `/api/timetable` | Generate a daily timetable from a PDF and routine |
+| `POST` | `/api/timetable/events` | Parse a timetable into timed events for notifications |
+| `POST` | `/api/calendar/add` | Add the timetable to Google Calendar |
+| `POST` | `/api/calendar/ics` | Download the timetable as an `.ics` file |
+| `GET` | `/google/login` | Start the Google sign-in flow |
+| `GET` | `/api/google/status` | Check the Google connection |
+| `POST` | `/api/google/disconnect` | Disconnect Google |
+
+</details>
+
+## 🔒 Security Notes
+
+- **Never commit** `.env`, `credentials.json` or real user data. They are listed in `.gitignore`.
+- If an API key is ever exposed, revoke it in the Groq console and create a new one.
+- Only whitelisted asset types (CSS, JS, images, fonts) can be downloaded from the server.
+- Session cookies are `HttpOnly`, `SameSite=Lax`, and `Secure` when deployed on Render.
+
+## ⚠️ Known Limitations
+
+- Accounts are stored in `users.csv` with **plain-text passwords**. Moving to a database with hashed passwords is planned.
+- On the free hosting plan the disk resets on every restart, so accounts registered on the live site are temporary.
+- Professor class-timetable **generation is not implemented yet**; the form currently validates and receives the inputs.
+- Results depend on PDF text quality. Scanned, image-only PDFs cannot be read.
+
+## 🗺️ Roadmap
+
+- [x] Student login and registration
+- [x] AI quiz from a syllabus PDF
+- [x] Smart daily timetable with reminders
+- [x] Google Calendar and `.ics` export
+- [x] Professor login and class-teacher input form
+- [ ] Database storage with hashed passwords
+- [ ] Automatic class timetable generation for professors
+- [ ] Deadline tracking and conflict detection
+- [ ] Saved timetable and quiz history
+
+## 👥 Contributors
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/sakshidange06"><b>@sakshidange06</b></a></td>
+    <td align="center"><a href="https://github.com/shraddhadange31-png"><b>@shraddhadange31-png</b></a></td>
+    <td align="center"><a href="https://github.com/SejalGawali"><b>@SejalGawali</b></a></td>
+  </tr>
+</table>
+
+---
+
+<div align="center">
+
+⭐ If you find this project useful, please give it a star!
+
+</div>
