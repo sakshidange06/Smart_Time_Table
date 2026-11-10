@@ -15,8 +15,7 @@ __pycache__/
 *.pyo
 *.pyd
 
-# User data and uploads
-users.csv
+# Uploaded files
 uploads/
 
 # IDE / Editor
