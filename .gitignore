@@ -2,6 +2,9 @@
 .env
 .env.*
 
+# Google OAuth credentials
+credentials.json
+
 # Python virtual environment
 venv/
 .venv/
@@ -12,11 +15,9 @@ __pycache__/
 *.pyo
 *.pyd
 
+# User data and uploads
 users.csv
 uploads/
-
-
-
 
 # IDE / Editor
 .vscode/
