@@ -1,3 +1,4 @@
+# app.py
 import os
 import re
 import csv
@@ -30,10 +31,7 @@ from coordinator import coordinator_bp
 # =========================================================
 app = Flask(__name__, template_folder=".", static_folder=".")
 
-# Render sits behind a proxy: trust its https/host headers
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
-
-# Needed for login sessions (Google tokens are kept in the session).
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
 
 USER_CSV = "users.csv"
@@ -44,7 +42,6 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Register coordinator blueprint for professor services
 app.register_blueprint(coordinator_bp)
 
-# ---------------- Google Calendar settings ----------------
 GOOGLE_CLIENT_SECRETS = (
           "/etc/secrets/credentials.json"
           if os.path.exists("/etc/secrets/credentials.json")
@@ -376,7 +373,7 @@ def register():
           return jsonify({"success": False, "message": message}), 400
 
 # =========================================================
-# PROFESSOR AUTHENTICATION 
+# PROFESSOR AUTHENTICATION
 # =========================================================
 @app.route("/api/professor/register", methods=["POST"])
 def professor_register():
