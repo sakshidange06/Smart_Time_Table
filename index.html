@@ -38,12 +38,20 @@ html.bf #butterfly{display:block}
 
 .btn{font-family:var(--body);display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 18px;border:0;border-radius:14px;font-size:1rem;font-weight:700;color:#06121a;background:linear-gradient(135deg,var(--cyan),var(--violet));box-shadow:0 8px 28px rgba(34,211,238,.28);transition:transform .15s,box-shadow .2s,filter .2s;text-decoration:none;cursor:pointer}
 .btn:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 12px 34px rgba(167,139,250,.4)}
+<<<<<<< Updated upstream
+=======
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+>>>>>>> Stashed changes
 .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
 .btn.ghost:hover{background:var(--panel2);border-color:var(--violet)}
 .btn.sm{width:auto;padding:8px 14px;font-size:.85rem}
 .form-group{margin-bottom:16px}
 label{display:block;margin-bottom:7px;font-weight:700;font-size:.9rem}
 input[type=text],input[type=password],input[type=time],input[type=number],textarea{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:.96rem;background:#0c0f22;color:var(--ink);transition:border-color .2s,box-shadow .2s;color-scheme:dark}
+<<<<<<< Updated upstream
+=======
+input[type=file]{width:100%;padding:12px;border:1.5px dashed var(--line);border-radius:12px;background:#0c0f22;color:var(--ink);font:inherit}
+>>>>>>> Stashed changes
 input:focus,textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.15)}
 .pw{position:relative}.pw input{padding-right:48px}
 .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:transparent;font-size:18px;border-radius:10px;color:var(--ink);cursor:pointer}
@@ -64,11 +72,33 @@ input:focus,textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:700;font-size:1.08rem}
 .brand .lg{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:19px;background:linear-gradient(135deg,rgba(34,211,238,.2),rgba(167,139,250,.25));border:1px solid rgba(167,139,250,.4)}
 .user{display:flex;align-items:center;gap:10px}
+.push{margin-left:auto}
 .avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:linear-gradient(135deg,var(--amber),var(--pink));color:#1a0b1a}
 main{position:relative;padding:34px 28px 70px}
 .wrap{max-width:1000px;margin:0 auto}
 .card{background:rgba(17,20,42,.82);border:1px solid var(--line);border-radius:var(--r);padding:26px;margin-bottom:18px;box-shadow:var(--glow)}
 
+<<<<<<< Updated upstream
+=======
+/* student tabs & pages */
+.tabs{display:flex;gap:6px;margin-left:12px}
+.tab{border:0;padding:9px 14px;border-radius:10px;background:transparent;color:var(--muted);font:700 .9rem var(--body);cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab.on{background:linear-gradient(135deg,var(--violet),var(--cyan));color:#06121a}
+.page-head{margin-bottom:18px}
+.page-head h2{margin-bottom:6px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.q-card{background:#0c0f22;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.q-card h4{margin:0 0 10px;font-family:var(--head)}
+.opt{display:flex;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;font-weight:500}
+.opt:hover{border-color:var(--cyan)}
+.opt.right{border-color:var(--lime);background:rgba(163,230,53,.1)}
+.opt.wrong{border-color:var(--red);background:rgba(251,113,133,.1)}
+.row-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.row-btns .btn{width:auto;flex:1;min-width:170px}
+.score{font-family:var(--head);font-size:1.4rem;margin-top:12px}
+
+>>>>>>> Stashed changes
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
 .cell{background:rgba(17,20,42,.82);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--glow)}
 .hero{grid-column:span 4;background:linear-gradient(135deg,rgba(109,40,217,.35),rgba(8,145,178,.25)),var(--panel)}
@@ -83,8 +113,19 @@ main{position:relative;padding:34px 28px 70px}
 .timetable-output table{width:100%;border-collapse:collapse;font-size:.92rem}
 .timetable-output th{background:linear-gradient(135deg,rgba(167,139,250,.35),rgba(34,211,238,.25));color:#fff;text-align:left;padding:12px}
 .timetable-output td{padding:11px 12px;border-bottom:1px solid var(--line);color:#dfe3ff}
+<<<<<<< Updated upstream
 .timetable-output h4, .timetable-output h5{margin-top:14px;color:var(--cyan)}
 .timetable-output ul{margin:6px 0 14px 20px}
+=======
+.timetable-output table.dept-subtable{margin-top:8px;margin-bottom:18px}
+.timetable-output h4,.timetable-output h5{margin-top:14px;color:var(--cyan)}
+.dept-year-heading{margin:18px 0 6px;color:var(--cyan)}
+.timetable-output ul{margin:6px 0 14px 20px}
+.timetable-output p{margin:6px 0}
+.badge-type{display:inline-block;padding:3px 9px;border-radius:99px;font-size:.78rem;font-weight:700;background:rgba(34,211,238,.15);color:var(--cyan)}
+.badge-type.prac{background:rgba(167,139,250,.2);color:var(--violet)}
+.badge-type.brk{background:rgba(251,191,36,.18);color:var(--amber)}
+>>>>>>> Stashed changes
 
 #toasts{position:fixed;right:20px;bottom:20px;z-index:100000;display:grid;gap:10px;max-width:360px}
 .toast{padding:13px 16px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);box-shadow:0 14px 40px rgba(0,0,0,.5);font-weight:700;font-size:.92rem;border-left:5px solid var(--cyan)}
@@ -98,10 +139,30 @@ main{position:relative;padding:34px 28px 70px}
 .prof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .prof-option{min-height:190px;cursor:pointer;text-align:left;color:var(--ink);background:rgba(17,20,42,.82);border:1px solid var(--line);border-radius:var(--r);padding:24px}
 .prof-option .big{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;font-size:27px;margin-bottom:14px;background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(167,139,250,.22))}
+<<<<<<< Updated upstream
 .professor-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .subject-row{display:grid;grid-template-columns:minmax(0,1fr) 130px auto;gap:10px;align-items:center;margin:10px 0}
 .remove-subject{border:1px solid rgba(251,113,133,.4);border-radius:10px;background:rgba(251,113,133,.1);color:var(--red);padding:11px 13px;cursor:pointer}
 @media(max-width:768px){.professor-form-grid{grid-template-columns:1fr}}
+=======
+.prof-option .go{display:inline-block;margin-top:12px;font-weight:800;color:var(--cyan)}
+.professor-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.subject-row{display:grid;grid-template-columns:minmax(0,1fr) 130px auto;gap:10px;align-items:center;margin:10px 0}
+.remove-subject{border:1px solid rgba(251,113,133,.4);border-radius:10px;background:rgba(251,113,133,.1);color:var(--red);padding:11px 13px;cursor:pointer}
+#staff-allocation-table th{text-align:left;padding:8px;color:var(--cyan);font-size:.85rem}
+#staff-allocation-table td{padding:6px 4px}
+@media(max-width:768px){
+  .professor-form-grid,.prof-grid,.grid2{grid-template-columns:1fr}
+  .tabs{display:none}
+  .hero,.tool{grid-column:span 6}
+}
+@media print{
+  body::before,body::after,.stars,#butterfly,.top,.btn,.professor-actions{display:none !important}
+  body{background:#fff;color:#000}
+  .card{box-shadow:none;border:0}
+  .timetable-output td,.timetable-output th{color:#000;background:none}
+}
+>>>>>>> Stashed changes
 </style>
 </head>
 <body>
@@ -177,12 +238,17 @@ main{position:relative;padding:34px 28px 70px}
       <div class="page-head"><h2>Professor Dashboard</h2><p>Choose the timetable task you want to work on.</p></div>
       <div class="prof-grid">
         <button type="button" class="cell prof-option" onclick="openClassTeacherForm()"><span class="big">🧑‍🏫</span><h3>Generate timetable as class teacher</h3><p>Enter class timings, practical batches, working days and subject credits.</p><span class="go">Open form →</span></button>
+<<<<<<< Updated upstream
         <button type="button" class="cell prof-option" onclick="checkDeptAccess()"><span class="big">🏛️</span><h3>Generate department time table with updations</h3><p>Multi-year department scheduling (Requires '@' in username).</p><span class="go">Open form →</span></button>
+=======
+        <button type="button" class="cell prof-option" onclick="checkDeptAccess()"><span class="big">🏛️</span><h3>Generate department time table with updations</h3><p>Multi-year department scheduling (requires '@' in username).</p><span class="go">Open form →</span></button>
+>>>>>>> Stashed changes
       </div>
     </section>
 
     <!-- Class Teacher View -->
     <section id="class-teacher-view" class="view hidden">
+<<<<<<< Updated upstream
       <div class="professor-actions"><h2>Class Teacher Timetable</h2><button class="btn ghost sm" onclick="showProfessorHome()">← Dashboard</button></div>
       <div class="card"><p>Class teacher module active.</p></div>
     </section>
@@ -245,6 +311,103 @@ main{position:relative;padding:34px 28px 70px}
       </div>
 
       <!-- Detailed View & Print Container -->
+=======
+      <div class="professor-actions">
+        <h2>🧑‍🏫 Class Teacher Timetable</h2>
+        <button class="btn ghost sm" onclick="showProfessorHome()">← Dashboard</button>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:14px">Class & Practical Batch Inputs</h3>
+        <form id="class-teacher-form" onsubmit="event.preventDefault(); submitClassTeacherForm();">
+          <div class="professor-form-grid">
+            <div class="form-group"><label>College Start Time</label><input type="time" id="ct-start" value="10:15" required></div>
+            <div class="form-group"><label>College End Time</label><input type="time" id="ct-end" value="16:45" required></div>
+            <div class="form-group"><label>Working Days</label><input type="text" id="ct-days" value="MON, TUE, WED, THU, FRI, SAT" required></div>
+          </div>
+          <div class="professor-form-grid">
+            <div class="form-group"><label>Lecture Duration (mins)</label><input type="number" id="ct-lec-mins" value="60" min="15" required></div>
+            <div class="form-group"><label>Practical Duration (mins)</label><input type="number" id="ct-prac-mins" value="120" min="30" required></div>
+            <div class="form-group"><label>Practical Batches (comma-separated)</label><input type="text" id="ct-batches" value="B1, B2, B3" required></div>
+          </div>
+          <h3 style="margin:14px 0 8px">📚 Subjects & Credits</h3>
+          <div id="ct-subjects-list">
+            <div class="subject-row">
+              <input type="text" class="ct-sub-name" placeholder="Subject (e.g. OSY)" value="OSY" required>
+              <input type="number" class="ct-sub-credits" placeholder="Credits" step="0.5" min="0.5" value="4" required>
+              <button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>
+            </div>
+            <div class="subject-row">
+              <input type="text" class="ct-sub-name" placeholder="Subject (e.g. ML)" value="ML" required>
+              <input type="number" class="ct-sub-credits" placeholder="Credits" step="0.5" min="0.5" value="4" required>
+              <button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>
+            </div>
+            <div class="subject-row">
+              <input type="text" class="ct-sub-name" placeholder="Subject (e.g. DBMS)" value="DBMS" required>
+              <input type="number" class="ct-sub-credits" placeholder="Credits" step="0.5" min="0.5" value="3" required>
+              <button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>
+            </div>
+          </div>
+          <button type="button" class="btn ghost sm" onclick="addClassTeacherSubject()">＋ Add Subject</button>
+          <div id="ct-error" class="error"></div>
+          <button type="submit" class="btn" style="margin-top:18px">Generate Class Timetable 📅</button>
+        </form>
+      </div>
+      <div id="ct-result-card" class="card hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <h3>📋 Generated Class Timetable (Practical Batches Divided)</h3>
+          <button class="btn ghost sm" onclick="window.print()">🖨️ Save as PDF / Print</button>
+        </div>
+        <div id="ct-table-wrap" class="timetable-output"></div>
+      </div>
+    </section>
+
+    <!-- Department Timetable View -->
+    <section id="department-timetable-view" class="view hidden">
+      <div class="professor-actions">
+        <h2>🏛️ Department Master Timetable & Updations</h2>
+        <button class="btn ghost sm" onclick="showProfessorHome()">← Dashboard</button>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <h3>📋 Created Timetable History</h3>
+        <p style="font-size:0.88rem;color:var(--muted);margin-bottom:14px">Select a generated timetable below to view its full format or save as PDF.</p>
+        <div id="department-history-list"><p style="color:var(--muted)">Loading saved timetables...</p></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:16px">✨ Generate New Department Timetable</h3>
+        <form id="department-form" onsubmit="event.preventDefault(); submitDepartmentInputs();">
+          <div class="form-group">
+            <label>Number of Study Years</label>
+            <input type="number" id="dept-years-count" min="1" max="5" value="3" onchange="renderYearInputs()">
+          </div>
+          <div id="dept-years-container"></div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+          <h3 style="margin-bottom:12px">📚 Subjects & Practicals per Year</h3>
+          <div id="dept-curriculum-container"></div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+          <h3 style="margin-bottom:12px">🧪 Labs Configuration</h3>
+          <div id="dept-labs-container">
+            <div class="subject-row">
+              <input type="text" placeholder="Lab Name (e.g. Computer Lab 1)" class="lab-name" value="Computer Lab 1">
+              <input type="number" placeholder="Capacity" class="lab-cap" value="30">
+              <button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>
+            </div>
+          </div>
+          <button type="button" class="btn ghost sm" style="margin-top:8px" onclick="addLabRow()">＋ Add Lab</button>
+          <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+          <h3 style="margin-bottom:12px">👨‍🏫 Staff Details (Tabular Allocation)</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:10px">Enter staff name and assign exact subject names for each year (leave '-' if none).</p>
+          <div style="overflow-x:auto">
+            <table id="staff-allocation-table" style="width:100%;border-collapse:collapse;margin-bottom:12px">
+              <thead id="staff-table-head"></thead>
+              <tbody id="staff-table-body"></tbody>
+            </table>
+          </div>
+          <button type="button" class="btn ghost sm" onclick="addStaffRow()">＋ Add Staff Member</button>
+          <div id="dept-error" class="error" style="margin-top:16px"></div>
+          <button type="submit" class="btn" style="margin-top:20px">Generate Master Timetable ⚡</button>
+        </form>
+      </div>
+>>>>>>> Stashed changes
       <div id="department-output-result" class="card hidden" style="margin-top:24px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
           <h3 id="dept-view-title">Formatted Department Timetable</h3>
@@ -268,6 +431,11 @@ main{position:relative;padding:34px 28px 70px}
     <div class="user push"><div class="avatar" id="user-avatar">U</div><b id="user-name">User</b><button class="btn ghost sm" onclick="handleLogout()">↩ Logout</button></div>
   </header>
   <main><div class="wrap">
+<<<<<<< Updated upstream
+=======
+
+    <!-- HOME -->
+>>>>>>> Stashed changes
     <div id="dashboard-section" class="view">
       <div class="bento">
         <div class="cell hero">
@@ -283,57 +451,135 @@ main{position:relative;padding:34px 28px 70px}
         </div>
       </div>
     </div>
+<<<<<<< Updated upstream
     <div id="quiz-section" class="view hidden"><div class="card"><h3>Quiz Module Active</h3><button class="btn ghost" onclick="showView('dashboard')">← Home</button></div></div>
     <div id="timetable-section" class="view hidden"><div class="card"><h3>Timetable Module Active</h3><button class="btn ghost" onclick="showView('dashboard')">← Home</button></div></div>
+=======
+
+    <!-- QUIZ -->
+    <div id="quiz-section" class="view hidden">
+      <div class="page-head"><h2>🎯 Quick Revision <span class="hl">Quiz</span></h2><p>Upload your syllabus or notes PDF and get a 5-question quiz.</p></div>
+      <div class="card">
+        <div class="form-group"><label>📄 Syllabus / Notes PDF</label><input type="file" id="quiz-pdf" accept="application/pdf"></div>
+        <button class="btn" id="quiz-btn" onclick="generateQuiz()">Generate Quiz 🧠</button>
+        <div id="quiz-msg" class="error"></div>
+      </div>
+      <div id="quiz-card" class="card hidden">
+        <div id="quiz-list"></div>
+        <button class="btn" onclick="checkQuiz()">Submit Answers ✅</button>
+        <div id="quiz-score" class="score"></div>
+      </div>
+    </div>
+
+    <!-- SMART TIMETABLE -->
+    <div id="timetable-section" class="view hidden">
+      <div class="page-head"><h2>📅 Smart <span class="hl-p">Timetable</span></h2><p>Upload your college timetable PDF and add your daily routine.</p></div>
+      <div class="card">
+        <div class="form-group"><label>📄 College Timetable PDF</label><input type="file" id="tt-pdf" accept="application/pdf"></div>
+        <div class="grid2">
+          <div class="form-group"><label>⏰ Wake-up time</label><input type="time" id="tt-wake" value="06:30"></div>
+          <div class="form-group"><label>😴 Sleep time</label><input type="time" id="tt-sleep" value="22:30"></div>
+          <div class="form-group"><label>🍽️ Dinner time</label><input type="time" id="tt-dinner" value="20:00"></div>
+          <div class="form-group"><label>🚌 Travel timings</label><input type="text" id="tt-travel" placeholder="08:30-09:15 to college, 17:00-17:45 home"></div>
+        </div>
+        <button class="btn" id="tt-btn" onclick="generateTimetable()">Generate My Plan ✨</button>
+        <div id="tt-msg" class="error"></div>
+      </div>
+      <div id="tt-card" class="card hidden">
+        <h3 style="margin-bottom:12px">📋 Your Daily Plan</h3>
+        <div id="tt-output" class="timetable-output"></div>
+        <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+        <div class="grid2">
+          <div class="form-group"><label>📆 Start date</label><input type="text" id="cal-date" placeholder="YYYY-MM-DD"></div>
+          <div class="form-group"><label>🔁 Repeat for (days)</label><input type="number" id="cal-repeat" value="1" min="1" max="365"></div>
+          <div class="form-group"><label>🔔 Reminder (minutes before)</label><input type="number" id="cal-remind" value="10" min="0" max="1440"></div>
+        </div>
+        <div class="row-btns">
+          <button class="btn ghost" onclick="enableReminders()">🔔 Enable Reminders</button>
+          <button class="btn ghost" onclick="connectGoogle()">🔗 Connect Google</button>
+          <button class="btn" onclick="addToGoogleCalendar()">📆 Add to Google Calendar</button>
+          <button class="btn ghost" onclick="downloadIcs()">📥 Download .ics</button>
+        </div>
+      </div>
+    </div>
+
+>>>>>>> Stashed changes
   </div></main>
 </div>
 
 <script>
     let currentLoggedProf = "";
     const $ = id => document.getElementById(id);
+<<<<<<< Updated upstream
+=======
+    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const ordinal = n => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
+>>>>>>> Stashed changes
     const toast = (msg, type='') => {
         const t = document.createElement('div');
         t.className = 'toast ' + type; t.textContent = msg;
         $('toasts').appendChild(t); setTimeout(() => t.remove(), 4200);
     };
+<<<<<<< Updated upstream
+=======
+    const postJSON = (url, body) => fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+>>>>>>> Stashed changes
 
     // Butterfly cursor
     (function () {
         if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
         const el = $('butterfly'); document.documentElement.classList.add('bf');
+<<<<<<< Updated upstream
         let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty, angle = 0, last = 0;
         addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
         (function tick(now) {
+=======
+        let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty, angle = 0;
+        addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+        (function tick() {
+>>>>>>> Stashed changes
             const dx = tx - x, dy = ty - y, dist = Math.hypot(dx, dy);
             x += dx * 0.16; y += dy * 0.16;
             if (dist > 3) angle += (((Math.atan2(dy, dx) * 180 / Math.PI + 90) - angle + 540) % 360 - 180) * 0.2;
             el.style.transform = `translate(${x - 15}px, ${y - 15}px) rotate(${angle}deg)`;
             requestAnimationFrame(tick);
-        })(0);
+        })();
     })();
 
+<<<<<<< Updated upstream
     // Auth & Navigation
+=======
+    // ---------- Student auth ----------
+>>>>>>> Stashed changes
     function setAuth(mode) {
         $('login-form').classList.toggle('hidden', mode !== 'login');
         $('register-form').classList.toggle('hidden', mode === 'login');
         $('seg-login').classList.toggle('on', mode === 'login');
         $('seg-register').classList.toggle('on', mode !== 'login');
     }
+<<<<<<< Updated upstream
     function setProfessorAuth(mode) {
         $('prof-login-form').classList.toggle('hidden', mode !== 'login');
         $('prof-register-form').classList.toggle('hidden', mode === 'login');
         $('prof-seg-login').classList.toggle('on', mode === 'login');
         $('prof-seg-register').classList.toggle('on', mode !== 'login');
     }
+=======
+>>>>>>> Stashed changes
     function togglePw(id, btn) { const i = $(id); i.type = i.type === 'password' ? 'text' : 'password'; btn.textContent = i.type === 'password' ? '👁️' : '🙈'; }
 
     async function handleLogin() {
         const username = $('login-username').value.trim(), password = $('login-password').value;
+<<<<<<< Updated upstream
         const res = await fetch('/api/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+=======
+        const res = await postJSON('/api/login', {username, password});
+>>>>>>> Stashed changes
         const data = await res.json();
         if (data.success) {
             $('user-name').textContent = username; $('greet-name').textContent = username;
             $('user-avatar').textContent = username.charAt(0).toUpperCase();
+<<<<<<< Updated upstream
             $('auth-section').classList.add('hidden'); $('app').classList.remove('hidden');
             showView('dashboard'); toast('Welcome back, ' + username + '! 🦋', 'ok');
         } else { $('login-msg').textContent = '⚠️ ' + data.message; }
@@ -466,11 +712,200 @@ main{position:relative;padding:34px 28px 70px}
         $('dept-labs-container').appendChild(div);
     }
 
+=======
+            $('login-msg').textContent = '';
+            $('auth-section').classList.add('hidden'); $('app').classList.remove('hidden');
+            showView('dashboard'); toast('Welcome back, ' + username + '! 🦋', 'ok');
+        } else { $('login-msg').textContent = '⚠️ ' + data.message; }
+    }
+
+    async function handleRegister() {
+        const username = $('reg-username').value.trim(), password = $('reg-password').value;
+        const res = await postJSON('/api/register', {username, password});
+        const data = await res.json();
+        $('reg-msg').className = data.success ? 'success' : 'error';
+        $('reg-msg').textContent = (data.success ? '🎉 ' : '⚠️ ') + data.message;
+        if (data.success) setTimeout(() => setAuth('login'), 1500);
+    }
+
+    function handleLogout() {
+        $('app').classList.add('hidden'); $('auth-section').classList.remove('hidden');
+        clearInterval(reminderTimer);
+    }
+
+    // ---------- Professor auth ----------
+    function setProfessorAuth(mode) {
+        $('prof-login-form').classList.toggle('hidden', mode !== 'login');
+        $('prof-register-form').classList.toggle('hidden', mode === 'login');
+        $('prof-seg-login').classList.toggle('on', mode === 'login');
+        $('prof-seg-register').classList.toggle('on', mode !== 'login');
+    }
+    function openProfessorAuth() {
+        $('auth-section').classList.add('hidden'); $('professor-auth-section').classList.remove('hidden');
+        setProfessorAuth('login');
+    }
+    function backToStudentLogin() {
+        $('professor-auth-section').classList.add('hidden'); $('auth-section').classList.remove('hidden');
+    }
+
+    async function handleProfessorLogin() {
+        const username = $('prof-login-username').value.trim(), password = $('prof-login-password').value;
+        const res = await postJSON('/api/professor/login', {username, password});
+        const data = await res.json();
+        if (!data.success) { $('prof-login-msg').textContent = '⚠️ ' + data.message; return; }
+        currentLoggedProf = username;
+        $('prof-login-msg').textContent = '';
+        $('prof-name').textContent = username; $('prof-avatar').textContent = username.charAt(0).toUpperCase();
+        $('professor-auth-section').classList.add('hidden'); $('professor-dashboard').classList.remove('hidden');
+        showProfessorHome(); toast('Welcome, Professor ' + username + '! 🎓', 'ok');
+    }
+
+    async function handleProfessorRegister() {
+        const username = $('prof-reg-username').value.trim(), password = $('prof-reg-password').value;
+        const res = await postJSON('/api/professor/register', {username, password});
+        const data = await res.json();
+        $('prof-reg-msg').className = data.success ? 'success' : 'error';
+        $('prof-reg-msg').textContent = (data.success ? '🎉 ' : '⚠️ ') + data.message;
+        if (data.success) { $('prof-login-username').value = username; $('prof-login-password').value = password; handleProfessorLogin(); }
+    }
+
+    async function handleProfessorLogout() {
+        await fetch('/api/professor/logout', {method:'POST'});
+        currentLoggedProf = "";
+        $('professor-dashboard').classList.add('hidden'); $('professor-auth-section').classList.remove('hidden');
+    }
+
+    // ---------- Professor: navigation ----------
+    function showProfessorHome() {
+        ['professor-home-view','class-teacher-view','department-timetable-view'].forEach(id => $(id).classList.add('hidden'));
+        $('professor-home-view').classList.remove('hidden');
+    }
+    function openClassTeacherForm() {
+        $('professor-home-view').classList.add('hidden');
+        $('class-teacher-view').classList.remove('hidden');
+    }
+
+    // ---------- Professor: class teacher ----------
+    function addClassTeacherSubject() {
+        const row = document.createElement('div');
+        row.className = 'subject-row';
+        row.innerHTML = `
+            <input type="text" class="ct-sub-name" placeholder="Subject name" required>
+            <input type="number" class="ct-sub-credits" placeholder="Credits" step="0.5" min="0.5" value="3" required>
+            <button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>`;
+        $('ct-subjects-list').appendChild(row);
+    }
+
+    async function submitClassTeacherForm() {
+        $('ct-error').textContent = '';
+        const batches = $('ct-batches').value.split(',').map(b => b.trim()).filter(Boolean);
+        const working_days = $('ct-days').value.split(',').map(d => d.trim()).filter(Boolean);
+        const subjects = Array.from($('ct-subjects-list').querySelectorAll('.subject-row')).map(row => ({
+            name: row.querySelector('.ct-sub-name').value.trim(),
+            credits: parseFloat(row.querySelector('.ct-sub-credits').value) || 0,
+        }));
+        const payload = {
+            college_start: $('ct-start').value,
+            college_end: $('ct-end').value,
+            lecture_minutes: parseInt($('ct-lec-mins').value, 10),
+            practical_minutes: parseInt($('ct-prac-mins').value, 10),
+            batch_count: batches.length,
+            batches, working_days, subjects,
+        };
+        const res = await postJSON('/api/professor/class-teacher/submit', payload);
+        const data = await res.json();
+        if (!data.success) { $('ct-error').textContent = '⚠️ ' + data.message; return; }
+        renderClassTeacherTable(data.rows || []);
+        toast('Class timetable generated!', 'ok');
+    }
+
+    function renderClassTeacherTable(rows) {
+        $('ct-result-card').classList.remove('hidden');
+        const bodyHtml = rows.map(r => {
+            const badgeClass = r.type === 'Practical' ? 'badge-type prac' : (r.type === 'Break' ? 'badge-type brk' : 'badge-type');
+            return `<tr><td><b>${esc(r.day)}</b></td><td>${esc(r.time)}</td><td>${esc(r.allocation)}</td><td><span class="${badgeClass}">${esc(r.type)}</span></td></tr>`;
+        }).join('');
+        $('ct-table-wrap').innerHTML = `
+            <table>
+                <thead><tr><th>Day</th><th>Time Slot</th><th>Subject / Practical Batches</th><th>Type</th></tr></thead>
+                <tbody>${bodyHtml}</tbody>
+            </table>`;
+        $('ct-result-card').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ---------- Professor: department ----------
+    function checkDeptAccess() {
+        if (!currentLoggedProf.includes('@')) {
+            toast('🔒 Access Restricted: Department Timetable requires an "@" symbol in your username.', 'err');
+            return;
+        }
+        openDepartmentForm();
+    }
+
+    function openDepartmentForm() {
+        $('professor-home-view').classList.add('hidden');
+        $('department-timetable-view').classList.remove('hidden');
+        renderYearInputs();
+        loadDepartmentHistory();
+    }
+
+    function renderYearInputs() {
+        const count = parseInt($('dept-years-count').value) || 3;
+        let html = '', curriculumHtml = '';
+        for (let i = 1; i <= count; i++) {
+            const yearName = `${ordinal(i)} Year`;
+            html += `<div class="professor-form-grid" style="margin-bottom:10px">
+                <div class="form-group"><label>${yearName} Name</label><input type="text" class="y-name" value="${yearName}" readonly></div>
+                <div class="form-group"><label>Total Capacity</label><input type="number" class="y-cap" value="120" min="10"></div>
+                <div class="form-group"><label>Divisions</label><input type="number" class="y-divs" value="2" min="1" max="5"></div>
+            </div>`;
+            curriculumHtml += `<div class="card" style="background:#0c0f22;padding:14px;margin-bottom:10px">
+                <h4 style="color:var(--cyan);margin-bottom:8px">${yearName} Curriculum</h4>
+                <div class="form-group"><label>Subjects (comma separated)</label><input type="text" class="y-subjects" placeholder="e.g. TOC, OOP, DBMS, OS" value="TOC, OOP, DBMS, OS"></div>
+                <div class="form-group"><label>Practicals (comma separated)</label><input type="text" class="y-practicals" placeholder="e.g. OOP Lab, DBMS Lab" value="OOP Lab, DBMS Lab"></div>
+            </div>`;
+        }
+        $('dept-years-container').innerHTML = html;
+        $('dept-curriculum-container').innerHTML = curriculumHtml;
+        renderStaffTableHeaders();
+    }
+
+    function renderStaffTableHeaders() {
+        const count = parseInt($('dept-years-count').value) || 3;
+        let headHtml = `<tr><th>Staff Name</th>`;
+        for (let i = 1; i <= count; i++) headHtml += `<th>${ordinal(i)} Year Subject</th>`;
+        headHtml += `<th>Action</th></tr>`;
+        $('staff-table-head').innerHTML = headHtml;
+        // rebuild staff rows so column count always matches the number of years
+        $('staff-table-body').innerHTML = '';
+        addStaffRow();
+    }
+
+    function addStaffRow() {
+        const count = parseInt($('dept-years-count').value) || 3;
+        const row = document.createElement('tr');
+        let cols = `<td><input type="text" class="staff-name-input" placeholder="Staff Name" required></td>`;
+        for (let i = 0; i < count; i++) cols += `<td><input type="text" class="staff-assign-input" value="-"></td>`;
+        cols += `<td><button type="button" class="remove-subject" onclick="this.closest('tr').remove()">✕</button></td>`;
+        row.innerHTML = cols;
+        $('staff-table-body').appendChild(row);
+    }
+
+    function addLabRow() {
+        const div = document.createElement('div');
+        div.className = 'subject-row';
+        div.innerHTML = `<input type="text" placeholder="Lab Name" class="lab-name"><input type="number" placeholder="Capacity" class="lab-cap" value="30"><button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>`;
+        $('dept-labs-container').appendChild(div);
+    }
+
+    let deptHistory = [];
+>>>>>>> Stashed changes
     async function loadDepartmentHistory() {
         try {
             const res = await fetch('/api/professor/department/history');
             const data = await res.json();
             if (!data.success) return;
+<<<<<<< Updated upstream
             const container = $('department-history-list');
             if (!data.history || data.history.length === 0) {
                 container.innerHTML = `<p style="color:var(--muted)">No department timetables generated yet.</p>`;
@@ -483,6 +918,304 @@ main{position:relative;padding:34px 28px 70px}
                 </div>
             `).join('');
         } catch(e) { console.error(e); }
+=======
+            deptHistory = data.history || [];
+            const container = $('department-history-list');
+            if (deptHistory.length === 0) {
+                container.innerHTML = `<p style="color:var(--muted)">No department timetables generated yet.</p>`;
+                return;
+            }
+            container.innerHTML = deptHistory.map((item, idx) => `
+                <div style="display:flex;justify-content:space-between;align-items:center;background:#0c0f22;padding:12px 16px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px">
+                    <div><b>Timetable #${deptHistory.length - idx}</b> (ID: ${esc(item.id)})<br><small style="color:var(--muted)">Generated: ${esc(item.timestamp)}</small></div>
+                    <button class="btn sm" onclick="renderDepartmentOutput(deptHistory[${idx}])">👁️ View Timetable</button>
+                </div>`).join('');
+        } catch (e) { console.error(e); }
+    }
+
+    async function submitDepartmentInputs() {
+        $('dept-error').textContent = '';
+        const count = parseInt($('dept-years-count').value) || 3;
+        const yearsData = [], curriculum = {};
+        const yearCards = $('dept-years-container').querySelectorAll('.professor-form-grid');
+        const currCards = $('dept-curriculum-container').querySelectorAll('.card');
+
+        for (let i = 0; i < count; i++) {
+            const yName = yearCards[i].querySelector('.y-name').value;
+            const cap = parseInt(yearCards[i].querySelector('.y-cap').value) || 60;
+            const divs = parseInt(yearCards[i].querySelector('.y-divs').value) || 1;
+            yearsData.push({name: yName, capacity: cap, divisions: divs});
+            const subs = currCards[i].querySelector('.y-subjects').value.split(',').map(s => s.trim()).filter(Boolean);
+            const pracs = currCards[i].querySelector('.y-practicals').value.split(',').map(p => p.trim()).filter(Boolean);
+            curriculum[yName] = {subjects: subs, practicals: pracs};
+        }
+
+        const labs = [];
+        $('dept-labs-container').querySelectorAll('.subject-row').forEach(row => {
+            labs.push({
+                name: row.querySelector('.lab-name').value.trim() || 'General Lab',
+                capacity: row.querySelector('.lab-cap').value || 30
+            });
+        });
+
+        const staffRecords = [];
+        $('staff-table-body').querySelectorAll('tr').forEach(tr => {
+            const name = tr.querySelector('.staff-name-input').value.trim();
+            if (!name) return;
+            const assigns = {};
+            tr.querySelectorAll('.staff-assign-input').forEach((inp, idx) => {
+                assigns[`${ordinal(idx + 1)} Year`] = inp.value.trim() || '-';   // fixed: "2nd Year", "3rd Year"
+            });
+            staffRecords.push({name, assignments: assigns});
+        });
+
+        const payload = {
+            years_data: yearsData,
+            curriculum,
+            staff_records: staffRecords,
+            labs,
+            college_start: "10:15",
+            theory_mins: 45,
+            practical_mins: 90,
+            working_days: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+        };
+
+        const res = await postJSON('/api/professor/department/generate', payload);
+        const data = await res.json();
+        if (!data.success) { $('dept-error').textContent = '⚠️ ' + data.message; }
+        else { toast('🏛️ Master timetable generated!', 'ok'); renderDepartmentOutput(data.record); loadDepartmentHistory(); }
+    }
+
+    function renderDepartmentOutput(record) {
+        $('department-output-result').classList.remove('hidden');
+        $('dept-view-title').textContent = `Department Timetable (${record.timestamp})`;
+
+        const batchRows = Object.entries(record.batches || {}).map(([year, batches]) => `
+            <tr><td><b>${esc(year)}</b></td><td>${Array.isArray(batches) && batches.length ? esc(batches.join(', ')) : '-'}</td></tr>`).join('');
+
+        let html = `
+            <h4>Calculated Batches</h4>
+            <table class="dept-subtable">
+                <thead><tr><th>Year</th><th>Divisions & Practical Batches</th></tr></thead>
+                <tbody>${batchRows || '<tr><td colspan="2">No batches calculated.</td></tr>'}</tbody>
+            </table>
+            <h4 style="margin-top:16px">Class Timetables</h4>`;
+
+        for (const [year, days] of Object.entries(record.class_timetables || {})) {
+            html += `<h5 class="dept-year-heading">${esc(year)}</h5>`;
+            let dayRowsHtml = '';
+            for (const [day, slots] of Object.entries(days || {})) {
+                if (!Array.isArray(slots) || slots.length === 0) {
+                    dayRowsHtml += `<tr><td><b>${esc(day)}</b></td><td>-</td><td>No slots scheduled</td><td>-</td></tr>`;
+                    continue;
+                }
+                slots.forEach((s, idx) => {
+                    const isPrac = s.type === 'Practical';
+                    const resourceText = isPrac ? `Lab: ${s.lab || 'General Lab'}` : `Prof: ${s.teacher || 'TBD'}`;
+                    dayRowsHtml += `
+                        <tr>
+                            <td>${idx === 0 ? `<b>${esc(day)}</b>` : ''}</td>
+                            <td>${esc(s.time || '-')}</td>
+                            <td>${esc(s.subject || '-')}</td>
+                            <td><span class="${isPrac ? 'badge-type prac' : 'badge-type'}">${esc(s.type || 'Slot')}</span>
+                                <span style="margin-left:8px;color:var(--muted)">${esc(resourceText)}</span></td>
+                        </tr>`;
+                });
+            }
+            html += `<table class="dept-subtable">
+                <thead><tr><th>Day</th><th>Time / Duration</th><th>Subject</th><th>Type & Allocation</th></tr></thead>
+                <tbody>${dayRowsHtml}</tbody></table>`;
+        }
+
+        const teacherEntries = Object.entries(record.teacher_timetables || {});
+        if (teacherEntries.length > 0) {
+            html += `<h4 style="margin-top:20px">Teacher / Staff Timetables</h4>`;
+            for (const [staffName, days] of teacherEntries) {
+                html += `<h5 class="dept-year-heading">${esc(staffName)}</h5>`;
+                let staffRowsHtml = '';
+                for (const [day, slots] of Object.entries(days || {})) {
+                    if (!Array.isArray(slots) || slots.length === 0) {
+                        staffRowsHtml += `<tr><td><b>${esc(day)}</b></td><td>-</td><td>-</td><td>No assigned theory slots</td></tr>`;
+                        continue;
+                    }
+                    slots.forEach((s, idx) => {
+                        staffRowsHtml += `
+                            <tr>
+                                <td>${idx === 0 ? `<b>${esc(day)}</b>` : ''}</td>
+                                <td>${esc(s.time || '-')}</td>
+                                <td>${esc(s.year || '-')}</td>
+                                <td>${esc(s.subject || '-')} <span class="badge-type">${esc(s.type || 'Theory')}</span></td>
+                            </tr>`;
+                    });
+                }
+                html += `<table class="dept-subtable">
+                    <thead><tr><th>Day</th><th>Time / Duration</th><th>Year</th><th>Subject & Type</th></tr></thead>
+                    <tbody>${staffRowsHtml}</tbody></table>`;
+            }
+        }
+
+        $('department-output-content').innerHTML = html;
+        scrollTo({ top: $('department-output-result').offsetTop, behavior: 'smooth' });
+    }
+
+    // ---------- Student navigation ----------
+    function showView(name) {
+        const views = ['dashboard','quiz','timetable'];
+        views.forEach(v => $(v+'-section').classList.toggle('hidden', v !== name));
+        document.querySelectorAll('.tabs .tab').forEach((b, i) => b.classList.toggle('on', views[i] === name));
+    }
+    setInterval(() => { const d = new Date(); $('clock').textContent = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }, 20000);
+    $('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+
+    // ---------- QUIZ ----------
+    let currentQuiz = [];
+    async function generateQuiz() {
+        const file = $('quiz-pdf').files[0];
+        $('quiz-msg').textContent = '';
+        if (!file) { $('quiz-msg').textContent = '⚠️ Please choose a PDF first.'; return; }
+        const fd = new FormData(); fd.append('pdf', file);
+        $('quiz-btn').disabled = true; $('quiz-btn').textContent = 'Generating... ⏳';
+        try {
+            const res = await fetch('/api/quiz', { method: 'POST', body: fd });
+            const data = await res.json();
+            if (!data.success) { $('quiz-msg').textContent = '⚠️ ' + data.message; return; }
+            currentQuiz = data.quiz || [];
+            $('quiz-list').innerHTML = currentQuiz.map((q, i) => `
+                <div class="q-card">
+                    <h4>${i + 1}. ${esc(q.question)}</h4>
+                    ${(q.options || []).map(o => `
+                        <label class="opt" data-q="${i}" data-letter="${esc(o.trim().charAt(0))}">
+                            <input type="radio" name="q${i}" value="${esc(o.trim().charAt(0))}"> ${esc(o)}
+                        </label>`).join('')}
+                </div>`).join('');
+            $('quiz-score').textContent = '';
+            $('quiz-card').classList.remove('hidden');
+            $('quiz-card').scrollIntoView({ behavior: 'smooth' });
+        } catch (e) { $('quiz-msg').textContent = '⚠️ ' + e.message; }
+        finally { $('quiz-btn').disabled = false; $('quiz-btn').textContent = 'Generate Quiz 🧠'; }
+    }
+    function checkQuiz() {
+        let score = 0;
+        currentQuiz.forEach((q, i) => {
+            const picked = document.querySelector(`input[name="q${i}"]:checked`);
+            const correct = String(q.answer || '').trim().charAt(0).toUpperCase();
+            document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(el => {
+                el.classList.remove('right', 'wrong');
+                if (el.dataset.letter.toUpperCase() === correct) el.classList.add('right');
+                else if (picked && el.contains(picked)) el.classList.add('wrong');
+            });
+            if (picked && picked.value.toUpperCase() === correct) score++;
+        });
+        $('quiz-score').textContent = `🏆 Score: ${score} / ${currentQuiz.length}`;
+        toast(`You scored ${score}/${currentQuiz.length}`, score >= currentQuiz.length / 2 ? 'ok' : 'warn');
+    }
+
+    // ---------- SMART TIMETABLE ----------
+    let lastTimetable = '', lastEvents = [];
+    function renderMarkdown(md) {
+        const out = []; let rows = [], list = false;
+        const flushTable = () => {
+            if (!rows.length) return;
+            const [head, ...body] = rows;
+            out.push('<table><thead><tr>' + head.map(c => `<th>${esc(c)}</th>`).join('') + '</tr></thead><tbody>' +
+                body.map(r => '<tr>' + r.map(c => `<td>${esc(c)}</td>`).join('') + '</tr>').join('') + '</tbody></table>');
+            rows = [];
+        };
+        const closeList = () => { if (list) { out.push('</ul>'); list = false; } };
+        md.split('\n').forEach(raw => {
+            const line = raw.trim();
+            if (line.startsWith('|')) {
+                closeList();
+                const cells = line.replace(/^\||\|$/g, '').split('|').map(c => c.trim().replace(/\*\*|__|`/g, ''));
+                if (cells.every(c => /^:?-{2,}:?$/.test(c))) return;
+                rows.push(cells); return;
+            }
+            flushTable();
+            if (/^#{1,6}\s/.test(line)) { closeList(); out.push(`<h4>${esc(line.replace(/^#+\s*/, ''))}</h4>`); }
+            else if (/^([-*]|\d+\.)\s/.test(line)) {
+                if (!list) { out.push('<ul>'); list = true; }
+                out.push(`<li>${esc(line.replace(/^([-*]|\d+\.)\s*/, '').replace(/\*\*/g, ''))}</li>`);
+            } else if (line) { closeList(); out.push(`<p>${esc(line)}</p>`); }
+        });
+        flushTable(); closeList();
+        return out.join('');
+    }
+    async function generateTimetable() {
+        const file = $('tt-pdf').files[0];
+        $('tt-msg').textContent = '';
+        if (!file) { $('tt-msg').textContent = '⚠️ Please upload your college timetable PDF.'; return; }
+        const fd = new FormData();
+        fd.append('pdf', file);
+        fd.append('wake_time', $('tt-wake').value);
+        fd.append('sleep_time', $('tt-sleep').value);
+        fd.append('dinner_time', $('tt-dinner').value);
+        fd.append('travel_timestamps', $('tt-travel').value);
+        $('tt-btn').disabled = true; $('tt-btn').textContent = 'Planning... ⏳ (can take a minute)';
+        try {
+            const res = await fetch('/api/timetable', { method: 'POST', body: fd });
+            const data = await res.json();
+            if (!data.success) { $('tt-msg').textContent = '⚠️ ' + data.message; return; }
+            lastTimetable = data.timetable; lastEvents = data.events || [];
+            $('tt-output').innerHTML = renderMarkdown(lastTimetable);
+            if (!$('cal-date').value) $('cal-date').value = new Date().toISOString().slice(0, 10);
+            $('tt-card').classList.remove('hidden');
+            $('tt-card').scrollIntoView({ behavior: 'smooth' });
+            toast('Your plan is ready! 📅', 'ok');
+        } catch (e) { $('tt-msg').textContent = '⚠️ ' + e.message; }
+        finally { $('tt-btn').disabled = false; $('tt-btn').textContent = 'Generate My Plan ✨'; }
+    }
+
+    // ---------- Browser reminders ----------
+    let reminderTimer = null; const fired = new Set();
+    async function enableReminders() {
+        if (!lastEvents.length) { toast('Generate a plan first.', 'warn'); return; }
+        if (!('Notification' in window)) { toast('Notifications are not supported in this browser.', 'err'); return; }
+        const perm = await Notification.requestPermission();
+        if (perm !== 'granted') { toast('Notification permission denied.', 'err'); return; }
+        clearInterval(reminderTimer);
+        reminderTimer = setInterval(() => {
+            const d = new Date(), now = d.getHours() * 60 + d.getMinutes(), day = d.toDateString();
+            lastEvents.forEach(ev => {
+                const key = day + ev.start;
+                if (ev.start === now && !fired.has(key)) {
+                    fired.add(key);
+                    new Notification(ev.activity, { body: `${ev.start_label} - ${ev.end_label}  ${ev.purpose || ''}` });
+                    toast('⏰ ' + ev.activity, 'ok');
+                }
+            });
+        }, 20000);
+        toast('Reminders enabled. Keep this tab open. 🔔', 'ok');
+    }
+
+    // ---------- Google Calendar + .ics ----------
+    const calPayload = () => ({
+        timetable: lastTimetable,
+        date: $('cal-date').value.trim(),
+        repeat_days: parseInt($('cal-repeat').value, 10) || 1,
+        reminder_minutes: parseInt($('cal-remind').value, 10) || 0,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+    });
+    function connectGoogle() { window.open('/google/login', 'gconnect', 'width=520,height=640'); }
+    addEventListener('message', e => {
+        if (e.origin !== location.origin) return;
+        if (e.data === 'google-connected') toast('Google Calendar connected! ✅', 'ok');
+        if (e.data === 'google-failed') toast('Google connection failed.', 'err');
+    });
+    async function addToGoogleCalendar() {
+        if (!lastTimetable) { toast('Generate a plan first.', 'warn'); return; }
+        const res = await postJSON('/api/calendar/add', calPayload());
+        const data = await res.json();
+        if (data.needs_auth) { toast('Please connect your Google account first.', 'warn'); connectGoogle(); return; }
+        toast(data.success ? `Added ${data.created} events to Google Calendar 📆` : '⚠️ ' + data.message, data.success ? 'ok' : 'err');
+    }
+    async function downloadIcs() {
+        if (!lastTimetable) { toast('Generate a plan first.', 'warn'); return; }
+        const res = await postJSON('/api/calendar/ics', calPayload());
+        if (!res.ok) { const d = await res.json(); toast('⚠️ ' + d.message, 'err'); return; }
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(await res.blob()); a.download = 'timetable.ics'; a.click();
+        URL.revokeObjectURL(a.href);
+>>>>>>> Stashed changes
     }
 
     async function submitDepartmentInputs() {
