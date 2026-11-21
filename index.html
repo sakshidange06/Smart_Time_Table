@@ -136,11 +136,22 @@ main{position:relative;padding:34px 28px 70px}
   .tabs{display:none}
   .hero,.tool{grid-column:span 6}
 }
+#print-area{display:none}
+@page{size:A4 landscape;margin:12mm}
 @media print{
-  body::before,body::after,.stars,#butterfly,.top,.btn,.professor-actions{display:none !important}
-  body{background:#fff;color:#000}
-  .card{box-shadow:none;border:0}
-  .timetable-output td,.timetable-output th{color:#000;background:none}
+  html,body{background:#fff !important;color:#000 !important;min-height:0;overflow:visible}
+  body::before,body::after{display:none !important}
+  body > *:not(#print-area){display:none !important}
+  #print-area{display:block !important;color:#000;font-family:var(--body)}
+  #print-area h2{font-family:var(--head);margin:0 0 4px;font-size:20pt;color:#000}
+  #print-area .meta{color:#444;font-size:10pt;margin-bottom:12px}
+  #print-area h4,#print-area h5{color:#000;margin:14px 0 6px;font-size:12pt}
+  #print-area table{width:100%;border-collapse:collapse;font-size:10.5pt;margin-bottom:12px;page-break-inside:auto}
+  #print-area tr{page-break-inside:avoid}
+  #print-area th,#print-area td{border:1px solid #444;padding:6px 8px;text-align:left;color:#000;background:none !important}
+  #print-area th{background:#e8e8e8 !important;font-weight:700}
+  #print-area .badge-type{background:none !important;color:#000;border:1px solid #888}
+  #print-area p,#print-area li{color:#000}
 }
 </style>
 </head>
@@ -148,6 +159,7 @@ main{position:relative;padding:34px 28px 70px}
 <div class="stars" aria-hidden="true"></div>
 <div id="butterfly" aria-hidden="true"><span class="wings">🦋</span></div>
 <div id="toasts" aria-live="polite"></div>
+<div id="print-area" aria-hidden="true"></div>
 
 <!-- STUDENT AUTH SECTION -->
 <div id="auth-section">
@@ -266,7 +278,7 @@ main{position:relative;padding:34px 28px 70px}
       <div id="ct-result-card" class="card hidden">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
           <h3>📋 Generated Class Timetable (Practical Batches Divided)</h3>
-          <button class="btn ghost sm" onclick="window.print()">🖨️ Save as PDF / Print</button>
+          <button class="btn ghost sm" onclick="printTimetable('Class Timetable','ct-table-wrap')">🖨️ Print / Save as PDF</button>
         </div>
         <div id="ct-table-wrap" class="timetable-output"></div>
       </div>
@@ -321,7 +333,7 @@ main{position:relative;padding:34px 28px 70px}
       <div id="department-output-result" class="card hidden" style="margin-top:24px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
           <h3 id="dept-view-title">Formatted Department Timetable</h3>
-          <button class="btn ghost sm" onclick="window.print()">🖨️ Save as PDF / Print</button>
+          <button class="btn ghost sm" onclick="printTimetable($('dept-view-title').textContent,'department-output-content')">🖨️ Print / Save as PDF</button>
         </div>
         <div id="department-output-content" class="timetable-output"></div>
       </div>
@@ -402,6 +414,7 @@ main{position:relative;padding:34px 28px 70px}
           <button class="btn ghost" onclick="connectGoogle()">🔗 Connect Google</button>
           <button class="btn" onclick="addToGoogleCalendar()">📆 Add to Google Calendar</button>
           <button class="btn ghost" onclick="downloadIcs()">📥 Download .ics</button>
+          <button class="btn ghost" onclick="printTimetable('My Daily Study Plan','tt-output')">🖨️ Print / Save as PDF</button>
         </div>
       </div>
     </div>
@@ -798,6 +811,19 @@ main{position:relative;padding:34px 28px 70px}
 
         $('department-output-content').innerHTML = html;
         scrollTo({ top: $('department-output-result').offsetTop, behavior: 'smooth' });
+    }
+
+    // ---------- Print only the timetable (full page) ----------
+    function printTimetable(title, sourceId) {
+        const src = $(sourceId);
+        if (!src || !src.innerHTML.trim()) { toast('Generate a timetable first.', 'warn'); return; }
+        const who = currentLoggedProf || $('user-name').textContent || '';
+        $('print-area').innerHTML = `<h2>${esc(title)}</h2><div class="meta">Smart Timetable AI · ${esc(who)} · ${new Date().toLocaleDateString()}</div>` + src.innerHTML;
+        const prevTitle = document.title;
+        document.title = title;
+        window.print();
+        document.title = prevTitle;
+        $('print-area').innerHTML = '';
     }
 
     // ---------- Student navigation ----------
