@@ -4,7 +4,7 @@
 
 ### Turn your PDFs into quizzes and a personalised daily study plan
 
-An AI-powered study planner built with **Flask**, **PDF text extraction** and the **Groq LLM**.
+An AI-powered study planner built with **Flask**, **PDF text extraction** and the **Groq LLM**, with a **professor module** that generates college class and department timetables.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20App-brightgreen?style=for-the-badge&logo=render&logoColor=white)](https://smart-time-table-4gqu.onrender.com)
 
@@ -28,13 +28,13 @@ An AI-powered study planner built with **Flask**, **PDF text extraction** and th
 - [About the Project](#-about-the-project)
 - [Features](#-features)
 - [How It Works](#-how-it-works)
-- [Tech Stack](#-tech-stack)
+- [Tech Stack](#%EF%B8%8F-tech-stack)
 - [Project Structure](#-project-structure)
 - [Quick Start](#-quick-start)
 - [Configuration](#%EF%B8%8F-configuration)
 - [Deployment on Render](#%EF%B8%8F-deployment-on-render)
 - [Usage Guide](#-usage-guide)
-- [Professor / Coordinator Module](#-professor--coordinator-module)
+- [Professor Module](#-professor-module)
 - [API Endpoints](#-api-endpoints)
 - [Security Notes](#-security-notes)
 - [Known Limitations](#%EF%B8%8F-known-limitations)
@@ -54,21 +54,22 @@ Students often struggle to balance study time with lectures, travelling, meals a
 
 then helps the student stick to it with **reminders** and **calendar export**.
 
-For teachers, a separate **professor / coordinator module** collects the inputs needed to build a college class timetable (working days, slot lengths, batches, subjects and credits).
+Professors get a separate portal that builds a **class timetable** (lectures, lunch and practical batches) and a **department master timetable** for several years, divisions, labs and staff.
 
 ## ✨ Features
 
 | | Feature | Description |
 |---|---|---|
-| 🔐 | **Student accounts** | Register and log in with a username and password |
-| 👩‍🏫 | **Professor accounts** | Separate professor role with its own login and session |
-| 🧑‍🏫 | **Class-teacher form** | Validated input form for college hours, lecture and practical slot lengths, batches, working days, subjects and credits |
-| 🏢 | **Department module** | Endpoint prepared for department-level timetable inputs (stub, coming in the next phase) |
-| 🧠 | **AI Quiz** | Upload a syllabus or notes PDF and get a 5-question multiple-choice quiz |
+| 🔐 | **Student accounts** | Separate student login with its own session; passwords are stored as hashes |
+| 🧠 | **AI Quiz** | Upload a syllabus or notes PDF and get a 5-question multiple-choice quiz with instant scoring |
 | 🗓️ | **Smart Timetable** | Upload a college timetable PDF, add wake-up, sleep, dinner and travel times, and get a daily plan with study priorities and productivity tips |
 | 🔔 | **Reminders** | Browser notifications for wake-up, study, meals and sleep |
 | 📆 | **Google Calendar** | Add the whole plan to your calendar with pop-up reminders and optional daily repeats |
 | 📥 | **.ics export** | Download a calendar file that works with any calendar app, no Google setup needed |
+| 👩‍🏫 | **Professor accounts** | Separate professor login and session; one role is active per browser at a time |
+| 🧑‍🏫 | **Class-teacher timetable** | Generates lectures, lunch break and practical batch rotation from college hours, slot lengths, working days, batches and subject credits |
+| 🏛️ | **Department master timetable** | Multi-year timetable with divisions, practical batches, labs, staff allocation, per-teacher timetables and a saved history (username needs `@`) |
+| 🖨️ | **Print / Save as PDF** | Print any generated professor timetable from the browser |
 | 🛡️ | **Protected files** | Only CSS, JS, images and fonts are served, so source code stays private |
 
 ## 🔄 How It Works
@@ -78,22 +79,22 @@ flowchart TD
     A[Login / Register] --> B{Choose a tool}
     B --> C[AI Quiz]
     B --> D[Smart Timetable]
-    B --> P[Professor Panel]
+    B --> P[Professor Portal]
     C --> C1[Upload syllabus PDF]
     C1 --> C2[Extract text with pypdf]
     C2 --> C3[Groq LLM writes 5 MCQs]
-    C3 --> C4[Take the quiz]
+    C3 --> C4[Take the quiz and see your score]
     D --> D1[Upload college timetable PDF]
     D1 --> D2[Enter wake, sleep, dinner, travel times]
     D2 --> D3[Groq LLM builds the daily plan]
     D3 --> D4[Browser reminders]
     D3 --> D5[Google Calendar]
     D3 --> D6[.ics download]
-    P --> P1[Class-teacher inputs]
-    P --> P2[Department inputs]
-    P1 --> P3[Validate and receive inputs]
-    P2 --> P4[Stub: connection ready]
-    P3 -.-> P5[Timetable generation: planned]
+    P --> P1[Class-teacher timetable]
+    P --> P2[Department master timetable]
+    P1 --> P3[Lectures, lunch, practical batches]
+    P2 --> P4[Years, divisions, labs, staff]
+    P4 --> P5[Class and teacher timetables plus history]
 ```
 
 ## 🛠️ Tech Stack
@@ -113,25 +114,20 @@ flowchart TD
 
 ```
 Smart_Time_Table/
-├── app.py              # Flask app: routes, auth, PDF handling, timetable, calendar
-├── coordinator.py      # Flask Blueprint: professor class-teacher and department endpoints
-├── llm.py              # Groq LLM setup and configuration
-├── index.html          # Web interface
-├── requirements.txt    # Python dependencies
-├── users.csv           # User accounts (created automatically if missing)
-├── uploads/            # Uploaded PDFs (created automatically, not in Git)
-├── .env                # Local secrets (not in Git)
+├── app.py                   # Flask app: student login, quiz, timetable, calendar
+├── coordinator.py           # Blueprint: professor login, class-teacher and department timetables
+├── llm.py                   # Groq LLM setup and configuration
+├── index.html               # Web interface (student app + professor portal)
+├── requirements.txt         # Python dependencies
+├── users.csv                # User accounts (created automatically if missing)
+├── department_history.json  # Saved department timetables (created automatically)
+├── uploads/                 # Temporary PDF uploads (created automatically, not in Git)
+├── .env                     # Local secrets (not in Git)
 ├── .gitignore
 └── README.md
 ```
 
-`coordinator.py` defines a Blueprint named `coordinator_bp`. It must be registered once in `app.py`:
-
-```python
-from coordinator import coordinator_bp
-
-app.register_blueprint(coordinator_bp)
-```
+The **student login** is in `app.py` and the **professor login** is in `coordinator.py` (a Blueprint registered with `app.register_blueprint(coordinator_bp)`). The shared `users.csv` helpers (hashing, sessions) live in `coordinator.py`, and `app.py` imports them.
 
 ## 🚀 Quick Start
 
@@ -175,7 +171,7 @@ Open **http://127.0.0.1:5000** in your browser.
 | `GROQ_MODEL` | | `openai/gpt-oss-20b` | LLM model name |
 | `GROQ_TIMEOUT` | | `60` | Seconds to wait for a model reply |
 | `GROQ_MAX_RETRIES` | | `1` | Retries on connection errors |
-| `ADMIN_PASSWORD` | | `password123` | Password of the default `admin` account |
+| `ADMIN_PASSWORD` | | `password123` | Password of the default `admin` account (used when `users.csv` is first created) |
 | `PYTHON_VERSION` | | Render default | Set to `3.12.8` on Render |
 
 ## ☁️ Deployment on Render
@@ -206,84 +202,53 @@ Open **http://127.0.0.1:5000** in your browser.
 ## 📖 Usage Guide
 
 **🧠 AI Quiz**
-1. Register or log in.
-2. Open the quiz section and upload a syllabus or notes PDF.
-3. Answer the generated 5-question multiple-choice quiz.
+1. Register or log in as a student (you stay logged in after a page refresh).
+2. Open the **Quiz** tab and upload a syllabus or notes PDF.
+3. Answer the generated 5-question quiz and press **Submit Answers** to see your score.
 
 **🗓️ Smart Timetable**
-1. Log in and open the timetable section.
-2. Upload your college timetable PDF.
-3. Enter your wake-up, sleep and dinner times, plus any travel timings.
-4. Generate the plan, then enable reminders, add it to Google Calendar, or download the `.ics` file.
+1. Open the **Timetable** tab and upload your college timetable PDF.
+2. Enter your wake-up, sleep and dinner times, plus any travel timings.
+3. Generate the plan, then enable reminders, add it to Google Calendar, or download the `.ics` file.
 
 **👩‍🏫 Professor**
-1. Use the **Professor Only** button on the login page to register or log in.
-2. Fill in the class-teacher form (college hours, slot lengths, batches, working days, subjects and credits).
-3. Submit the form. The inputs are validated and received; timetable generation is coming in a later phase.
+1. Use the **Professor Portal** button on the login page to register or log in.
+2. Choose **class teacher** or **department** timetable (see below).
 
-## 🧑‍🏫 Professor / Coordinator Module
+## 🧑‍🏫 Professor Module
 
-All professor-side logic lives in `coordinator.py`. Both endpoints require an active professor session (`user_role == "professor"` and a `professor_username`). Without it they return **401**.
+All professor logic lives in `coordinator.py`. Every endpoint needs an active professor session (otherwise `401`).
 
-### Class-teacher inputs
+### Class-teacher timetable
 
 `POST /api/professor/class-teacher/submit`
 
-**Example request body**
-
 ```json
 {
-  "college_start": "09:00",
-  "college_end": "17:00",
+  "college_start": "10:15",
+  "college_end": "16:45",
   "lecture_minutes": 60,
   "practical_minutes": 120,
   "batch_count": 3,
-  "batches": ["A1", "A2", "A3"],
-  "working_days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+  "batches": ["B1", "B2", "B3"],
+  "working_days": ["MON", "TUE", "WED", "THU", "FRI", "SAT"],
   "subjects": [
-    { "name": "Mathematics", "credits": 4 },
-    { "name": "Physics", "credits": 3 }
+    { "name": "OSY", "credits": 4 },
+    { "name": "DBMS", "credits": 3 }
   ]
 }
 ```
 
-**Validation rules**
+The server checks the inputs (valid `HH:MM` times, end after start, positive numbers, `batch_count` equal to the number of batches, every subject with a name and positive credits) and replies with `status: "generated"`, a `rows` list and a Markdown `timetable`. Higher-credit subjects get lectures first, a lunch break is added at 12:15, and each day has one practical slot where batches rotate through the practicals.
 
-| Check | Error (HTTP 400) |
-|---|---|
-| `college_start`, `college_end`, `lecture_minutes`, `practical_minutes`, `batches`, `working_days`, `subjects` must all be present | Please complete all required timetable details. |
-| `working_days` must be a non-empty list | Select at least one working day. |
-| `subjects` must be a non-empty list | Add at least one subject with its credits. |
-| `college_end` must be later than `college_start` | College end time must be later than college start time. |
-| `lecture_minutes`, `practical_minutes` and `batch_count` must be valid numbers | Lecture, practical and batch values must be valid numbers. |
-| All three numbers must be greater than 0, and `batch_count` must equal the number of `batches` | Check slot durations and ensure batch names match the batch count. |
-| Every subject needs a non-empty name and credits greater than 0 | Every subject needs a name and a positive credit value. |
+### Department master timetable
 
-**Success response**
+Requires a professor username that contains **`@`** (for example `name@dept`), otherwise the API returns `403`.
 
-```json
-{
-  "success": true,
-  "status": "processing",
-  "message": "Your class-teacher inputs have been received. Timetable generation is not enabled in this phase yet."
-}
-```
+- `POST /api/professor/department/generate` takes years (capacity and divisions), subjects and practicals per year, labs and staff allocation. It returns practical batches, a class timetable per year, a timetable per teacher and a record ID.
+- `GET /api/professor/department/history` lists all earlier timetables, newest first, so they can be viewed or printed again.
 
-> Times are compared as `HH:MM` strings, so send them in 24-hour, zero-padded format (for example `09:00`, not `9:00`).
-
-### Department inputs
-
-`POST /api/professor/department/submit`
-
-A stub prepared for the second part of the project. It currently only checks the professor session and returns:
-
-```json
-{
-  "success": true,
-  "status": "pending",
-  "message": "Department timetable module connection is ready."
-}
-```
+History is kept in memory and mirrored to `department_history.json`.
 
 ## 🔌 API Endpoints
 
@@ -293,15 +258,18 @@ A stub prepared for the second part of the project. It currently only checks the
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/` | Web interface |
-| `POST` | `/api/register` | Register a student |
-| `POST` | `/api/login` | Student login |
-| `POST` | `/api/professor/register` | Register a professor |
-| `POST` | `/api/professor/login` | Professor login |
-| `POST` | `/api/professor/logout` | Professor logout |
-| `POST` | `/api/professor/class-teacher/submit` | Validate and receive class-teacher inputs *(coordinator.py)* |
-| `POST` | `/api/professor/department/submit` | Department inputs, stub for the next phase *(coordinator.py)* |
-| `POST` | `/api/quiz` | Generate a quiz from a PDF |
-| `POST` | `/api/timetable` | Generate a daily timetable from a PDF and routine |
+| `GET` | `/api/me` | Who is logged in (used to restore the login after a refresh) |
+| `POST` | `/api/register` | Register a student *(app.py)* |
+| `POST` | `/api/login` | Student login *(app.py)* |
+| `POST` | `/api/logout` | Student logout *(app.py)* |
+| `POST` | `/api/professor/register` | Register a professor *(coordinator.py)* |
+| `POST` | `/api/professor/login` | Professor login *(coordinator.py)* |
+| `POST` | `/api/professor/logout` | Professor logout *(coordinator.py)* |
+| `POST` | `/api/professor/class-teacher/submit` | Generate a class-teacher timetable *(coordinator.py)* |
+| `POST` | `/api/professor/department/generate` | Generate a department master timetable, needs `@` in username *(coordinator.py)* |
+| `GET` | `/api/professor/department/history` | List saved department timetables, needs `@` in username *(coordinator.py)* |
+| `POST` | `/api/quiz` | Generate a quiz from a PDF (student login required) |
+| `POST` | `/api/timetable` | Generate a daily timetable from a PDF and routine (student login required) |
 | `POST` | `/api/timetable/events` | Parse a timetable into timed events for notifications |
 | `POST` | `/api/calendar/add` | Add the timetable to Google Calendar |
 | `POST` | `/api/calendar/ics` | Download the timetable as an `.ics` file |
@@ -317,15 +285,16 @@ A stub prepared for the second part of the project. It currently only checks the
 - If an API key is ever exposed, revoke it in the Groq console and create a new one.
 - Only whitelisted asset types (CSS, JS, images, fonts) can be downloaded from the server.
 - Session cookies are `HttpOnly`, `SameSite=Lax`, and `Secure` when deployed on Render.
-- Professor endpoints are protected by a session role check and return `401` for anyone who is not logged in as a professor.
+- Uploaded PDFs are deleted from the server right after they are processed.
+- Passwords are saved as salted hashes. Old plain-text accounts in `users.csv` still log in once and are upgraded automatically.
+- Quiz, timetable and calendar endpoints return `401` unless a student is logged in; professor endpoints return `401` unless a professor is logged in.
 
 ## ⚠️ Known Limitations
 
-- Accounts are stored in `users.csv` with **plain-text passwords**. Moving to a database with hashed passwords is planned.
-- On the free hosting plan the disk resets on every restart, so accounts registered on the live site are temporary.
-- Professor class-timetable **generation is not implemented yet**; the class-teacher form only validates and receives the inputs.
-- The **department module** is a stub and does not process any data yet.
-- Submitted class-teacher inputs are not saved anywhere yet.
+- Accounts are stored in `users.csv`, not in a database yet.
+- On the free hosting plan the disk resets on every restart, so accounts and department history on the live site are temporary.
+- The department timetable does not yet detect teacher clashes between years.
+- Class-teacher timetables are shown on screen only and are not saved.
 - Results depend on PDF text quality. Scanned, image-only PDFs cannot be read.
 
 ## 🗺️ Roadmap
@@ -334,13 +303,13 @@ A stub prepared for the second part of the project. It currently only checks the
 - [x] AI quiz from a syllabus PDF
 - [x] Smart daily timetable with reminders
 - [x] Google Calendar and `.ics` export
-- [x] Professor login and class-teacher input form
-- [x] Coordinator Blueprint with validated class-teacher endpoint and department stub
-- [ ] Department timetable module (second phase)
-- [ ] Automatic class timetable generation for professors
-- [ ] Database storage with hashed passwords
+- [x] Professor login and class-teacher timetable generation
+- [x] Department master timetable with history
+- [x] Separate student (`app.py`) and professor (`coordinator.py`) logins with hashed passwords and sessions
+- [ ] Database storage for accounts
+- [ ] Teacher and lab clash detection for department timetables
 - [ ] Deadline tracking and conflict detection
-- [ ] Saved timetable and quiz history
+- [ ] Saved timetable and quiz history for students
 
 ## 👥 Contributors
 
