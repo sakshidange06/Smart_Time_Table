@@ -2,15 +2,13 @@ username,password,role
 admin,password123,student
 sakshi,sakshi123,student
 Abhijit,Abhijit@123,student
-<<<<<<< Updated upstream
 Rahul_Sonawane,Rahul@123,professor
 admin,Admin@Smart2026!,student
 HOD@MIT,Headofco123,professor
-=======
 HOD,HOD@123,professor
 admin,Admin@2026,student
 SakshiDange,dange123,professor
 Sakshi,Sakshi123,student
 HOD@ofCO,HOD123,student
 TECO@123,123456,professor
->>>>>>> Stashed changes
+HOD@CO,scrypt:32768:8:1$Rja3D8XhI2mhQ5IG$9c0ad0aa061f7f8fee127d3e9ef7551c0a7c4f44d9b3a6721b9f98592cbe7383319a6c3e0b7997b79f00dd942d5f766528c86d391367ed5e5b5921471b96b99d,professor
