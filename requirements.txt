@@ -7,3 +7,5 @@ langchain-groq>=0.2
 google-auth>=2.30
 google-auth-oauthlib>=1.2
 google-api-python-client>=2.130
+SQLAlchemy
+psycopg2-binarys
