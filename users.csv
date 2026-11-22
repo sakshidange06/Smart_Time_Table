@@ -1,5 +1,5 @@
 username,password,role
-admin,password123,student
+admin,scrypt:32768:8:1$qd42BVYo4dJEzgxx$daeba89994868caa18c3f02e78e5da919945bdf2caab58f02b6fc75cac57e4824689984689a767734ceea5e81396933c8cb2c96ca4dde8ee28980b2f5a913e0d,student
 sakshi,sakshi123,student
 Abhijit,Abhijit@123,student
 Rahul_Sonawane,Rahul@123,professor
@@ -12,3 +12,4 @@ Sakshi,Sakshi123,student
 HOD@ofCO,HOD123,student
 TECO@123,123456,professor
 HOD@CO,scrypt:32768:8:1$Rja3D8XhI2mhQ5IG$9c0ad0aa061f7f8fee127d3e9ef7551c0a7c4f44d9b3a6721b9f98592cbe7383319a6c3e0b7997b79f00dd942d5f766528c86d391367ed5e5b5921471b96b99d,professor
+CO@123,scrypt:32768:8:1$6JoRwtR53UJNbfct$23836df707e66384c1141433991c931031ac72b9bf91ccf7c12bb3cdc1becf14c842add74f1b0db588043cec4ccd8a25139ab0693da983a7218f4aaa764e348f,professor
