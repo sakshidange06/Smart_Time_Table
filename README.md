@@ -83,18 +83,18 @@ Professors get a separate portal that builds a **class timetable** (lectures, lu
 | Student | |
 |---|---|
 | **Login** | **Dashboard** |
-| ![Login](docs/screenshots/login.png) | ![Student dashboard](docs/screenshots/student-dashboard.png) |
+| ![Login]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\login.png") | ![Student dashboard]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\student_dashboard.png") |
 | **Quiz runner** | **Answer review** |
-| ![Quiz runner](docs/screenshots/quiz-runner.png) | ![Quiz review](docs/screenshots/quiz-review.png) |
+| ![Quiz runner]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\quiz.png") | ![Quiz review]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\quizreview.png") |
 | **Smart timetable** | **Print view** |
-| ![Smart timetable](docs/screenshots/smart-timetable.png) | ![Print view](docs/screenshots/print-view.png) |
+| ![Smart timetable]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\timetable.png") | ![Print view]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\finaltimetable.png") |
 
 | Professor | |
 |---|---|
 | **Professor portal** | **Class timetable** |
-| ![Professor portal](docs/screenshots/professor-portal.png) | ![Class timetable](docs/screenshots/class-timetable.png) |
+| ![Professor portal]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\professor_portal.png") | ![Class timetable]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\class_time_table.png") |
 | **Department master timetable** | |
-| ![Department timetable](docs/screenshots/department-timetable.png) | |
+| ![Department timetable]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\dept_master_timetable.png") | |
 
 ## 🔄 How It Works
 
