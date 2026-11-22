@@ -24,15 +24,19 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 DEFAULT_SQLITE_URL = f"sqlite:///{(BASE_DIR / 'timetable_dev.db').as_posix()}"
 
+
 def _resolve_database_url() -> str:
     raw_url = (os.getenv("DATABASE_URL") or "").strip()
     if not raw_url:
         return DEFAULT_SQLITE_URL
 
     if raw_url.startswith("postgres://"):
-        raw_url = raw_url.replace("postgres://", "postgresql://", 1)
+        raw_url = raw_url.replace("postgres://", "postgresql+psycopg2://", 1)
+    elif raw_url.startswith("postgresql://") and not raw_url.startswith("postgresql+"):
+        raw_url = raw_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
     return raw_url
+
 
 DATABASE_URL = _resolve_database_url()
 IS_SQLITE = DATABASE_URL.startswith("sqlite")
