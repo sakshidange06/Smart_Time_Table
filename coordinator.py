@@ -1,7 +1,6 @@
 # coordinator.py
 # Professor login + professor services (class-teacher and department timetables).
 # Uses db.py (SQLAlchemy) for user storage and department timetable history,
-# with conflict-aware department scheduling and credit-weighted subject slots.
 import json
 import uuid
 from datetime import datetime

@@ -3,7 +3,6 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterator
-
 from dotenv import load_dotenv
 from sqlalchemy import (
     Boolean,
@@ -25,7 +24,6 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 DEFAULT_SQLITE_URL = f"sqlite:///{(BASE_DIR / 'timetable_dev.db').as_posix()}"
 
-
 def _resolve_database_url() -> str:
     raw_url = (os.getenv("DATABASE_URL") or "").strip()
     if not raw_url:
@@ -35,7 +33,6 @@ def _resolve_database_url() -> str:
         raw_url = raw_url.replace("postgres://", "postgresql://", 1)
 
     return raw_url
-
 
 DATABASE_URL = _resolve_database_url()
 IS_SQLITE = DATABASE_URL.startswith("sqlite")
