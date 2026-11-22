@@ -78,23 +78,27 @@ Professors get a separate portal that builds a **class timetable** (lectures, lu
 
 ## 📸 Screenshots
 
-> Save your screenshots in `docs/screenshots/` using the file names below, and they will show up here.
+> Click any screenshot to open it full size.
 
-| Student | |
-|---|---|
+### Student
+
+| | |
+|:---:|:---:|
 | **Login** | **Dashboard** |
-| ![Login]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\login.png") | ![Student dashboard]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\student_dashboard.png") |
+| <a href="Docs/SmartTimeTable/login.png"><img src="Docs/SmartTimeTable/login.png" alt="Login" width="440"></a> | <a href="Docs/SmartTimeTable/student_dashboard.png"><img src="Docs/SmartTimeTable/student_dashboard.png" alt="Dashboard" width="440"></a> |
 | **Quiz runner** | **Answer review** |
-| ![Quiz runner]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\quiz.png") | ![Quiz review]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\quizreview.png") |
+| <a href="Docs/SmartTimeTable/quiz.png"><img src="Docs/SmartTimeTable/quiz.png" alt="Quiz runner" width="440"></a> | <a href="Docs/SmartTimeTable/quizreview.png"><img src="Docs/SmartTimeTable/quizreview.png" alt="Answer review" width="440"></a> |
 | **Smart timetable** | **Print view** |
-| ![Smart timetable]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\timetable.png") | ![Print view]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\finaltimetable.png") |
+| <a href="Docs/SmartTimeTable/timetable.png"><img src="Docs/SmartTimeTable/timetable.png" alt="Smart timetable" width="440"></a> | <a href="Docs/SmartTimeTable/finaltimetable.png"><img src="Docs/SmartTimeTable/finaltimetable.png" alt="Print view" width="440"></a> |
 
-| Professor | |
-|---|---|
+### Professor
+
+| | |
+|:---:|:---:|
 | **Professor portal** | **Class timetable** |
-| ![Professor portal]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\professor_portal.png") | ![Class timetable]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\class_time_table.png") |
+| <a href="Docs/SmartTimeTable/professor_portal.png"><img src="Docs/SmartTimeTable/professor_portal.png" alt="Professor portal" width="440"></a> | <a href="Docs/SmartTimeTable/class_time_table.png"><img src="Docs/SmartTimeTable/class_time_table.png" alt="Class timetable" width="440"></a> |
 | **Department master timetable** | |
-| ![Department timetable]("C:\Users\SAINATH\OneDrive\Pictures\Docs\SmartTimeTable\dept_master_timetable.png") | |
+| <a href="Docs/SmartTimeTable/dept_master_timetable.png"><img src="Docs/SmartTimeTable/dept_master_timetable.png" alt="Department master timetable" width="440"></a> | |
 
 ## 🔄 How It Works
 
@@ -183,7 +187,7 @@ Smart_Time_Table/
 ├── users.csv                # User accounts (created automatically, not in Git)
 ├── department_history.json  # Saved department timetables (created automatically, not in Git)
 ├── uploads/                 # Temporary PDF uploads (created automatically, not in Git)
-├── docs/screenshots/        # Screenshots shown in this README
+├── Docs/SmartTimeTable/        # Screenshots shown in this README
 ├── credentials.json         # Google OAuth client (optional, not in Git)
 ├── .env                     # Local secrets (not in Git)
 ├── .gitignore
