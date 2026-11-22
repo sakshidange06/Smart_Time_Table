@@ -37,16 +37,16 @@ html.bf #butterfly{display:block}
 @keyframes flap{from{transform:scaleX(1)}to{transform:scaleX(.33)}}
 
 .btn{font-family:var(--body);display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 18px;border:0;border-radius:14px;font-size:1rem;font-weight:700;color:#06121a;background:linear-gradient(135deg,var(--cyan),var(--violet));box-shadow:0 8px 28px rgba(34,211,238,.28);transition:transform .15s,box-shadow .2s,filter .2s;text-decoration:none;cursor:pointer}
-.btn:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 12px 34px rgba(167,139,250,.4)}
-.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 12px 34px rgba(167,139,250,.4)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
 .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
-.btn.ghost:hover{background:var(--panel2);border-color:var(--violet)}
+.btn.ghost:hover:not(:disabled){background:var(--panel2);border-color:var(--violet)}
 .btn.sm{width:auto;padding:8px 14px;font-size:.85rem}
 .form-group{margin-bottom:16px}
 label{display:block;margin-bottom:7px;font-weight:700;font-size:.9rem}
-input[type=text],input[type=password],input[type=time],input[type=number],textarea{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:.96rem;background:#0c0f22;color:var(--ink);transition:border-color .2s,box-shadow .2s;color-scheme:dark}
+input[type=text],input[type=password],input[type=time],input[type=number],input[type=date],textarea,select{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:.96rem;background:#0c0f22;color:var(--ink);transition:border-color .2s,box-shadow .2s;color-scheme:dark}
 input[type=file]{width:100%;padding:12px;border:1.5px dashed var(--line);border-radius:12px;background:#0c0f22;color:var(--ink);font:inherit}
-input:focus,textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.15)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.15)}
 .pw{position:relative}.pw input{padding-right:48px}
 .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:transparent;font-size:18px;border-radius:10px;color:var(--ink);cursor:pointer}
 .error{color:var(--red);font-size:.88rem;margin-top:10px;font-weight:700}
@@ -62,43 +62,91 @@ input:focus,textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
 .chip{font-size:.8rem;font-weight:700;padding:6px 12px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted)}
 
-.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:18px;padding:12px 28px;background:rgba(8,10,20,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:18px;padding:12px 28px;background:rgba(8,10,20,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:700;font-size:1.08rem}
 .brand .lg{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:19px;background:linear-gradient(135deg,rgba(34,211,238,.2),rgba(167,139,250,.25));border:1px solid rgba(167,139,250,.4)}
 .user{display:flex;align-items:center;gap:10px}
 .push{margin-left:auto}
 .avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:linear-gradient(135deg,var(--amber),var(--pink));color:#1a0b1a}
 main{position:relative;padding:34px 28px 70px}
-.wrap{max-width:1000px;margin:0 auto}
+.wrap{max-width:1040px;margin:0 auto}
 .card{background:rgba(17,20,42,.82);border:1px solid var(--line);border-radius:var(--r);padding:26px;margin-bottom:18px;box-shadow:var(--glow)}
 
-/* student tabs & pages */
-.tabs{display:flex;gap:6px;margin-left:12px}
-.tab{border:0;padding:9px 14px;border-radius:10px;background:transparent;color:var(--muted);font:700 .9rem var(--body);cursor:pointer}
+/* Student CSS (overridden from 2nd index.html) */
+.tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:rgba(17,20,42,.65);border:1px solid var(--line);padding:4px;border-radius:14px}
+.tab{border:0;background:transparent;color:var(--muted);padding:7px 15px;border-radius:10px;font:700 .88rem var(--body);cursor:pointer;transition:all .15s}
 .tab:hover{color:var(--ink)}
-.tab.on{background:linear-gradient(135deg,var(--violet),var(--cyan));color:#06121a}
+.tab.on{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#06121a}
 .page-head{margin-bottom:18px}
 .page-head h2{margin-bottom:6px}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.q-card{background:#0c0f22;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
-.q-card h4{margin:0 0 10px;font-family:var(--head)}
-.opt{display:flex;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;font-weight:500}
-.opt:hover{border-color:var(--cyan)}
-.opt.right{border-color:var(--lime);background:rgba(163,230,53,.1)}
-.opt.wrong{border-color:var(--red);background:rgba(251,113,133,.1)}
 .row-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .row-btns .btn{width:auto;flex:1;min-width:170px}
-.score{font-family:var(--head);font-size:1.4rem;margin-top:12px}
 
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
 .cell{background:rgba(17,20,42,.82);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--glow)}
-.hero{grid-column:span 4;background:linear-gradient(135deg,rgba(109,40,217,.35),rgba(8,145,178,.25)),var(--panel)}
-.hero h2{font-size:2rem;margin-bottom:10px}
-.hero .clock{font-family:var(--head);font-size:2.6rem;font-weight:700;margin-top:18px}
-.tool{grid-column:span 3;cursor:pointer}
-.tool:hover{border-color:var(--cyan)}
-.tool .big{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:28px;margin-bottom:16px;background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(167,139,250,.22))}
-.tool .go{display:inline-block;margin-top:16px;font-weight:800;color:var(--cyan)}
+.hero{grid-column:span 4;background:linear-gradient(135deg,rgba(109,40,217,.36),rgba(8,145,178,.22)),var(--panel)}
+.hero h2{font-size:2rem;margin-bottom:8px}
+.hero .clock{font-family:var(--head);font-size:2.4rem;font-weight:800;margin-top:18px;letter-spacing:-.02em}
+.hero .date-sub{color:var(--muted);font-size:.95rem;margin-top:2px}
+.tip-card{grid-column:span 2;display:flex;flex-direction:column;justify-content:space-between;background:rgba(17,20,42,.86)}
+.tip-label{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;display:inline-flex;align-items:center;gap:6px}
+.tip-text{color:var(--ink);font-size:1.05rem;font-weight:600;line-height:1.55}
+.tip-btn{margin-top:18px;width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);font:700 .88rem var(--body);cursor:pointer;transition:all .15s}
+.tip-btn:hover{border-color:var(--cyan);background:var(--panel2)}
+
+.tool{grid-column:span 3;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s;text-align:left}
+.tool:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.tool.featured-glow{border-color:rgba(34,211,238,.55);box-shadow:0 0 0 1px rgba(34,211,238,.3),0 12px 36px rgba(34,211,238,.12)}
+.tool .big{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:14px;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+.tool h3{font-size:1.25rem;margin-bottom:8px}
+.tool .go{display:inline-block;margin-top:14px;font-weight:800;color:var(--cyan);font-size:.92rem}
+
+.how-card{grid-column:span 6;background:rgba(17,20,42,.78)}
+.how-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+.how-step{background:#0c0f22;border:1px solid var(--line);border-radius:14px;padding:16px}
+.step-num{width:24px;height:24px;border-radius:999px;display:inline-grid;place-items:center;font-size:.78rem;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--violet));color:#06121a;margin-bottom:10px}
+.how-step h4{margin:0 0 6px;font-family:var(--head);font-size:1rem;color:var(--ink)}
+
+.note-banner{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.28);color:#fde68a;border-radius:12px;padding:12px 16px;font-size:.92rem;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.dropzone{border:1.5px dashed rgba(167,139,250,.45);background:#0c0f22;border-radius:16px;padding:34px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;margin-bottom:18px}
+.dropzone:hover,.dropzone.dragover{border-color:var(--cyan);background:rgba(34,211,238,.06)}
+.dropzone .dz-icon{font-size:28px;margin-bottom:10px}
+.dropzone .dz-title{font-weight:700;color:var(--ink);font-size:1rem}
+.dropzone .dz-sub{color:var(--muted);font-size:.86rem;margin-top:4px}
+.back-bar{margin-top:16px}
+.back-bar-btn{width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:rgba(17,20,42,.65);color:var(--muted);font:700 .9rem var(--body);cursor:pointer;transition:all .15s}
+.back-bar-btn:hover{color:var(--ink);border-color:var(--violet)}
+
+.quiz-meta-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;font-weight:700;font-size:.95rem}
+.progress-track{height:6px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-bottom:16px}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--violet));transition:width .25s ease}
+.q-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.q-pill{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#0c0f22;color:var(--muted);font:700 .88rem var(--body);cursor:pointer;transition:all .15s}
+.q-pill.answered{border-color:rgba(34,211,238,.55);color:var(--cyan)}
+.q-pill.active{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#06121a;border-color:transparent}
+
+.q-stage{background:rgba(17,20,42,.88);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--glow)}
+.q-prompt-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px}
+.q-badge{width:28px;height:28px;border-radius:8px;background:rgba(34,211,238,.16);color:var(--cyan);display:grid;place-items:center;font-weight:800;font-size:.88rem;flex-shrink:0;margin-top:2px}
+.q-prompt{font-family:var(--head);font-size:1.15rem;font-weight:700;color:var(--ink)}
+.opt-list{display:grid;gap:10px}
+.opt-btn{width:100%;text-align:left;padding:13px 16px;border-radius:12px;border:1px solid var(--line);background:#0c0f22;color:var(--ink);font:600 .95rem var(--body);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px}
+.opt-btn:hover{border-color:var(--violet);background:var(--panel2)}
+.opt-btn.selected{border-color:var(--cyan);background:rgba(34,211,238,.12)}
+.q-nav-row{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:12px;margin-top:16px}
+.shortcut-hint{text-align:center;color:var(--muted);font-size:.8rem;margin-top:12px}
+.kbd{display:inline-block;padding:1px 6px;border-radius:5px;border:1px solid var(--line);background:#0c0f22;color:var(--ink);font-size:.76rem;font-weight:700}
+
+.score-banner{background:linear-gradient(135deg,rgba(109,40,217,.35),rgba(34,211,238,.18)),var(--panel);border:1px solid rgba(167,139,250,.4);border-radius:var(--r);padding:24px;display:flex;align-items:center;gap:22px;margin-bottom:20px;flex-wrap:wrap}
+.score-ring{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-family:var(--head);font-weight:800;font-size:1.3rem;color:var(--ink);background:radial-gradient(closest-side,var(--panel) 78%,transparent 80%),conic-gradient(var(--pink) var(--pct,0%),rgba(255,255,255,.12) 0);flex-shrink:0}
+.review-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.review-card{background:rgba(17,20,42,.86);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px}
+.review-card.ok{border-left-color:var(--lime)}
+.review-card.bad{border-left-color:var(--red)}
+.review-opts{margin-top:10px;display:grid;gap:6px;font-size:.92rem}
+.review-opt.is-correct{color:var(--lime);font-weight:700}
+.review-opt.is-wrong{color:var(--red);font-weight:700}
 
 .timetable-output{overflow-x:auto}
 .timetable-output table{width:100%;border-collapse:collapse;font-size:.92rem}
@@ -132,9 +180,10 @@ main{position:relative;padding:34px 28px 70px}
 #staff-allocation-table th{text-align:left;padding:8px;color:var(--cyan);font-size:.85rem}
 #staff-allocation-table td{padding:6px 4px}
 @media(max-width:768px){
-  .professor-form-grid,.prof-grid,.grid2{grid-template-columns:1fr}
+  .professor-form-grid,.prof-grid,.grid2,.how-grid{grid-template-columns:1fr}
   .tabs{display:none}
-  .hero,.tool{grid-column:span 6}
+  .hero,.tip-card,.tool,.how-card{grid-column:span 6}
+  .q-nav-row{grid-template-columns:1fr}
 }
 #print-area{display:none}
 @page{size:A4 landscape;margin:12mm}
@@ -341,48 +390,129 @@ main{position:relative;padding:34px 28px 70px}
   </div></main>
 </div>
 
-<!-- STUDENT APP -->
+<!-- STUDENT APP (overridden from 2nd index.html) -->
 <div id="app" class="hidden">
   <header class="top">
     <div class="brand"><span class="lg">🦋</span> Smart Timetable AI</div>
     <nav class="tabs">
-      <button class="tab on" onclick="showView('dashboard')">🏠 Home</button>
-      <button class="tab" onclick="showView('quiz')">🎯 Quiz</button>
-      <button class="tab" onclick="showView('timetable')">📅 Timetable</button>
+      <button type="button" class="tab on" onclick="showView('dashboard')">🏠 Home</button>
+      <button type="button" class="tab" onclick="showView('quiz')">🎯 Quiz</button>
+      <button type="button" class="tab" onclick="showView('timetable')">📅 Timetable</button>
     </nav>
-    <div class="user push"><div class="avatar" id="user-avatar">U</div><b id="user-name">User</b><button class="btn ghost sm" onclick="handleLogout()">↩ Logout</button></div>
+    <div class="user push"><div class="avatar" id="user-avatar">U</div><b id="user-name">User</b><button type="button" class="btn ghost sm" onclick="handleLogout()">↩ Logout</button></div>
   </header>
   <main><div class="wrap">
-
-    <!-- HOME -->
+    <!-- Student Dashboard -->
     <div id="dashboard-section" class="view">
       <div class="bento">
         <div class="cell hero">
-          <h2>Hello, <span class="grad" id="greet-name">there</span> 👋</h2>
-          <p>Ready to learn something new? Pick a tool below.</p>
+          <h2><span id="greeting-phrase">Good evening</span>, <span class="grad" id="greet-name">there</span> 👋</h2>
+          <p>Ready to learn something new? Pick a tool below and start in <span class="hl">under a minute</span></p>
           <div class="clock" id="clock">--:--</div>
+          <div class="date-sub" id="date-sub"></div>
         </div>
-        <div class="cell tool" onclick="showView('quiz')">
-          <div class="big">🎯</div><h3>Quick Revision <span class="hl">Quiz Generator</span></h3><p>Upload syllabus PDF and test yourself.</p><span class="go">Start quiz →</span>
+
+        <div class="cell tip-card">
+          <div>
+            <div class="tip-label">💡 Study Tip</div>
+            <p class="tip-text" id="study-tip">Test yourself before re-reading—active recall locks facts into long-term memory faster than passive highlighting.</p>
+          </div>
+          <button type="button" class="tip-btn" onclick="nextStudyTip()">New tip ✨</button>
         </div>
-        <div class="cell tool" onclick="showView('timetable')">
-          <div class="big">📅</div><h3>Create <span class="hl-p">Smart Timetable</span></h3><p>Get a personal schedule from your PDF.</p><span class="go">Build schedule →</span>
+
+        <button type="button" class="cell tool featured-glow" onclick="showView('quiz')">
+          <div class="big">🎯</div>
+          <h3>Quick Revision <span class="hl">Quiz Generator</span></h3>
+          <p>Upload a syllabus or notes PDF and practice with an interactive question runner and answer review.</p>
+          <span class="go">Start quiz →</span>
+        </button>
+
+        <button type="button" class="cell tool" onclick="showView('timetable')">
+          <div class="big">📅</div>
+          <h3>Create <span class="hl-p">Smart Timetable</span></h3>
+          <p>Combine your college schedule PDF with wake, sleep, dinner, and travel timings into a daily routine.</p>
+          <span class="go">Build schedule →</span>
+        </button>
+
+        <div class="cell how-card">
+          <h3>How it works</h3>
+          <div class="how-grid">
+            <div class="how-step">
+              <span class="step-num">1</span>
+              <h4>Upload your PDF</h4>
+              <p>Drop in lecture notes, a syllabus, or your college timetable PDF.</p>
+            </div>
+            <div class="how-step">
+              <span class="step-num">2</span>
+              <h4>Generate & practice</h4>
+              <p>Take a revision quiz or build a structured day around your routine.</p>
+            </div>
+            <div class="how-step">
+              <span class="step-num">3</span>
+              <h4>Review & export</h4>
+              <p>Inspect answers, set reminders, or export to calendar and print.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- QUIZ -->
     <div id="quiz-section" class="view hidden">
-      <div class="page-head"><h2>🎯 Quick Revision <span class="hl">Quiz</span></h2><p>Upload your syllabus or notes PDF and get a 5-question quiz.</p></div>
+      <div class="page-head"><h2>🎯 Quick Revision <span class="hl">Quiz</span></h2><p>Upload your syllabus or notes PDF and practice question by question.</p></div>
       <div class="card">
-        <div class="form-group"><label>📄 Syllabus / Notes PDF</label><input type="file" id="quiz-pdf" accept="application/pdf"></div>
-        <button class="btn" id="quiz-btn" onclick="generateQuiz()">Generate Quiz 🧠</button>
+        <div class="note-banner">📌 Tip: Choose a clear text-based PDF for best question extraction.</div>
+        <input type="file" id="quiz-pdf" accept="application/pdf" class="hidden" onchange="onQuizFileChange(this)">
+        <div class="dropzone" id="quiz-dropzone" onclick="$('quiz-pdf').click()" ondragover="handleDropOver(event, this)" ondragleave="handleDropLeave(this)" ondrop="handleDropFile(event, 'quiz-pdf', this)">
+          <div class="dz-icon">📄</div>
+          <div class="dz-title" id="quiz-file-label">Click to select a PDF or drag & drop here</div>
+          <div class="dz-sub">Supports syllabus, lecture slides, or study notes (PDF)</div>
+        </div>
+        <button type="button" class="btn" id="quiz-btn" onclick="generateQuiz()">Generate Quiz 🧠</button>
         <div id="quiz-msg" class="error"></div>
       </div>
+
       <div id="quiz-card" class="card hidden">
-        <div id="quiz-list"></div>
-        <button class="btn" onclick="checkQuiz()">Submit Answers ✅</button>
-        <div id="quiz-score" class="score"></div>
+        <div class="quiz-meta-top">
+          <span id="quiz-progress-label">Question 1 of 5</span>
+          <span id="quiz-answered-label">0 answered</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="quiz-progress-fill"></div></div>
+        <div class="q-pills" id="quiz-pills"></div>
+
+        <div class="q-stage" id="quiz-stage">
+          <div class="q-prompt-row">
+            <span class="q-badge" id="q-badge">1</span>
+            <div class="q-prompt" id="q-prompt">Question text</div>
+          </div>
+          <div class="opt-list" id="q-options"></div>
+        </div>
+
+        <div class="q-nav-row">
+          <button type="button" class="btn ghost" id="q-prev-btn" onclick="prevQuestion()">← Previous</button>
+          <button type="button" class="btn" id="q-submit-btn" onclick="checkQuiz()">Submit Answers ✅</button>
+          <button type="button" class="btn ghost" id="q-next-btn" onclick="nextQuestion()">Next →</button>
+        </div>
+        <div class="shortcut-hint">Shortcuts: <span class="kbd">1</span>–<span class="kbd">4</span> select option · <span class="kbd">←</span> <span class="kbd">→</span> navigate</div>
+      </div>
+
+      <div id="quiz-review-card" class="card hidden">
+        <div class="score-banner">
+          <div class="score-ring" id="score-ring" style="--pct:0%">0%</div>
+          <div>
+            <h3 id="quiz-score-title">Quiz Complete!</h3>
+            <p id="quiz-score-sub">Review your answers below or generate a fresh set.</p>
+          </div>
+        </div>
+        <div class="review-head">
+          <h3>Answer Review</h3>
+          <button type="button" class="btn ghost sm" onclick="resetQuiz()">🔄 Try Another PDF</button>
+        </div>
+        <div id="quiz-review-list"></div>
+      </div>
+
+      <div class="back-bar">
+        <button type="button" class="back-bar-btn" onclick="showView('dashboard')">← Back to Home</button>
       </div>
     </div>
 
@@ -390,32 +520,37 @@ main{position:relative;padding:34px 28px 70px}
     <div id="timetable-section" class="view hidden">
       <div class="page-head"><h2>📅 Smart <span class="hl-p">Timetable</span></h2><p>Upload your college timetable PDF and add your daily routine.</p></div>
       <div class="card">
-        <div class="form-group"><label>📄 College Timetable PDF</label><input type="file" id="tt-pdf" accept="application/pdf"></div>
+        <div class="form-group"><label for="tt-pdf">📄 College Timetable PDF</label><input type="file" id="tt-pdf" accept="application/pdf"></div>
         <div class="grid2">
-          <div class="form-group"><label>⏰ Wake-up time</label><input type="time" id="tt-wake" value="06:30"></div>
-          <div class="form-group"><label>😴 Sleep time</label><input type="time" id="tt-sleep" value="22:30"></div>
-          <div class="form-group"><label>🍽️ Dinner time</label><input type="time" id="tt-dinner" value="20:00"></div>
-          <div class="form-group"><label>🚌 Travel timings</label><input type="text" id="tt-travel" placeholder="08:30-09:15 to college, 17:00-17:45 home"></div>
+          <div class="form-group"><label for="tt-wake">⏰ Wake-up time</label><input type="time" id="tt-wake" value="06:30"></div>
+          <div class="form-group"><label for="tt-sleep">😴 Sleep time</label><input type="time" id="tt-sleep" value="22:30"></div>
+          <div class="form-group"><label for="tt-dinner">🍽️ Dinner time</label><input type="time" id="tt-dinner" value="20:00"></div>
+          <div class="form-group"><label for="tt-travel">🚌 Travel timings</label><input type="text" id="tt-travel" placeholder="08:30-09:15 to college, 17:00-17:45 home"></div>
         </div>
-        <button class="btn" id="tt-btn" onclick="generateTimetable()">Generate My Plan ✨</button>
+        <button type="button" class="btn" id="tt-btn" onclick="generateTimetable()">Generate My Plan ✨</button>
         <div id="tt-msg" class="error"></div>
       </div>
+
       <div id="tt-card" class="card hidden">
         <h3 style="margin-bottom:12px">📋 Your Daily Plan</h3>
         <div id="tt-output" class="timetable-output"></div>
         <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
         <div class="grid2">
-          <div class="form-group"><label>📆 Start date</label><input type="text" id="cal-date" placeholder="YYYY-MM-DD"></div>
-          <div class="form-group"><label>🔁 Repeat for (days)</label><input type="number" id="cal-repeat" value="1" min="1" max="365"></div>
-          <div class="form-group"><label>🔔 Reminder (minutes before)</label><input type="number" id="cal-remind" value="10" min="0" max="1440"></div>
+          <div class="form-group"><label for="cal-date">📆 Start date</label><input type="date" id="cal-date"></div>
+          <div class="form-group"><label for="cal-repeat">🔁 Repeat for (days)</label><input type="number" id="cal-repeat" value="1" min="1" max="365"></div>
+          <div class="form-group"><label for="cal-remind">🔔 Reminder (minutes before)</label><input type="number" id="cal-remind" value="10" min="0" max="1440"></div>
         </div>
         <div class="row-btns">
-          <button class="btn ghost" onclick="enableReminders()">🔔 Enable Reminders</button>
-          <button class="btn ghost" onclick="connectGoogle()">🔗 Connect Google</button>
-          <button class="btn" onclick="addToGoogleCalendar()">📆 Add to Google Calendar</button>
-          <button class="btn ghost" onclick="downloadIcs()">📥 Download .ics</button>
-          <button class="btn ghost" onclick="printTimetable('My Daily Study Plan','tt-output')">🖨️ Print / Save as PDF</button>
+          <button type="button" class="btn ghost" onclick="enableReminders()">🔔 Enable Reminders</button>
+          <button type="button" class="btn ghost" id="google-connect-btn" onclick="connectGoogle()">🔗 Connect Google</button>
+          <button type="button" class="btn" onclick="addToGoogleCalendar()">📆 Add to Google Calendar</button>
+          <button type="button" class="btn ghost" onclick="downloadIcs()">📥 Download .ics</button>
+          <button type="button" class="btn ghost" onclick="printTimetable('My Daily Study Plan','tt-output')">🖨️ Print / Save as PDF</button>
         </div>
+      </div>
+
+      <div class="back-bar">
+        <button type="button" class="back-bar-btn" onclick="showView('dashboard')">← Back to Home</button>
       </div>
     </div>
 
@@ -424,15 +559,24 @@ main{position:relative;padding:34px 28px 70px}
 
 <script>
     let currentLoggedProf = "";
+    let currentTimetableMarkdown = "";
+    let currentTimetableEvents = [];
     const $ = id => document.getElementById(id);
-    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    const ordinal = n => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
+    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&','<':'<','>':'>','"':'"'}[c]));
     const toast = (msg, type='') => {
         const t = document.createElement('div');
         t.className = 'toast ' + type; t.textContent = msg;
         $('toasts').appendChild(t); setTimeout(() => t.remove(), 4200);
     };
-    const postJSON = (url, body) => fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    const postJSON = async (url, body) => {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        const data = await res.json().catch(() => ({}));
+        return { ok: res.ok, status: res.status, data };
+    };
 
     // Butterfly cursor
     (function () {
@@ -449,552 +593,765 @@ main{position:relative;padding:34px 28px 70px}
         })();
     })();
 
-    // ---------- Student auth ----------
+    // ---------- Auth & Session (connected to app.py & coordinator.py) ----------
     function setAuth(mode) {
         $('login-form').classList.toggle('hidden', mode !== 'login');
         $('register-form').classList.toggle('hidden', mode === 'login');
         $('seg-login').classList.toggle('on', mode === 'login');
         $('seg-register').classList.toggle('on', mode !== 'login');
-    }
-    function togglePw(id, btn) { const i = $(id); i.type = i.type === 'password' ? 'text' : 'password'; btn.textContent = i.type === 'password' ? '👁️' : '🙈'; }
-
-    async function handleLogin() {
-        const username = $('login-username').value.trim(), password = $('login-password').value;
-        const res = await postJSON('/api/login', {username, password});
-        const data = await res.json();
-        if (data.success) {
-            enterStudentApp(username); toast('Welcome back, ' + username + '! 🦋', 'ok');
-        } else { $('login-msg').textContent = '⚠️ ' + data.message; }
-    }
-
-    async function handleRegister() {
-        const username = $('reg-username').value.trim(), password = $('reg-password').value;
-        const res = await postJSON('/api/register', {username, password});
-        const data = await res.json();
-        $('reg-msg').className = data.success ? 'success' : 'error';
-        $('reg-msg').textContent = (data.success ? '🎉 ' : '⚠️ ') + data.message;
-        if (data.success) setTimeout(() => setAuth('login'), 1500);
-    }
-
-    function enterStudentApp(username) {
-        $('user-name').textContent = username; $('greet-name').textContent = username;
-        $('user-avatar').textContent = username.charAt(0).toUpperCase();
         $('login-msg').textContent = '';
-        $('auth-section').classList.add('hidden'); $('professor-auth-section').classList.add('hidden');
-        $('professor-dashboard').classList.add('hidden'); $('app').classList.remove('hidden');
+        $('reg-msg').textContent = '';
+    }
+    function togglePw(id, btn) {
+        const i = $(id);
+        const isPw = i.type === 'password';
+        i.type = isPw ? 'text' : 'password';
+        if (btn) btn.textContent = isPw ? '🙈' : '👁️';
+    }
+    function enterStudentApp(username) {
+        const name = (username || 'Student').trim() || 'Student';
+        $('auth-section').classList.add('hidden');
+        $('professor-auth-section').classList.add('hidden');
+        $('professor-dashboard').classList.add('hidden');
+        $('app').classList.remove('hidden');
+        $('user-name').textContent = name;
+        $('greet-name').textContent = name;
+        $('user-avatar').textContent = name[0].toUpperCase();
+        updateStudentClock();
         showView('dashboard');
+        refreshGoogleStatus();
     }
-
+    function enterProfessorApp(username) {
+        const name = (username || 'Professor').trim() || 'Professor';
+        currentLoggedProf = name;
+        $('prof-name').textContent = name;
+        $('prof-avatar').textContent = name[0].toUpperCase();
+        $('auth-section').classList.add('hidden');
+        $('professor-auth-section').classList.add('hidden');
+        $('app').classList.add('hidden');
+        $('professor-dashboard').classList.remove('hidden');
+        showProfessorHome();
+    }
+    async function handleLogin() {
+        const u = ($('login-username').value || '').trim();
+        const p = $('login-password').value || '';
+        $('login-msg').textContent = '';
+        if (!u || !p) { $('login-msg').textContent = 'Please enter both username and password.'; return; }
+        const { ok, data } = await postJSON('/api/login', { username: u, password: p });
+        if (!ok || !data.success) {
+            $('login-msg').textContent = data.message || 'Invalid username or password.';
+            return;
+        }
+        enterStudentApp(data.username || u);
+        toast(data.message || `Welcome back, ${u}!`, 'ok');
+    }
+    async function handleRegister() {
+        const u = ($('reg-username').value || '').trim();
+        const p = $('reg-password').value || '';
+        const msg = $('reg-msg');
+        msg.className = 'error';
+        msg.textContent = '';
+        if (!u || p.length < 6) {
+            msg.textContent = 'Username must be at least 3 chars and password at least 6 chars.';
+            return;
+        }
+        const { ok, data } = await postJSON('/api/register', { username: u, password: p });
+        if (!ok || !data.success) {
+            msg.textContent = data.message || 'Registration failed.';
+            return;
+        }
+        msg.className = 'success';
+        msg.textContent = data.message || 'Registration successful! Logging in...';
+        const loginRes = await postJSON('/api/login', { username: u, password: p });
+        if (loginRes.ok && loginRes.data.success) {
+            enterStudentApp(loginRes.data.username || u);
+            toast('Account created and logged in!', 'ok');
+        } else {
+            setAuth('login');
+            $('login-username').value = u;
+            toast(data.message || 'Account created! Please log in.', 'ok');
+        }
+    }
     async function handleLogout() {
-        try { await fetch('/api/logout', {method:'POST'}); } catch (e) {}
-        clearInterval(reminderTimer);
-        lastTimetable = ''; lastEvents = [];
-        $('tt-card').classList.add('hidden'); $('quiz-card').classList.add('hidden');
-        $('app').classList.add('hidden'); $('auth-section').classList.remove('hidden');
+        await postJSON('/api/logout', {});
+        $('app').classList.add('hidden');
+        $('auth-section').classList.remove('hidden');
+        toast('Logged out');
     }
 
-    function sessionExpired() {
-        toast('Session expired. Please log in again.', 'warn');
-        handleLogout();
+    // Professor Auth & Dashboard
+    function openProfessorAuth() {
+        $('auth-section').classList.add('hidden');
+        $('professor-auth-section').classList.remove('hidden');
     }
-
-    // ---------- Professor auth ----------
+    function backToStudentLogin() {
+        $('professor-auth-section').classList.add('hidden');
+        $('auth-section').classList.remove('hidden');
+    }
     function setProfessorAuth(mode) {
         $('prof-login-form').classList.toggle('hidden', mode !== 'login');
         $('prof-register-form').classList.toggle('hidden', mode === 'login');
         $('prof-seg-login').classList.toggle('on', mode === 'login');
         $('prof-seg-register').classList.toggle('on', mode !== 'login');
-    }
-    function openProfessorAuth() {
-        $('auth-section').classList.add('hidden'); $('professor-auth-section').classList.remove('hidden');
-        setProfessorAuth('login');
-    }
-    function backToStudentLogin() {
-        $('professor-auth-section').classList.add('hidden'); $('auth-section').classList.remove('hidden');
-    }
-
-    async function handleProfessorLogin() {
-        const username = $('prof-login-username').value.trim(), password = $('prof-login-password').value;
-        const res = await postJSON('/api/professor/login', {username, password});
-        const data = await res.json();
-        if (!data.success) { $('prof-login-msg').textContent = '⚠️ ' + data.message; return; }
-        enterProfessorDashboard(username); toast('Welcome, Professor ' + username + '! 🎓', 'ok');
-    }
-
-    function enterProfessorDashboard(username) {
-        currentLoggedProf = username;
         $('prof-login-msg').textContent = '';
-        $('prof-name').textContent = username; $('prof-avatar').textContent = username.charAt(0).toUpperCase();
-        $('auth-section').classList.add('hidden'); $('app').classList.add('hidden');
-        $('professor-auth-section').classList.add('hidden'); $('professor-dashboard').classList.remove('hidden');
-        showProfessorHome();
+        $('prof-reg-msg').textContent = '';
     }
-
+    async function handleProfessorLogin() {
+        const u = ($('prof-login-username').value || '').trim();
+        const p = $('prof-login-password').value || '';
+        $('prof-login-msg').textContent = '';
+        if (!u || !p) { $('prof-login-msg').textContent = 'Enter professor credentials.'; return; }
+        const { ok, data } = await postJSON('/api/professor/login', { username: u, password: p });
+        if (!ok || !data.success) {
+            $('prof-login-msg').textContent = data.message || 'Invalid professor username or password.';
+            return;
+        }
+        enterProfessorApp(data.username || u);
+        toast(data.message || 'Professor login successful.', 'ok');
+    }
     async function handleProfessorRegister() {
-        const username = $('prof-reg-username').value.trim(), password = $('prof-reg-password').value;
-        const res = await postJSON('/api/professor/register', {username, password});
-        const data = await res.json();
-        $('prof-reg-msg').className = data.success ? 'success' : 'error';
-        $('prof-reg-msg').textContent = (data.success ? '🎉 ' : '⚠️ ') + data.message;
-        if (data.success) { $('prof-login-username').value = username; $('prof-login-password').value = password; handleProfessorLogin(); }
+        const u = ($('prof-reg-username').value || '').trim();
+        const p = $('prof-reg-password').value || '';
+        $('prof-reg-msg').textContent = '';
+        if (!u.includes('@') || p.length < 6) {
+            $('prof-reg-msg').textContent = 'Username must contain "@" and password >= 6 chars.';
+            return;
+        }
+        const { ok, data } = await postJSON('/api/professor/register', { username: u, password: p });
+        if (!ok || !data.success) {
+            $('prof-reg-msg').textContent = data.message || 'Could not create professor account.';
+            return;
+        }
+        const loginRes = await postJSON('/api/professor/login', { username: u, password: p });
+        if (loginRes.ok && loginRes.data.success) {
+            enterProfessorApp(loginRes.data.username || u);
+            toast('Professor account created!', 'ok');
+        } else {
+            setProfessorAuth('login');
+            $('prof-login-username').value = u;
+            toast(data.message || 'Account created! Please log in.', 'ok');
+        }
     }
-
     async function handleProfessorLogout() {
-        await fetch('/api/professor/logout', {method:'POST'});
-        currentLoggedProf = "";
-        $('professor-dashboard').classList.add('hidden'); $('professor-auth-section').classList.remove('hidden');
+        await postJSON('/api/professor/logout', {});
+        currentLoggedProf = '';
+        $('professor-dashboard').classList.add('hidden');
+        $('professor-auth-section').classList.remove('hidden');
+        toast('Professor logged out');
     }
-
-    // ---------- Professor: navigation ----------
     function showProfessorHome() {
-        ['professor-home-view','class-teacher-view','department-timetable-view'].forEach(id => $(id).classList.add('hidden'));
+        document.querySelectorAll('#professor-dashboard .view').forEach(v => v.classList.add('hidden'));
         $('professor-home-view').classList.remove('hidden');
     }
     function openClassTeacherForm() {
-        $('professor-home-view').classList.add('hidden');
+        document.querySelectorAll('#professor-dashboard .view').forEach(v => v.classList.add('hidden'));
         $('class-teacher-view').classList.remove('hidden');
     }
-
-    // ---------- Professor: class teacher ----------
     function addClassTeacherSubject() {
-        const row = document.createElement('div');
-        row.className = 'subject-row';
-        row.innerHTML = `
-            <input type="text" class="ct-sub-name" placeholder="Subject name" required>
+        const div = document.createElement('div');
+        div.className = 'subject-row';
+        div.innerHTML = `<input type="text" class="ct-sub-name" placeholder="Subject name" required>
             <input type="number" class="ct-sub-credits" placeholder="Credits" step="0.5" min="0.5" value="3" required>
             <button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>`;
-        $('ct-subjects-list').appendChild(row);
+        $('ct-subjects-list').appendChild(div);
     }
-
     async function submitClassTeacherForm() {
         $('ct-error').textContent = '';
-        const batches = $('ct-batches').value.split(',').map(b => b.trim()).filter(Boolean);
-        const working_days = $('ct-days').value.split(',').map(d => d.trim()).filter(Boolean);
-        const subjects = Array.from($('ct-subjects-list').querySelectorAll('.subject-row')).map(row => ({
-            name: row.querySelector('.ct-sub-name').value.trim(),
-            credits: parseFloat(row.querySelector('.ct-sub-credits').value) || 0,
-        }));
-        const payload = {
+        const batches = ($('ct-batches').value || '').split(',').map(s => s.trim()).filter(Boolean);
+        const working_days = ($('ct-days').value || '').split(',').map(s => s.trim()).filter(Boolean);
+        const subjects = Array.from(document.querySelectorAll('#ct-subjects-list .subject-row')).map(row => ({
+            name: (row.querySelector('.ct-sub-name')?.value || '').trim(),
+            credits: parseFloat(row.querySelector('.ct-sub-credits')?.value || '0')
+        })).filter(s => s.name);
+
+        const { ok, data } = await postJSON('/api/professor/class-teacher/submit', {
             college_start: $('ct-start').value,
             college_end: $('ct-end').value,
             lecture_minutes: parseInt($('ct-lec-mins').value, 10),
             practical_minutes: parseInt($('ct-prac-mins').value, 10),
             batch_count: batches.length,
-            batches, working_days, subjects,
-        };
-        const res = await postJSON('/api/professor/class-teacher/submit', payload);
-        const data = await res.json();
-        if (!data.success) { $('ct-error').textContent = '⚠️ ' + data.message; return; }
-        renderClassTeacherTable(data.rows || []);
+            batches,
+            working_days,
+            subjects
+        });
+        if (!ok || !data.success) {
+            $('ct-error').textContent = data.message || 'Could not generate class timetable.';
+            return;
+        }
+        if (Array.isArray(data.rows) && data.rows.length) {
+            $('ct-table-wrap').innerHTML = `<table>
+                <thead><tr><th>Day</th><th>Time Slot</th><th>Subject / Practical Batches</th><th>Type</th></tr></thead>
+                <tbody>${data.rows.map(r => {
+                    const cls = r.type === 'Practical' ? 'prac' : r.type === 'Break' ? 'brk' : '';
+                    return `<tr><td>${esc(r.day)}</td><td>${esc(r.time)}</td><td>${esc(r.allocation)}</td><td><span class="badge-type ${cls}">${esc(r.type)}</span></td></tr>`;
+                }).join('')}</tbody>
+            </table>`;
+        } else {
+            $('ct-table-wrap').innerHTML = renderMarkdownTimetable(data.timetable || '');
+        }
+        $('ct-result-card').classList.remove('hidden');
         toast('Class timetable generated!', 'ok');
     }
 
-    function renderClassTeacherTable(rows) {
-        $('ct-result-card').classList.remove('hidden');
-        const bodyHtml = rows.map(r => {
-            const badgeClass = r.type === 'Practical' ? 'badge-type prac' : (r.type === 'Break' ? 'badge-type brk' : 'badge-type');
-            return `<tr><td><b>${esc(r.day)}</b></td><td>${esc(r.time)}</td><td>${esc(r.allocation)}</td><td><span class="${badgeClass}">${esc(r.type)}</span></td></tr>`;
-        }).join('');
-        $('ct-table-wrap').innerHTML = `
-            <table>
-                <thead><tr><th>Day</th><th>Time Slot</th><th>Subject / Practical Batches</th><th>Type</th></tr></thead>
-                <tbody>${bodyHtml}</tbody>
-            </table>`;
-        $('ct-result-card').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // ---------- Professor: department ----------
-    function checkDeptAccess() {
-        if (!currentLoggedProf.includes('@')) {
-            toast('🔒 Access Restricted: Department Timetable requires an "@" symbol in your username.', 'err');
-            return;
-        }
-        openDepartmentForm();
-    }
-
-    function openDepartmentForm() {
-        $('professor-home-view').classList.add('hidden');
-        $('department-timetable-view').classList.remove('hidden');
-        renderYearInputs();
-        loadDepartmentHistory();
-    }
-
+    // Department Timetable helpers
     function renderYearInputs() {
-        const count = parseInt($('dept-years-count').value) || 3;
-        let html = '', curriculumHtml = '';
-        for (let i = 1; i <= count; i++) {
-            const yearName = `${ordinal(i)} Year`;
-            html += `<div class="professor-form-grid" style="margin-bottom:10px">
-                <div class="form-group"><label>${yearName} Name</label><input type="text" class="y-name" value="${yearName}" readonly></div>
-                <div class="form-group"><label>Total Capacity</label><input type="number" class="y-cap" value="120" min="10"></div>
-                <div class="form-group"><label>Divisions</label><input type="number" class="y-divs" value="2" min="1" max="5"></div>
-            </div>`;
-            curriculumHtml += `<div class="card" style="background:#0c0f22;padding:14px;margin-bottom:10px">
-                <h4 style="color:var(--cyan);margin-bottom:8px">${yearName} Curriculum</h4>
-                <div class="form-group"><label>Subjects (comma separated)</label><input type="text" class="y-subjects" placeholder="e.g. TOC, OOP, DBMS, OS" value="TOC, OOP, DBMS, OS"></div>
-                <div class="form-group"><label>Practicals (comma separated)</label><input type="text" class="y-practicals" placeholder="e.g. OOP Lab, DBMS Lab" value="OOP Lab, DBMS Lab"></div>
-            </div>`;
-        }
-        $('dept-years-container').innerHTML = html;
-        $('dept-curriculum-container').innerHTML = curriculumHtml;
-        renderStaffTableHeaders();
+        const count = Math.max(1, Math.min(5, parseInt($('dept-years-count').value || '3', 10)));
+        const yc = $('dept-years-container');
+        const cc = $('dept-curriculum-container');
+        const defaultNames = ['First Year (FE)', 'Second Year (SE)', 'Third Year (TE)', 'Fourth Year (BE)', 'Fifth Year'];
+        yc.innerHTML = `<div class="professor-form-grid">${Array.from({ length: count }, (_, i) => `
+            <div class="form-group">
+                <label>Year ${i + 1} Name & Students / Divisions</label>
+                <input type="text" class="dept-y-name" value="${esc(defaultNames[i] || `Year ${i + 1}`)}" placeholder="Year Name">
+                <div class="grid2" style="margin-top:8px">
+                    <input type="number" class="dept-y-cap" value="60" min="1" placeholder="Students">
+                    <input type="number" class="dept-y-divs" value="1" min="1" max="6" placeholder="Divisions">
+                </div>
+            </div>`).join('')}</div>`;
+        cc.innerHTML = Array.from({ length: count }, (_, i) => `
+            <div class="card" style="padding:16px;margin-bottom:12px" data-year-idx="${i}">
+                <h4 style="margin-bottom:10px;color:var(--cyan)">Year ${i + 1} Subjects & Practicals</h4>
+                <div class="grid2">
+                    <div class="form-group" style="margin-bottom:0">
+                        <label>Theory Subjects (comma-separated)</label>
+                        <input type="text" class="dept-y-subs" value="OS, DBMS, CN" placeholder="OS, DBMS, CN">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label>Practicals (comma-separated)</label>
+                        <input type="text" class="dept-y-pracs" value="OS Lab, DBMS Lab" placeholder="OS Lab, DBMS Lab">
+                    </div>
+                </div>
+            </div>`).join('');
+        renderStaffTableHeader(count);
     }
-
-    function renderStaffTableHeaders() {
-        const count = parseInt($('dept-years-count').value) || 3;
-        let headHtml = `<tr><th>Staff Name</th>`;
-        for (let i = 1; i <= count; i++) headHtml += `<th>${ordinal(i)} Year Subject</th>`;
-        headHtml += `<th>Action</th></tr>`;
-        $('staff-table-head').innerHTML = headHtml;
-        // rebuild staff rows so column count always matches the number of years
-        $('staff-table-body').innerHTML = '';
-        addStaffRow();
+    function renderStaffTableHeader(count) {
+        const head = $('staff-table-head');
+        const names = Array.from(document.querySelectorAll('.dept-y-name')).map((el, i) => el.value.trim() || `Year ${i + 1}`);
+        const cols = count || names.length || 3;
+        head.innerHTML = `<tr><th>Staff Name</th>${Array.from({ length: cols }, (_, i) => `<th>${esc(names[i] || `Year ${i + 1}`)} Subject</th>`).join('')}<th></th></tr>`;
+        if (!$('staff-table-body').children.length) addStaffRow();
     }
-
     function addStaffRow() {
-        const count = parseInt($('dept-years-count').value) || 3;
-        const row = document.createElement('tr');
-        let cols = `<td><input type="text" class="staff-name-input" placeholder="Staff Name" required></td>`;
-        for (let i = 0; i < count; i++) cols += `<td><input type="text" class="staff-assign-input" value="-"></td>`;
-        cols += `<td><button type="button" class="remove-subject" onclick="this.closest('tr').remove()">✕</button></td>`;
-        row.innerHTML = cols;
-        $('staff-table-body').appendChild(row);
+        const cols = Math.max(1, Math.min(5, parseInt($('dept-years-count').value || '3', 10)));
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><input type="text" class="staff-name" placeholder="Prof. Name"></td>
+            ${Array.from({ length: cols }, () => `<td><input type="text" class="staff-sub" value="-" placeholder="Subject or -"></td>`).join('')}
+            <td><button type="button" class="remove-subject" onclick="this.closest('tr').remove()">✕</button></td>`;
+        $('staff-table-body').appendChild(tr);
     }
-
     function addLabRow() {
         const div = document.createElement('div');
         div.className = 'subject-row';
-        div.innerHTML = `<input type="text" placeholder="Lab Name" class="lab-name"><input type="number" placeholder="Capacity" class="lab-cap" value="30"><button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>`;
+        div.innerHTML = `<input type="text" placeholder="Lab Name" class="lab-name">
+            <input type="number" placeholder="Capacity" class="lab-cap" value="30">
+            <button type="button" class="remove-subject" onclick="this.closest('.subject-row').remove()">✕</button>`;
         $('dept-labs-container').appendChild(div);
     }
-
-    let deptHistory = [];
-    async function loadDepartmentHistory() {
-        try {
-            const res = await fetch('/api/professor/department/history');
-            const data = await res.json();
-            if (!data.success) return;
-            deptHistory = data.history || [];
-            const container = $('department-history-list');
-            if (deptHistory.length === 0) {
-                container.innerHTML = `<p style="color:var(--muted)">No department timetables generated yet.</p>`;
-                return;
-            }
-            container.innerHTML = deptHistory.map((item, idx) => `
-                <div style="display:flex;justify-content:space-between;align-items:center;background:#0c0f22;padding:12px 16px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px">
-                    <div><b>Timetable #${deptHistory.length - idx}</b> (ID: ${esc(item.id)})<br><small style="color:var(--muted)">Generated: ${esc(item.timestamp)}</small></div>
-                    <button class="btn sm" onclick="renderDepartmentOutput(deptHistory[${idx}])">👁️ View Timetable</button>
-                </div>`).join('');
-        } catch (e) { console.error(e); }
+    function renderDepartmentRecord(record, titleText) {
+        if (!record) return;
+        $('dept-view-title').textContent = titleText || `Department Timetable (${record.id || ''})`;
+        let html = `<p><strong>Generated:</strong> ${esc(record.timestamp || '')}</p>`;
+        const ct = record.class_timetables || {};
+        Object.keys(ct).forEach(yName => {
+            html += `<h4 class="dept-year-heading">${esc(yName)}</h4>`;
+            const daysObj = ct[yName] || {};
+            Object.keys(daysObj).forEach(day => {
+                const slots = daysObj[day] || [];
+                html += `<h5>${esc(day)}</h5><table class="dept-subtable"><thead><tr><th>Time</th><th>Subject</th><th>Type</th><th>Faculty / Lab</th></tr></thead><tbody>`;
+                html += slots.map(s => `<tr><td>${esc(s.time)}</td><td>${esc(s.subject)}</td><td>${esc(s.type)}</td><td>${esc(s.lab ? `${s.lab} (${s.teacher || ''})` : (s.teacher || ''))}</td></tr>`).join('');
+                html += `</tbody></table>`;
+            });
+        });
+        $('department-output-content').innerHTML = html;
+        $('department-output-result').classList.remove('hidden');
     }
-
+    async function loadDepartmentHistory() {
+        const listEl = $('department-history-list');
+        const res = await fetch('/api/professor/department/history');
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) {
+            listEl.innerHTML = `<p class="error">${esc(data.message || 'Unable to load history.')}</p>`;
+            return;
+        }
+        const hist = data.history || [];
+        if (!hist.length) {
+            listEl.innerHTML = `<p style="color:var(--muted)">No saved department timetables yet.</p>`;
+            return;
+        }
+        listEl.innerHTML = hist.map((rec, idx) => `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#0c0f22;flex-wrap:wrap">
+            <div><b>#${idx + 1} · ID ${esc(rec.id)}</b> <span style="color:var(--muted);font-size:.86rem">(${esc(rec.timestamp)})</span></div>
+            <button type="button" class="btn ghost sm" onclick='renderDepartmentRecord(${JSON.stringify(rec).replace(/'/g, "'")}, "Saved Timetable #${idx + 1}")'>View</button>
+        </div>`).join('');
+    }
+    async function checkDeptAccess() {
+        if (!currentLoggedProf.includes('@')) {
+            toast('Department timetable requires "@" in professor username.', 'warn');
+            return;
+        }
+        document.querySelectorAll('#professor-dashboard .view').forEach(v => v.classList.add('hidden'));
+        $('department-timetable-view').classList.remove('hidden');
+        if (!$('dept-years-container').children.length) renderYearInputs();
+        await loadDepartmentHistory();
+    }
     async function submitDepartmentInputs() {
         $('dept-error').textContent = '';
-        const count = parseInt($('dept-years-count').value) || 3;
-        const yearsData = [], curriculum = {};
-        const yearCards = $('dept-years-container').querySelectorAll('.professor-form-grid');
-        const currCards = $('dept-curriculum-container').querySelectorAll('.card');
+        const yNames = Array.from(document.querySelectorAll('.dept-y-name')).map(i => i.value.trim());
+        const yCaps = Array.from(document.querySelectorAll('.dept-y-cap')).map(i => parseInt(i.value || '60', 10));
+        const yDivs = Array.from(document.querySelectorAll('.dept-y-divs')).map(i => parseInt(i.value || '1', 10));
+        const ySubs = Array.from(document.querySelectorAll('.dept-y-subs')).map(i => i.value.split(',').map(s => s.trim()).filter(Boolean));
+        const yPracs = Array.from(document.querySelectorAll('.dept-y-pracs')).map(i => i.value.split(',').map(s => s.trim()).filter(Boolean));
 
-        for (let i = 0; i < count; i++) {
-            const yName = yearCards[i].querySelector('.y-name').value;
-            const cap = parseInt(yearCards[i].querySelector('.y-cap').value) || 60;
-            const divs = parseInt(yearCards[i].querySelector('.y-divs').value) || 1;
-            yearsData.push({name: yName, capacity: cap, divisions: divs});
-            const subs = currCards[i].querySelector('.y-subjects').value.split(',').map(s => s.trim()).filter(Boolean);
-            const pracs = currCards[i].querySelector('.y-practicals').value.split(',').map(p => p.trim()).filter(Boolean);
-            curriculum[yName] = {subjects: subs, practicals: pracs};
-        }
-
-        const labs = [];
-        $('dept-labs-container').querySelectorAll('.subject-row').forEach(row => {
-            labs.push({
-                name: row.querySelector('.lab-name').value.trim() || 'General Lab',
-                capacity: row.querySelector('.lab-cap').value || 30
-            });
+        const years_data = yNames.map((name, idx) => ({
+            name: name || `Year ${idx + 1}`,
+            capacity: yCaps[idx] || 60,
+            divisions: yDivs[idx] || 1
+        }));
+        const curriculum = {};
+        years_data.forEach((y, idx) => {
+            curriculum[y.name] = {
+                subjects: ySubs[idx] && ySubs[idx].length ? ySubs[idx] : ['General Subject'],
+                practicals: yPracs[idx] || []
+            };
         });
-
-        const staffRecords = [];
-        $('staff-table-body').querySelectorAll('tr').forEach(tr => {
-            const name = tr.querySelector('.staff-name-input').value.trim();
-            if (!name) return;
-            const assigns = {};
-            tr.querySelectorAll('.staff-assign-input').forEach((inp, idx) => {
-                assigns[`${ordinal(idx + 1)} Year`] = inp.value.trim() || '-';   // fixed: "2nd Year", "3rd Year"
+        const labs = Array.from(document.querySelectorAll('#dept-labs-container .subject-row')).map(row => ({
+            name: (row.querySelector('.lab-name')?.value || '').trim(),
+            capacity: parseInt(row.querySelector('.lab-cap')?.value || '30', 10)
+        })).filter(l => l.name);
+        const staff_records = Array.from(document.querySelectorAll('#staff-table-body tr')).map(tr => {
+            const name = (tr.querySelector('.staff-name')?.value || '').trim();
+            const subInputs = Array.from(tr.querySelectorAll('.staff-sub'));
+            const assignments = {};
+            years_data.forEach((y, idx) => {
+                assignments[y.name] = (subInputs[idx]?.value || '-').trim();
             });
-            staffRecords.push({name, assignments: assigns});
-        });
+            return { name, assignments };
+        }).filter(s => s.name);
 
-        const payload = {
-            years_data: yearsData,
+        const { ok, data } = await postJSON('/api/professor/department/generate', {
+            years_data,
             curriculum,
-            staff_records: staffRecords,
+            staff_records,
             labs,
-            college_start: "10:15",
-            theory_mins: 45,
-            practical_mins: 90,
-            working_days: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-        };
-
-        const res = await postJSON('/api/professor/department/generate', payload);
-        const data = await res.json();
-        if (!data.success) { $('dept-error').textContent = '⚠️ ' + data.message; }
-        else { toast('🏛️ Master timetable generated!', 'ok'); renderDepartmentOutput(data.record); loadDepartmentHistory(); }
-    }
-
-    function renderDepartmentOutput(record) {
-        $('department-output-result').classList.remove('hidden');
-        $('dept-view-title').textContent = `Department Timetable (${record.timestamp})`;
-
-        const batchRows = Object.entries(record.batches || {}).map(([year, batches]) => `
-            <tr><td><b>${esc(year)}</b></td><td>${Array.isArray(batches) && batches.length ? esc(batches.join(', ')) : '-'}</td></tr>`).join('');
-
-        let html = `
-            <h4>Calculated Batches</h4>
-            <table class="dept-subtable">
-                <thead><tr><th>Year</th><th>Divisions & Practical Batches</th></tr></thead>
-                <tbody>${batchRows || '<tr><td colspan="2">No batches calculated.</td></tr>'}</tbody>
-            </table>
-            <h4 style="margin-top:16px">Class Timetables</h4>`;
-
-        for (const [year, days] of Object.entries(record.class_timetables || {})) {
-            html += `<h5 class="dept-year-heading">${esc(year)}</h5>`;
-            let dayRowsHtml = '';
-            for (const [day, slots] of Object.entries(days || {})) {
-                if (!Array.isArray(slots) || slots.length === 0) {
-                    dayRowsHtml += `<tr><td><b>${esc(day)}</b></td><td>-</td><td>No slots scheduled</td><td>-</td></tr>`;
-                    continue;
-                }
-                slots.forEach((s, idx) => {
-                    const isPrac = s.type === 'Practical';
-                    const resourceText = isPrac ? `Lab: ${s.lab || 'General Lab'}` : `Prof: ${s.teacher || 'TBD'}`;
-                    dayRowsHtml += `
-                        <tr>
-                            <td>${idx === 0 ? `<b>${esc(day)}</b>` : ''}</td>
-                            <td>${esc(s.time || '-')}</td>
-                            <td>${esc(s.subject || '-')}</td>
-                            <td><span class="${isPrac ? 'badge-type prac' : 'badge-type'}">${esc(s.type || 'Slot')}</span>
-                                <span style="margin-left:8px;color:var(--muted)">${esc(resourceText)}</span></td>
-                        </tr>`;
-                });
-            }
-            html += `<table class="dept-subtable">
-                <thead><tr><th>Day</th><th>Time / Duration</th><th>Subject</th><th>Type & Allocation</th></tr></thead>
-                <tbody>${dayRowsHtml}</tbody></table>`;
-        }
-
-        const teacherEntries = Object.entries(record.teacher_timetables || {});
-        if (teacherEntries.length > 0) {
-            html += `<h4 style="margin-top:20px">Teacher / Staff Timetables</h4>`;
-            for (const [staffName, days] of teacherEntries) {
-                html += `<h5 class="dept-year-heading">${esc(staffName)}</h5>`;
-                let staffRowsHtml = '';
-                for (const [day, slots] of Object.entries(days || {})) {
-                    if (!Array.isArray(slots) || slots.length === 0) {
-                        staffRowsHtml += `<tr><td><b>${esc(day)}</b></td><td>-</td><td>-</td><td>No assigned theory slots</td></tr>`;
-                        continue;
-                    }
-                    slots.forEach((s, idx) => {
-                        staffRowsHtml += `
-                            <tr>
-                                <td>${idx === 0 ? `<b>${esc(day)}</b>` : ''}</td>
-                                <td>${esc(s.time || '-')}</td>
-                                <td>${esc(s.year || '-')}</td>
-                                <td>${esc(s.subject || '-')} <span class="badge-type">${esc(s.type || 'Theory')}</span></td>
-                            </tr>`;
-                    });
-                }
-                html += `<table class="dept-subtable">
-                    <thead><tr><th>Day</th><th>Time / Duration</th><th>Year</th><th>Subject & Type</th></tr></thead>
-                    <tbody>${staffRowsHtml}</tbody></table>`;
-            }
-        }
-
-        $('department-output-content').innerHTML = html;
-        scrollTo({ top: $('department-output-result').offsetTop, behavior: 'smooth' });
-    }
-
-    // ---------- Print only the timetable (full page) ----------
-    function printTimetable(title, sourceId) {
-        const src = $(sourceId);
-        if (!src || !src.innerHTML.trim()) { toast('Generate a timetable first.', 'warn'); return; }
-        const who = currentLoggedProf || $('user-name').textContent || '';
-        $('print-area').innerHTML = `<h2>${esc(title)}</h2><div class="meta">Smart Timetable AI · ${esc(who)} · ${new Date().toLocaleDateString()}</div>` + src.innerHTML;
-        const prevTitle = document.title;
-        document.title = title;
-        window.print();
-        document.title = prevTitle;
-        $('print-area').innerHTML = '';
-    }
-
-    // ---------- Student navigation ----------
-    function showView(name) {
-        const views = ['dashboard','quiz','timetable'];
-        views.forEach(v => $(v+'-section').classList.toggle('hidden', v !== name));
-        document.querySelectorAll('.tabs .tab').forEach((b, i) => b.classList.toggle('on', views[i] === name));
-    }
-    setInterval(() => { const d = new Date(); $('clock').textContent = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }, 20000);
-    $('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-
-    // ---------- QUIZ ----------
-    let currentQuiz = [];
-    async function generateQuiz() {
-        const file = $('quiz-pdf').files[0];
-        $('quiz-msg').textContent = '';
-        if (!file) { $('quiz-msg').textContent = '⚠️ Please choose a PDF first.'; return; }
-        const fd = new FormData(); fd.append('pdf', file);
-        $('quiz-btn').disabled = true; $('quiz-btn').textContent = 'Generating... ⏳';
-        try {
-            const res = await fetch('/api/quiz', { method: 'POST', body: fd });
-            if (res.status === 401) { sessionExpired(); return; }
-            const data = await res.json();
-            if (!data.success) { $('quiz-msg').textContent = '⚠️ ' + data.message; return; }
-            currentQuiz = data.quiz || [];
-            $('quiz-list').innerHTML = currentQuiz.map((q, i) => `
-                <div class="q-card">
-                    <h4>${i + 1}. ${esc(q.question)}</h4>
-                    ${(q.options || []).map(o => `
-                        <label class="opt" data-q="${i}" data-letter="${esc(o.trim().charAt(0))}">
-                            <input type="radio" name="q${i}" value="${esc(o.trim().charAt(0))}"> ${esc(o)}
-                        </label>`).join('')}
-                </div>`).join('');
-            $('quiz-score').textContent = '';
-            $('quiz-card').classList.remove('hidden');
-            $('quiz-card').scrollIntoView({ behavior: 'smooth' });
-        } catch (e) { $('quiz-msg').textContent = '⚠️ ' + e.message; }
-        finally { $('quiz-btn').disabled = false; $('quiz-btn').textContent = 'Generate Quiz 🧠'; }
-    }
-    function checkQuiz() {
-        let score = 0;
-        currentQuiz.forEach((q, i) => {
-            const picked = document.querySelector(`input[name="q${i}"]:checked`);
-            const correct = String(q.answer || '').trim().charAt(0).toUpperCase();
-            document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(el => {
-                el.classList.remove('right', 'wrong');
-                if (el.dataset.letter.toUpperCase() === correct) el.classList.add('right');
-                else if (picked && el.contains(picked)) el.classList.add('wrong');
-            });
-            if (picked && picked.value.toUpperCase() === correct) score++;
+            working_days: ($('dept-days')?.value || 'Monday, Tuesday, Wednesday, Thursday, Friday, Saturday').split(',').map(s => s.trim()).filter(Boolean),
+            college_start: $('dept-start')?.value || '10:15',
+            batch_size_limit: parseInt($('dept-batch-limit')?.value || '25', 10),
+            theory_mins: parseInt($('dept-theory-mins')?.value || '45', 10),
+            practical_mins: parseInt($('dept-prac-mins')?.value || '90', 10)
         });
-        $('quiz-score').textContent = `🏆 Score: ${score} / ${currentQuiz.length}`;
-        toast(`You scored ${score}/${currentQuiz.length}`, score >= currentQuiz.length / 2 ? 'ok' : 'warn');
+        if (!ok || !data.success) {
+            $('dept-error').textContent = data.message || 'Could not generate department timetable.';
+            return;
+        }
+        renderDepartmentRecord(data.record, 'Generated Department Master Timetable');
+        await loadDepartmentHistory();
+        toast(data.message || 'Department timetable generated!', 'ok');
     }
 
-    // ---------- SMART TIMETABLE ----------
-    let lastTimetable = '', lastEvents = [];
-    function renderMarkdown(md) {
-        const out = []; let rows = [], list = false;
+    function printTimetable(title, containerId) {
+        const src = $(containerId);
+        if (!src) return;
+        const pa = $('print-area');
+        pa.innerHTML = `<h2>${esc(title)}</h2><div class="meta">Generated on ${esc(new Date().toLocaleString())}</div>${src.innerHTML}`;
+        window.print();
+    }
+
+    // ---------- Student JS (overridden from 2nd index.html & wired to app.py) ----------
+    const STUDY_TIPS = [
+        'Test yourself before re-reading—active recall locks facts into long-term memory faster than passive highlighting.',
+        'Space review sessions over 1, 3, and 7 days instead of cramming everything the night before.',
+        'Explain a concept out loud in plain words—any gap you stumble on shows what to review next.',
+        'Study in focused 25–45 minute blocks with a short 5–10 minute break away from screens.',
+        'Turn headings from your syllabus PDF into practice questions before looking at the notes.'
+    ];
+    let tipIndex = 0;
+
+    function nextStudyTip() {
+        tipIndex = (tipIndex + 1) % STUDY_TIPS.length;
+        $('study-tip').textContent = STUDY_TIPS[tipIndex];
+    }
+
+    function updateStudentClock() {
+        const now = new Date();
+        const h = now.getHours();
+        const phrase = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+        if ($('greeting-phrase')) $('greeting-phrase').textContent = phrase;
+        if ($('clock')) $('clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if ($('date-sub')) $('date-sub').textContent = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+    }
+    setInterval(updateStudentClock, 1000);
+    updateStudentClock();
+
+    function showView(name) {
+        document.querySelectorAll('#app .view').forEach(v => v.classList.add('hidden'));
+        const target = $(name + '-section');
+        if (target) target.classList.remove('hidden');
+        const map = { dashboard: 0, quiz: 1, timetable: 2 };
+        document.querySelectorAll('#app .tab').forEach((t, idx) => t.classList.toggle('on', idx === map[name]));
+    }
+
+    // Quiz upload dropzone & runner (/api/quiz)
+    let quizQuestions = [];
+    let currentQIdx = 0;
+    let userAnswers = {};
+
+    function onQuizFileChange(input) {
+        const file = input.files && input.files[0];
+        $('quiz-file-label').textContent = file
+            ? `Selected: ${file.name}`
+            : 'Click to select a PDF or drag & drop here';
+        $('quiz-msg').textContent = '';
+    }
+    function handleDropOver(e, el) { e.preventDefault(); el.classList.add('dragover'); }
+    function handleDropLeave(el) { el.classList.remove('dragover'); }
+    function handleDropFile(e, inputId, el) {
+        e.preventDefault();
+        el.classList.remove('dragover');
+        const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (!file) return;
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        $(inputId).files = dt.files;
+        onQuizFileChange($(inputId));
+    }
+
+    function resolveAnswerIndex(rawAnswer, options) {
+        if (typeof rawAnswer === 'number') return rawAnswer;
+        const ans = String(rawAnswer ?? '').trim();
+        const letterMap = { A: 0, B: 1, C: 2, D: 3 };
+        if (ans.length === 1 && letterMap[ans.toUpperCase()] !== undefined) {
+            return letterMap[ans.toUpperCase()];
+        }
+        const prefixMatch = ans.match(/^([A-Da-d])\s*[\).:-]/);
+        if (prefixMatch) return letterMap[prefixMatch[1].toUpperCase()];
+        const idx = options.findIndex(o => String(o).trim().toLowerCase() === ans.toLowerCase());
+        return idx >= 0 ? idx : 0;
+    }
+
+    async function generateQuiz() {
+        const msg = $('quiz-msg');
+        const btn = $('quiz-btn');
+        msg.textContent = '';
+        const file = $('quiz-pdf').files && $('quiz-pdf').files[0];
+        if (!file) {
+            msg.textContent = 'Please select a PDF file first.';
+            return;
+        }
+        btn.disabled = true;
+        btn.textContent = 'Generating Quiz... ⏳';
+        try {
+            const fd = new FormData();
+            fd.append('pdf', file);
+            const res = await fetch('/api/quiz', { method: 'POST', body: fd });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.success || !Array.isArray(data.quiz) || !data.quiz.length) {
+                msg.textContent = data.message || 'Could not generate quiz from this PDF.';
+                return;
+            }
+            quizQuestions = data.quiz.map(item => {
+                const opts = Array.isArray(item.options) ? item.options : [];
+                return {
+                    q: item.question || item.q || 'Question',
+                    options: opts,
+                    answer: resolveAnswerIndex(item.answer, opts)
+                };
+            });
+            currentQIdx = 0;
+            userAnswers = {};
+            $('quiz-review-card').classList.add('hidden');
+            $('quiz-card').classList.remove('hidden');
+            renderQuestionRunner();
+            toast('Quiz generated from your PDF!', 'ok');
+        } catch (err) {
+            msg.textContent = 'Network error while generating quiz.';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Generate Quiz 🧠';
+        }
+    }
+
+    function renderQuestionRunner() {
+        const total = quizQuestions.length;
+        if (!total) return;
+        const q = quizQuestions[currentQIdx];
+        const answeredCount = Object.keys(userAnswers).length;
+
+        $('quiz-progress-label').textContent = `Question ${currentQIdx + 1} of ${total}`;
+        $('quiz-answered-label').textContent = `${answeredCount} answered`;
+        $('quiz-progress-fill').style.width = `${((currentQIdx + 1) / total) * 100}%`;
+
+        $('quiz-pills').innerHTML = quizQuestions.map((_, i) => {
+            const cls = ['q-pill'];
+            if (i === currentQIdx) cls.push('active');
+            else if (userAnswers[i] !== undefined) cls.push('answered');
+            return `<button type="button" class="${cls.join(' ')}" onclick="jumpToQuestion(${i})">${i + 1}</button>`;
+        }).join('');
+
+        $('q-badge').textContent = String(currentQIdx + 1);
+        $('q-prompt').textContent = q.q;
+        $('q-options').innerHTML = q.options.map((opt, idx) => {
+            const sel = userAnswers[currentQIdx] === idx ? ' selected' : '';
+            return `<button type="button" class="opt-btn${sel}" onclick="selectOption(${idx})"><span>${esc(opt)}</span></button>`;
+        }).join('');
+
+        $('q-prev-btn').disabled = currentQIdx === 0;
+        $('q-next-btn').disabled = currentQIdx === total - 1;
+    }
+
+    function selectOption(optIdx) {
+        userAnswers[currentQIdx] = optIdx;
+        renderQuestionRunner();
+    }
+    function jumpToQuestion(i) { currentQIdx = i; renderQuestionRunner(); }
+    function prevQuestion() { if (currentQIdx > 0) { currentQIdx--; renderQuestionRunner(); } }
+    function nextQuestion() { if (currentQIdx < quizQuestions.length - 1) { currentQIdx++; renderQuestionRunner(); } }
+
+    document.addEventListener('keydown', e => {
+        if ($('quiz-section').classList.contains('hidden') || $('quiz-card').classList.contains('hidden')) return;
+        if (['1', '2', '3', '4'].includes(e.key)) {
+            const idx = Number(e.key) - 1;
+            if (quizQuestions[currentQIdx] && quizQuestions[currentQIdx].options[idx] !== undefined) {
+                selectOption(idx);
+            }
+        } else if (e.key === 'ArrowLeft') {
+            prevQuestion();
+        } else if (e.key === 'ArrowRight') {
+            nextQuestion();
+        }
+    });
+
+    function checkQuiz() {
+        const total = quizQuestions.length;
+        if (!total) return;
+        let correct = 0;
+        const reviewHtml = quizQuestions.map((item, idx) => {
+            const picked = userAnswers[idx];
+            const isRight = picked === item.answer;
+            if (isRight) correct++;
+            const optsHtml = item.options.map((o, oIdx) => {
+                let cls = 'review-opt';
+                let tag = '';
+                if (oIdx === item.answer) { cls += ' is-correct'; tag = ' ✓ (Correct)'; }
+                else if (oIdx === picked && !isRight) { cls += ' is-wrong'; tag = ' ✕ (Your pick)'; }
+                return `<div class="${cls}">${esc(o)}${tag}</div>`;
+            }).join('');
+            return `<div class="review-card ${isRight ? 'ok' : 'bad'}">
+                <div><b>Q${idx + 1}:</b> ${esc(item.q)}</div>
+                <div class="review-opts">${optsHtml}</div>
+            </div>`;
+        }).join('');
+
+        const pct = Math.round((correct / total) * 100);
+        $('score-ring').style.setProperty('--pct', `${pct}%`);
+        $('score-ring').textContent = `${pct}%`;
+        $('quiz-score-title').textContent = `You scored ${correct} out of ${total}`;
+        $('quiz-score-sub').textContent = pct >= 80 ? 'Great revision session!' : 'Review the highlighted answers and try again.';
+        $('quiz-review-list').innerHTML = reviewHtml;
+        $('quiz-review-card').classList.remove('hidden');
+        $('quiz-review-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetQuiz() {
+        quizQuestions = [];
+        currentQIdx = 0;
+        userAnswers = {};
+        $('quiz-pdf').value = '';
+        $('quiz-file-label').textContent = 'Click to select a PDF or drag & drop here';
+        $('quiz-card').classList.add('hidden');
+        $('quiz-review-card').classList.add('hidden');
+    }
+
+    // Smart Timetable generator & exports (/api/timetable, /api/calendar/add, /api/calendar/ics)
+    function renderMarkdownTimetable(md) {
+        const lines = String(md || '').split('\n');
+        let html = '';
+        let tableRows = [];
+        let listItems = [];
+
         const flushTable = () => {
-            if (!rows.length) return;
-            const [head, ...body] = rows;
-            out.push('<table><thead><tr>' + head.map(c => `<th>${esc(c)}</th>`).join('') + '</tr></thead><tbody>' +
-                body.map(r => '<tr>' + r.map(c => `<td>${esc(c)}</td>`).join('') + '</tr>').join('') + '</tbody></table>');
-            rows = [];
+            if (!tableRows.length) return;
+            const [header, ...body] = tableRows;
+            html += `<table><thead><tr>${header.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>`;
+            html += body.map(r => {
+                const typeCell = (r[2] || r[1] || '').toLowerCase();
+                const cls = typeCell.includes('prac') || typeCell.includes('college') ? 'prac' : typeCell.includes('break') || typeCell.includes('sleep') || typeCell.includes('dinner') ? 'brk' : '';
+                return `<tr>${r.map((c, idx) => idx === r.length - 1 && r.length >= 3 ? `<td><span class="badge-type ${cls}">${esc(c)}</span></td>` : `<td>${esc(c)}</td>`).join('')}</tr>`;
+            }).join('');
+            html += `</tbody></table>`;
+            tableRows = [];
         };
-        const closeList = () => { if (list) { out.push('</ul>'); list = false; } };
-        md.split('\n').forEach(raw => {
+        const flushList = () => {
+            if (!listItems.length) return;
+            html += `<ul>${listItems.map(li => `<li>${esc(li)}</li>`).join('')}</ul>`;
+            listItems = [];
+        };
+
+        for (const raw of lines) {
             const line = raw.trim();
+            if (!line) { flushTable(); flushList(); continue; }
             if (line.startsWith('|')) {
-                closeList();
-                const cells = line.replace(/^\||\|$/g, '').split('|').map(c => c.trim().replace(/\*\*|__|`/g, ''));
-                if (cells.every(c => /^:?-{2,}:?$/.test(c))) return;
-                rows.push(cells); return;
+                flushList();
+                const cells = line.replace(/^\||\|$/g, '').split('|').map(c => c.trim().replace(/\*\*|__|`+/g, ''));
+                if (!cells.every(c => /^:?-{2,}:?$/.test(c))) tableRows.push(cells);
+                continue;
             }
             flushTable();
-            if (/^#{1,6}\s/.test(line)) { closeList(); out.push(`<h4>${esc(line.replace(/^#+\s*/, ''))}</h4>`); }
-            else if (/^([-*]|\d+\.)\s/.test(line)) {
-                if (!list) { out.push('<ul>'); list = true; }
-                out.push(`<li>${esc(line.replace(/^([-*]|\d+\.)\s*/, '').replace(/\*\*/g, ''))}</li>`);
-            } else if (line) { closeList(); out.push(`<p>${esc(line)}</p>`); }
-        });
-        flushTable(); closeList();
-        return out.join('');
+            if (line.startsWith('### ')) {
+                flushList();
+                html += `<h4>${esc(line.slice(4))}</h4>`;
+            } else if (/^[-*]\s+/.test(line)) {
+                listItems.push(line.replace(/^[-*]\s+/, ''));
+            } else if (/^\d+\.\s+/.test(line)) {
+                listItems.push(line.replace(/^\d+\.\s+/, ''));
+            } else {
+                flushList();
+                html += `<p>${esc(line)}</p>`;
+            }
+        }
+        flushTable();
+        flushList();
+        return html || `<p>${esc(md)}</p>`;
     }
+
     async function generateTimetable() {
-        const file = $('tt-pdf').files[0];
-        $('tt-msg').textContent = '';
-        if (!file) { $('tt-msg').textContent = '⚠️ Please upload your college timetable PDF.'; return; }
-        const fd = new FormData();
-        fd.append('pdf', file);
-        fd.append('wake_time', $('tt-wake').value);
-        fd.append('sleep_time', $('tt-sleep').value);
-        fd.append('dinner_time', $('tt-dinner').value);
-        fd.append('travel_timestamps', $('tt-travel').value);
-        $('tt-btn').disabled = true; $('tt-btn').textContent = 'Planning... ⏳ (can take a minute)';
+        const msg = $('tt-msg');
+        const btn = $('tt-btn');
+        msg.textContent = '';
+        const file = $('tt-pdf').files && $('tt-pdf').files[0];
+        if (!file) {
+            msg.textContent = 'Please upload your college timetable PDF first.';
+            return;
+        }
+        btn.disabled = true;
+        btn.textContent = 'Generating Plan... ⏳';
         try {
+            const fd = new FormData();
+            fd.append('pdf', file);
+            fd.append('wake_time', $('tt-wake').value || '');
+            fd.append('sleep_time', $('tt-sleep').value || '');
+            fd.append('dinner_time', $('tt-dinner').value || '');
+            fd.append('travel_timestamps', $('tt-travel').value || '');
+
             const res = await fetch('/api/timetable', { method: 'POST', body: fd });
-            if (res.status === 401) { sessionExpired(); return; }
-            const data = await res.json();
-            if (!data.success) { $('tt-msg').textContent = '⚠️ ' + data.message; return; }
-            lastTimetable = data.timetable; lastEvents = data.events || [];
-            $('tt-output').innerHTML = renderMarkdown(lastTimetable);
-            if (!$('cal-date').value) $('cal-date').value = new Date().toISOString().slice(0, 10);
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.success || !data.timetable) {
+                msg.textContent = data.message || 'Could not generate daily plan.';
+                return;
+            }
+            currentTimetableMarkdown = data.timetable;
+            currentTimetableEvents = Array.isArray(data.events) ? data.events : [];
+            $('tt-output').innerHTML = renderMarkdownTimetable(currentTimetableMarkdown);
+            if ($('cal-date') && !$('cal-date').value) {
+                $('cal-date').value = new Date().toISOString().slice(0, 10);
+            }
             $('tt-card').classList.remove('hidden');
-            $('tt-card').scrollIntoView({ behavior: 'smooth' });
-            toast('Your plan is ready! 📅', 'ok');
-        } catch (e) { $('tt-msg').textContent = '⚠️ ' + e.message; }
-        finally { $('tt-btn').disabled = false; $('tt-btn').textContent = 'Generate My Plan ✨'; }
+            toast('Daily plan generated!', 'ok');
+        } catch (err) {
+            msg.textContent = 'Network error while generating timetable.';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Generate My Plan ✨';
+        }
     }
 
-    // ---------- Browser reminders ----------
-    let reminderTimer = null; const fired = new Set();
-    async function enableReminders() {
-        if (!lastEvents.length) { toast('Generate a plan first.', 'warn'); return; }
-        if (!('Notification' in window)) { toast('Notifications are not supported in this browser.', 'err'); return; }
-        const perm = await Notification.requestPermission();
-        if (perm !== 'granted') { toast('Notification permission denied.', 'err'); return; }
-        clearInterval(reminderTimer);
-        reminderTimer = setInterval(() => {
-            const d = new Date(), now = d.getHours() * 60 + d.getMinutes(), day = d.toDateString();
-            lastEvents.forEach(ev => {
-                const key = day + ev.start;
-                if (ev.start === now && !fired.has(key)) {
-                    fired.add(key);
-                    new Notification(ev.activity, { body: `${ev.start_label} - ${ev.end_label}  ${ev.purpose || ''}` });
-                    toast('⏰ ' + ev.activity, 'ok');
-                }
+    function enableReminders() {
+        const mins = Number($('cal-remind').value || 10);
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().then(p => {
+                toast(p === 'granted' ? `Reminders enabled (${mins}m prior)` : `In-app reminders set (${mins}m prior)`, 'ok');
             });
-        }, 20000);
-        toast('Reminders enabled. Keep this tab open. 🔔', 'ok');
+        } else {
+            toast(`Reminders set for ${mins} minutes before blocks`, 'ok');
+        }
     }
 
-    // ---------- Google Calendar + .ics ----------
-    const calPayload = () => ({
-        timetable: lastTimetable,
-        date: $('cal-date').value.trim(),
-        repeat_days: parseInt($('cal-repeat').value, 10) || 1,
-        reminder_minutes: parseInt($('cal-remind').value, 10) || 0,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+    async function refreshGoogleStatus() {
+        try {
+            const res = await fetch('/api/google/status');
+            const data = await res.json().catch(() => ({}));
+            const b = $('google-connect-btn');
+            if (b) b.textContent = data.connected ? '✅ Google Connected' : '🔗 Connect Google';
+        } catch (_) {}
+    }
+
+    function connectGoogle() {
+        const popup = window.open('/google/login', 'googleCalendarAuth', 'width=520,height=640');
+        if (!popup) toast('Allow popups to connect Google Calendar.', 'warn');
+    }
+
+    window.addEventListener('message', e => {
+        if (e.origin !== window.location.origin) return;
+        if (e.data === 'google-connected') {
+            refreshGoogleStatus();
+            toast('Google Calendar connected!', 'ok');
+        } else if (e.data === 'google-failed') {
+            toast('Could not connect Google Calendar.', 'err');
+        }
     });
-    function connectGoogle() { window.open('/google/login', 'gconnect', 'width=520,height=640'); }
-    addEventListener('message', e => {
-        if (e.origin !== location.origin) return;
-        if (e.data === 'google-connected') toast('Google Calendar connected! ✅', 'ok');
-        if (e.data === 'google-failed') toast('Google connection failed.', 'err');
-    });
+
+    function calendarPayload() {
+        return {
+            timetable: currentTimetableMarkdown,
+            date: $('cal-date').value || new Date().toISOString().slice(0, 10),
+            repeat_days: parseInt($('cal-repeat').value || '1', 10),
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+            reminder_minutes: parseInt($('cal-remind').value || '10', 10)
+        };
+    }
+
     async function addToGoogleCalendar() {
-        if (!lastTimetable) { toast('Generate a plan first.', 'warn'); return; }
-        const res = await postJSON('/api/calendar/add', calPayload());
-        const data = await res.json();
-        if (data.needs_auth) { toast('Please connect your Google account first.', 'warn'); connectGoogle(); return; }
-        toast(data.success ? `Added ${data.created} events to Google Calendar 📆` : '⚠️ ' + data.message, data.success ? 'ok' : 'err');
-    }
-    async function downloadIcs() {
-        if (!lastTimetable) { toast('Generate a plan first.', 'warn'); return; }
-        const res = await postJSON('/api/calendar/ics', calPayload());
-        if (!res.ok) { const d = await res.json(); toast('⚠️ ' + d.message, 'err'); return; }
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(await res.blob()); a.download = 'timetable.ics'; a.click();
-        URL.revokeObjectURL(a.href);
+        if (!currentTimetableMarkdown) {
+            toast('Generate your daily plan first.', 'warn');
+            return;
+        }
+        const { ok, data } = await postJSON('/api/calendar/add', calendarPayload());
+        if (data.needs_auth) {
+            toast('Please connect your Google account first.', 'warn');
+            connectGoogle();
+            return;
+        }
+        if (!ok || !data.success) {
+            toast(data.message || 'Could not add events to Google Calendar.', 'err');
+            return;
+        }
+        toast(`Added ${data.created} events to Google Calendar!`, 'ok');
     }
 
-    // ---------- keep the user logged in after a page refresh ----------
+    async function downloadIcs() {
+        if (!currentTimetableMarkdown) {
+            toast('Generate your daily plan first.', 'warn');
+            return;
+        }
+        const res = await fetch('/api/calendar/ics', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(calendarPayload())
+        });
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            toast(errData.message || 'Could not download .ics file.', 'err');
+            return;
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'timetable.ics';
+        a.click();
+        URL.revokeObjectURL(url);
+        toast('Downloaded timetable.ics', 'ok');
+    }
+
+    // Restore active session on load
     (async function restoreSession() {
         try {
-            const data = await (await fetch('/api/me')).json();
-            if (!data.success) return;
-            if (data.role === 'student') enterStudentApp(data.username);
-            else if (data.role === 'professor') enterProfessorDashboard(data.username);
-        } catch (e) { /* stay on the login screen */ }
+            const res = await fetch('/api/me');
+            const data = await res.json().catch(() => ({}));
+            if (res.ok && data.success && data.role === 'student') {
+                enterStudentApp(data.username);
+            } else if (res.ok && data.success && data.role === 'professor') {
+                enterProfessorApp(data.username);
+            }
+        } catch (_) {}
     })();
 </script>
 </body>

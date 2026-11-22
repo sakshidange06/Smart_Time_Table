@@ -1,124 +1,115 @@
 # coordinator.py
 # Professor login + professor services (class-teacher and department timetables).
-# Also holds the shared user store (users.csv) that app.py uses for student login.
-import csv
+# Uses db.py (SQLAlchemy) for user storage and department timetable history,
+# with conflict-aware department scheduling and credit-weighted subject slots.
 import json
-import os
-import threading
 import uuid
 from datetime import datetime
 from functools import wraps
+from llm import llm
+from flask import Blueprint, jsonify, request, session
+from sqlalchemy import desc, select
+from sqlalchemy.exc import IntegrityError
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from flask import Blueprint, request, jsonify, session
-from werkzeug.security import generate_password_hash, check_password_hash
+from db import (
+    ChatSessionRecord,
+    TimetableRecord,
+    UserRecord,
+    get_db_session,
+)
 
 coordinator_bp = Blueprint("coordinator", __name__)
 
-
 # ===============================================================
-# USER STORE (users.csv), PASSWORD HASHING AND SESSION HELPERS
-# Shared with app.py, which uses them for the student login.
+# USER STORE (SQLAlchemy), PASSWORD HASHING AND SESSION HELPERS
 # ===============================================================
-USER_CSV = "users.csv"
 MIN_PASSWORD_LENGTH = 6
 _HASH_PREFIXES = ("pbkdf2:", "scrypt:")
-_lock = threading.RLock()  # re-entrant: register_user and verify_user call read_user_records while holding it
+_DEPARTMENT_SESSION_ID = "dept_history:shared"
+DEFAULT_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 
-# ---------------------------------------------------------------
-# users.csv helpers
-# ---------------------------------------------------------------
 def _is_hashed(value):
-    return value.startswith(_HASH_PREFIXES)
-
-
-def _write_records(records):
-    with open(USER_CSV, mode="w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(["username", "password", "role"])
-        for r in records:
-            writer.writerow([r["username"], r["password"], r["role"]])
-
-
-def init_user_csv():
-    """Create users.csv with a default admin student account if it is missing or empty."""
-    with _lock:
-        if os.path.exists(USER_CSV) and os.path.getsize(USER_CSV) > 0:
-            return
-        admin_password = os.getenv("ADMIN_PASSWORD", "password123")
-        _write_records([{
-            "username": "admin",
-            "password": generate_password_hash(admin_password),
-            "role": "student",
-        }])
-
-
-def read_user_records():
-    init_user_csv()
-    records = []
-    with open(USER_CSV, mode="r", newline="", encoding="utf-8-sig") as f:
-        for row in csv.reader(f):
-            if len(row) < 2:
-                continue
-            username, password = row[0].strip(), row[1].strip()
-            if username.lower() == "username" and password.lower() == "password":
-                continue  # header row
-            role = row[2].strip().lower() if len(row) > 2 and row[2].strip() else "student"
-            records.append({"username": username, "password": password, "role": role})
-    return records
+    return isinstance(value, str) and value.startswith(_HASH_PREFIXES)
 
 
 def _role_matches(record_role, wanted_role):
-    # anything that is not "professor" counts as a student account
-    return (record_role == "professor") == (wanted_role == "professor")
+    return ((record_role or "student").strip().lower() == "professor") == (
+        (wanted_role or "student").strip().lower() == "professor"
+    )
+
+
+def _normalize_role(role):
+    return "professor" if str(role or "").strip().lower() == "professor" else "student"
 
 
 # ---------------------------------------------------------------
-# Register / verify
+# Register / verify (backed by db.py UserRecord)
 # ---------------------------------------------------------------
 def register_user(username, password, role):
-    """Create an account. Returns (ok, message)."""
-    username, password = username.strip(), password.strip()
-    if not username or not password:
+    """Create an account in the database. Returns (ok, message)."""
+    clean_user = str(username or "").strip()
+    clean_password = str(password or "").strip()
+    clean_role = _normalize_role(role)
+
+    if not clean_user or not clean_password:
         return False, "Username and password cannot be empty."
-    if len(username) < 3 or any(ch in username for ch in ",\r\n"):
+    if len(clean_user) < 3 or any(ch in clean_user for ch in ",\r\n"):
         return False, "Username must be at least 3 characters and cannot contain commas."
-    if len(password) < MIN_PASSWORD_LENGTH:
+    if len(clean_password) < MIN_PASSWORD_LENGTH:
         return False, f"Use a password with at least {MIN_PASSWORD_LENGTH} characters."
 
-    with _lock:
-        records = read_user_records()
-        if any(r["username"] == username for r in records):
-            return False, "Username already exists. Please choose another."
-        records.append({
-            "username": username,
-            "password": generate_password_hash(password),
-            "role": role,
-        })
-        _write_records(records)
-    return True, "Registration successful!"
+    try:
+        with get_db_session() as db:
+            existing = db.execute(
+                select(UserRecord.id).where(UserRecord.username == clean_user)
+            ).scalar_one_or_none()
+            if existing is not None:
+                return False, "Username already exists. Please choose another."
+
+            db.add(
+                UserRecord(
+                    username=clean_user,
+                    password_hash=generate_password_hash(clean_password),
+                    role=clean_role,
+                )
+            )
+            db.flush()
+        return True, "Registration successful!"
+    except IntegrityError:
+        return False, "Username already exists. Please choose another."
+    except Exception as exc:
+        print("REGISTER USER ERROR:", repr(exc))
+        return False, "Database error while registering user."
 
 
 def verify_user(username, password, role):
-    """Check a login for the given role ("student" or "professor").
+    """Check a login for the given role ("student" or "professor")."""
+    clean_user = str(username or "").strip()
+    clean_password = str(password or "").strip()
+    if not clean_user or not clean_password:
+        return False
 
-    Old plain-text passwords still work once and are upgraded to a hash.
-    """
-    username, password = username.strip(), password.strip()
-    with _lock:
-        records = read_user_records()
-        for r in records:
-            if r["username"] != username or not _role_matches(r["role"], role):
-                continue
-            stored = r["password"]
+    try:
+        with get_db_session() as db:
+            user = db.execute(
+                select(UserRecord).where(UserRecord.username == clean_user)
+            ).scalar_one_or_none()
+            if user is None or not _role_matches(user.role, role):
+                return False
+
+            stored = user.password_hash or ""
             if _is_hashed(stored):
-                return check_password_hash(stored, password)
-            if stored == password:  # legacy plain-text account: upgrade it now
-                r["password"] = generate_password_hash(password)
-                _write_records(records)
+                return check_password_hash(stored, clean_password)
+            if stored == clean_password:
+                user.password_hash = generate_password_hash(clean_password)
+                db.add(user)
                 return True
             return False
-    return False
+    except Exception as exc:
+        print("VERIFY USER ERROR:", repr(exc))
+        return False
 
 
 # ---------------------------------------------------------------
@@ -170,21 +161,26 @@ professor_required = _login_required("professor", "Please log in as a professor 
 @coordinator_bp.route("/api/professor/register", methods=["POST"])
 def professor_register():
     data = request.json or {}
-    try:
-        ok, message = register_user(data.get("username", ""), data.get("password", ""), role="professor")
-    except PermissionError:
-        return jsonify({"success": False, "message": "Cannot write users.csv. Close it if it is open in Excel and try again."}), 500
+    ok, message = register_user(
+        data.get("username", ""),
+        data.get("password", ""),
+        role="professor",
+    )
     return jsonify({"success": ok, "message": message}), (200 if ok else 400)
 
 
 @coordinator_bp.route("/api/professor/login", methods=["POST"])
 def professor_login():
     data = request.json or {}
-    username = data.get("username", "").strip()
-    password = data.get("password", "")
+    username = str(data.get("username", "")).strip()
+    password = str(data.get("password", ""))
     if verify_user(username, password, role="professor"):
         start_session("professor", username)
-        return jsonify({"success": True, "username": username, "message": "Professor login successful."})
+        return jsonify({
+            "success": True,
+            "username": username,
+            "message": "Professor login successful.",
+        })
     return jsonify({"success": False, "message": "Invalid professor username or password."}), 401
 
 
@@ -193,31 +189,84 @@ def professor_logout():
     end_session("professor")
     return jsonify({"success": True, "message": "Professor logged out."})
 
-HISTORY_FILE = "department_history.json"
-DEFAULT_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-
 
 # ---------------------------------------------------------------
-# Department history (kept in memory and mirrored to a JSON file)
+# Department history (backed by db.py TimetableRecord)
 # ---------------------------------------------------------------
-def _load_history():
+def _get_or_create_dept_owner(db, username: str) -> UserRecord:
+    clean_name = (username or "admin").strip()
+    user = db.execute(
+        select(UserRecord).where(UserRecord.username == clean_name)
+    ).scalar_one_or_none()
+    if user is not None:
+        return user
+
+    admin_user = db.execute(
+        select(UserRecord).where(UserRecord.username == "admin")
+    ).scalar_one_or_none()
+    if admin_user is not None:
+        return admin_user
+
+    fallback_user = UserRecord(
+        username=clean_name,
+        password_hash=generate_password_hash("password123"),
+        role="professor",
+    )
+    db.add(fallback_user)
+    db.flush()
+    return fallback_user
+
+
+def _get_or_create_dept_session(db, username: str) -> ChatSessionRecord:
+    owner = _get_or_create_dept_owner(db, username)
+    sess = db.execute(
+        select(ChatSessionRecord).where(ChatSessionRecord.session_id == _DEPARTMENT_SESSION_ID)
+    ).scalar_one_or_none()
+    if sess is None:
+        sess = ChatSessionRecord(
+            session_id=_DEPARTMENT_SESSION_ID,
+            user_id=owner.id,
+            title="Department Master Timetable History",
+        )
+        db.add(sess)
+        db.flush()
+    return sess
+
+
+def _save_department_record(record: dict, username: str) -> None:
     try:
-        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data if isinstance(data, list) else []
-    except (OSError, ValueError):
-        return []
+        with get_db_session() as db:
+            dept_sess = _get_or_create_dept_session(db, username)
+            db.add(
+                TimetableRecord(
+                    session_id=dept_sess.id,
+                    department="Department Master",
+                    payload_json=json.dumps(record, ensure_ascii=False),
+                )
+            )
+    except Exception as exc:
+        print("DEPARTMENT RECORD SAVE ERROR:", repr(exc))
 
 
-def _save_history(history):
+def _load_department_history() -> list:
+    history = []
     try:
-        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-            json.dump(history, f)
-    except OSError as e:
-        print("HISTORY SAVE ERROR:", repr(e))
-
-
-DEPARTMENT_DATABASE = {"history": _load_history()}
+        with get_db_session() as db:
+            rows = db.execute(
+                select(TimetableRecord)
+                .where(TimetableRecord.department == "Department Master")
+                .order_by(desc(TimetableRecord.id))
+            ).scalars().all()
+            for row in rows:
+                try:
+                    parsed = json.loads(row.payload_json)
+                    if isinstance(parsed, dict):
+                        history.append(parsed)
+                except (TypeError, ValueError):
+                    continue
+    except Exception as exc:
+        print("DEPARTMENT HISTORY LOAD ERROR:", repr(exc))
+    return history
 
 
 # ---------------------------------------------------------------
@@ -240,13 +289,23 @@ def _error(message, code=400):
 
 
 def _professor_error(need_at_symbol=False):
-    """Return an error response if the caller is not an allowed professor, else None."""
     username = session.get("professor_username", "")
     if session.get("user_role") != "professor" or not username:
         return _error("Please log in as a professor first.", 401)
     if need_at_symbol and "@" not in username:
         return _error("Access Denied: Department Timetable requires '@' in the professor username.", 403)
     return None
+
+
+def _build_weighted_subject_pool(ordered_subjects):
+    pool = []
+    for s in ordered_subjects:
+        name = str(s.get("name", "")).strip()
+        if not name:
+            continue
+        weight = max(1, min(6, round(float(s.get("credits", 1)))))
+        pool.extend([name] * weight)
+    return pool or ["General Lecture"]
 
 
 # ---------------------------------------------------------------
@@ -268,9 +327,8 @@ def build_class_teacher_timetable(
     lunch_min = _parse_hhmm(lunch_start)
 
     ordered_subjects = sorted(subjects, key=lambda s: float(s.get("credits", 1)), reverse=True)
-    subject_names = [str(s.get("name", "")).strip() for s in ordered_subjects if str(s.get("name", "")).strip()]
-    if not subject_names:
-        subject_names = ["General Lecture"]
+    subject_pool = _build_weighted_subject_pool(ordered_subjects)
+    unique_subjects = list(dict.fromkeys(subject_pool))
 
     practical_names = [
         (str(s.get("practical") or f"{str(s.get('name', '')).strip()} Lab")).strip()
@@ -278,13 +336,14 @@ def build_class_teacher_timetable(
         if s.get("has_practical", True) and str(s.get("name", "")).strip()
     ]
     if not practical_names:
-        practical_names = [f"{name} Lab" for name in subject_names]
+        practical_names = [f"{name} Lab" for name in unique_subjects]
 
     clean_batches = [str(b).strip() for b in batches if str(b).strip()]
 
     rows = []
-    lec_idx = 0
+    pool_idx = 0
     prac_rotation = 0
+    last_lecture_subj = None
 
     for day in working_days:
         day_label = str(day).strip()
@@ -332,14 +391,23 @@ def build_class_teacher_timetable(
             if not lunch_added and cursor < lunch_min < lec_end:
                 lec_end = lunch_min
 
+            chosen_subj = subject_pool[pool_idx % len(subject_pool)]
+            if len(unique_subjects) > 1 and chosen_subj == last_lecture_subj:
+                for offset in range(1, len(subject_pool) + 1):
+                    candidate = subject_pool[(pool_idx + offset) % len(subject_pool)]
+                    if candidate != last_lecture_subj:
+                        chosen_subj = candidate
+                        break
+
             rows.append({
                 "day": day_label,
                 "time": f"{_fmt_hhmm(cursor)} - {_fmt_hhmm(lec_end)}",
-                "allocation": subject_names[lec_idx % len(subject_names)],
+                "allocation": chosen_subj,
                 "type": "Lecture",
             })
+            last_lecture_subj = chosen_subj
             cursor = lec_end
-            lec_idx += 1
+            pool_idx += 1
 
     markdown_lines = [
         "| Day | Time Slot | Subject / Practical Batches | Type |",
@@ -438,7 +506,6 @@ def generate_department_timetable():
     if not years_data or not staff_records:
         return _error("Years data and staff records are required.")
 
-    # ---- practical batches per year / division ----
     calculated_batches = {}
     try:
         for y_info in years_data:
@@ -450,7 +517,7 @@ def generate_department_timetable():
             year_batches = []
             for d_idx in range(divs):
                 div_letter = chr(65 + d_idx)
-                batches_in_div = max(1, -(-stud_per_div // batch_size_limit))  # ceiling division
+                batches_in_div = max(1, -(-stud_per_div // batch_size_limit))
                 for b_num in range(1, batches_in_div + 1):
                     year_batches.append(f"{y_name} Div {div_letter} - Batch {prefix}{b_num}")
             calculated_batches[y_name] = year_batches
@@ -458,9 +525,20 @@ def generate_department_timetable():
         return _error("Each year needs a name, a capacity and a number of divisions.")
 
     class_timetables = {}
-    teacher_timetables = {s["name"]: {day: [] for day in working_days} for s in staff_records if s.get("name")}
+    teacher_timetables = {
+        s["name"]: {day: [] for day in working_days}
+        for s in staff_records
+        if s.get("name")
+    }
+    busy_teachers = set()
+    busy_labs = set()
+    lab_names = [
+        str(l.get("name", "")).strip()
+        for l in labs
+        if isinstance(l, dict) and str(l.get("name", "")).strip()
+    ] or ["General Lab"]
 
-    for y_info in years_data:
+    for y_idx, y_info in enumerate(years_data):
         y_name = y_info["name"]
         class_timetables[y_name] = {}
         y_curr = curriculum.get(y_name, {})
@@ -471,17 +549,24 @@ def generate_department_timetable():
             cursor = start_min
             day_slots = []
 
-            # rotate subject order so every day is not identical
-            shift = day_idx % len(y_subjects)
+            shift = (day_idx + y_idx) % len(y_subjects)
             for subj in y_subjects[shift:] + y_subjects[:shift]:
+                slot_label = f"{_fmt_hhmm(cursor)} - {_fmt_hhmm(cursor + theory_mins)}"
                 assigned_teacher = "TBD"
+
                 for staff in staff_records:
+                    staff_name = str(staff.get("name", "")).strip()
+                    if not staff_name:
+                        continue
                     assigned = str(staff.get("assignments", {}).get(y_name, "")).strip()
                     if assigned and assigned != "-" and assigned.lower() == subj.lower():
-                        assigned_teacher = staff["name"]
-                        break
+                        if (day, slot_label, staff_name) not in busy_teachers:
+                            assigned_teacher = staff_name
+                            busy_teachers.add((day, slot_label, staff_name))
+                            break
+
                 slot = {
-                    "time": f"{_fmt_hhmm(cursor)} - {_fmt_hhmm(cursor + theory_mins)}",
+                    "time": slot_label,
                     "subject": subj,
                     "type": "Theory",
                     "teacher": assigned_teacher,
@@ -492,15 +577,21 @@ def generate_department_timetable():
                     teacher_timetables[assigned_teacher][day].append(slot)
                 cursor += theory_mins
 
-            # one practical session per day, rotating through the year's practicals and labs
             if y_pracs:
-                prac = y_pracs[day_idx % len(y_pracs)]
-                lab = labs[day_idx % len(labs)]["name"] if labs else "General Lab"
+                prac = y_pracs[(day_idx + y_idx) % len(y_pracs)]
+                slot_label = f"{_fmt_hhmm(cursor)} - {_fmt_hhmm(cursor + practical_mins)}"
+                chosen_lab = lab_names[(day_idx + y_idx) % len(lab_names)]
+                for candidate_lab in lab_names:
+                    if (day, slot_label, candidate_lab) not in busy_labs:
+                        chosen_lab = candidate_lab
+                        break
+                busy_labs.add((day, slot_label, chosen_lab))
+
                 day_slots.append({
-                    "time": f"{_fmt_hhmm(cursor)} - {_fmt_hhmm(cursor + practical_mins)}",
+                    "time": slot_label,
                     "subject": prac,
                     "type": "Practical",
-                    "lab": lab,
+                    "lab": chosen_lab,
                     "teacher": "Lab Instructor",
                     "year": y_name,
                 })
@@ -516,14 +607,15 @@ def generate_department_timetable():
         "labs": labs,
     }
 
-    DEPARTMENT_DATABASE["history"].insert(0, record)
-    DEPARTMENT_DATABASE["master_state"] = record
-    _save_history(DEPARTMENT_DATABASE["history"])
+    username = session.get("professor_username", "admin")
+    _save_department_record(record, username)
+    history = _load_department_history()
 
     return jsonify({
         "success": True,
         "message": "Department master timetable generated successfully!",
         "record": record,
+        "history": history,
     })
 
 
@@ -532,4 +624,4 @@ def get_department_history():
     denied = _professor_error(need_at_symbol=True)
     if denied:
         return denied
-    return jsonify({"success": True, "history": DEPARTMENT_DATABASE.get("history", [])})
+    return jsonify({"success": True, "history": _load_department_history()})
